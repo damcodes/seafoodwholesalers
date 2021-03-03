@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react' 
+import { useState, useEffect, useRef } from 'react' 
 import { Redirect, useHistory } from 'react-router-dom'
-import { Button, Checkbox, Icon, Table, Container, Input, Tab, Label, Segment, Grid } from 'semantic-ui-react'
+import { Button, Checkbox, Icon, Table, Container, Input, Tab, Label, Header, Grid } from 'semantic-ui-react'
 import LineItem from '../components/LineItem'
 import Order from '../components/Order'
 
@@ -15,9 +15,12 @@ const NewOrder = () => {
   const [ totalCost, setTotalCost ] = useState(0)
   const [ confirming, setConfirming ] = useState(false)
   const [ currentOrder, setCurrentOrder ] = useState(null)
-  const [ sort, setSort ] = useState(null)
-  const [ searched, setSearched ] = useState(null)
-  const [ refresh, setRefresh ] = useState(2000)
+  const [ sort, setSort ] = useState('')
+  const [ sortedUp, setSortedUp ] = useState(false)
+  const [ searched, setSearched ] = useState('')
+  const [ processedItems, setProcessedItems ] = useState([])
+  const [ refresh, setRefresh ] = useState(500)
+  const prevSearched = usePrevious(searched)
 
   useEffect(() => {
     fetch('http://localhost:3001/current-user', {
@@ -53,11 +56,101 @@ const NewOrder = () => {
   }, [cart])
 
   useEffect(() => {
-    if (refresh && refresh > 0) {
+    if (refresh && refresh > 0 && (sort !== '' || searched !== '')) {
       const interval = setInterval(fetchProducts, refresh)
       return () => clearInterval(interval)
     }
   })
+
+
+  useEffect(() => {
+    let processed
+    if (sort !== '' && searched !== '') {
+      processed = items.filter( item => {
+        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
+        // debugger
+        // const descriptionWords = item.description.split(' ')
+        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
+          // debugger
+          return true
+        } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
+          // debugger
+          if (item.description.includes(searched)) return true
+        } //else if () {
+        //   debugger
+        //   return true 
+        // }
+        return false
+        }).sort( (a, b) => {
+          let op 
+          if (sort === 'Weight') {
+            if (!sortedUp) {
+              op = b.avail_weight - a.avail_weight
+            } else {
+              op = a.avail_weight - b.avail_weight
+            }
+          } else if (sort === 'Price') {
+            if (!sortedUp) {
+              op = b.price - a.price
+            } else {
+              op = a.price - b.price
+            }
+          } else if (sort === 'Name') {
+            op = a.description.localeCompare(b.description)
+          }
+          return op 
+        })
+    } else if (sort === '' && searched !== '') {
+      // debugger
+      processed = items.filter( item => {
+        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
+        // debugger
+        // const descriptionWords = item.description.split(' ')
+        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
+          // debugger
+          return true
+        } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
+          // debugger
+          if (item.description.includes(searched)) return true
+        } //else if () {
+        //   debugger
+        //   return true 
+        // }
+        return false
+      })
+    } else if (sort !== '' && searched === '') {
+      processed = items.sort( (a, b) => {
+        let op 
+        if (sort === 'Weight') {
+          if (!sortedUp) {
+            op = b.avail_weight - a.avail_weight
+          } else {
+            op = a.avail_weight - b.avail_weight
+          }
+        } else if (sort === 'Price') {
+          if (!sortedUp) {
+            op = b.price - a.price
+          } else {
+            op = a.price - b.price
+          }
+        } else if (sort === 'Name') {
+          op = a.description.localeCompare(b.description)
+        }
+        return op 
+      })
+    } 
+    // debugger
+    return processed ? setProcessedItems(processed) : setProcessedItems([])
+  }, [ sort, searched, items, prevSearched, sortedUp ])
+
+  function usePrevious(value) {
+    const ref = useRef()
+    useEffect(() => {
+      ref.current = value
+    })
+    return ref.current
+  }
+
 
   const fetchProducts = () => {
     fetch('http://localhost:3001/products', {
@@ -175,25 +268,31 @@ const NewOrder = () => {
       <Grid>
         <Grid.Row columns={2}>
           <Grid.Column textAlign='left'>
-            {/* <Segment > */}
-              <Label>
-                Sort By: 
-              </Label>
-              <select onChange={(e) => setSort(e.target.value)}>
-                <option></option>
-                <option>Price</option>
-                <option>Name</option>
-              </select>
-            {/* </Segment> */}
+            <Label>
+              Sort By: 
+            </Label>
+            <select onChange={(e) => setSort(e.target.value)}>
+              <option></option>
+              <option>Price</option>
+            </select>
+            { sort === 'Price' ?
+            <div>
+              <Button positive={sortedUp} onClick={() => setSortedUp(!sortedUp)} ><Icon name='sort amount up' /></Button>
+
+              <Button positive={!sortedUp} onClick={() => setSortedUp(!sortedUp)} ><Icon name='sort amount down' /></Button>
+            </div>
+            : 
+            null  
+            }
           </Grid.Column>
 
           <Grid.Column textAlign='right'>
-            {/* <Segment> */}
-              <Input icon='search' placeholder='Search...' onChange={e => setSearched(e.target.value)}/>
-            {/* </Segment> */}
+            <Input icon='search' placeholder='Search...' onChange={e => setSearched(e.target.value)}/>
           </Grid.Column>
         </Grid.Row>
       </Grid>
+
+      { items.length > 0 || processedItems.length > 0 ?
       <Table striped compact celled definition>
         <Table.Header>
           <Table.Row>
@@ -208,18 +307,8 @@ const NewOrder = () => {
         </Table.Header>
 
         <Table.Body>
-          { (sort && sort !== '') || (searched && searched !== '') ?
-            items.filter(item => item.active && item.avail_weight > 0 && (item.description.toUpperCase().includes(searched) || item.description.toLowerCase().includes(searched)))
-                 .sort( (a,b) => {
-                              let op
-                              if (sort === "Price") {
-                                op = b.price - a.price
-                              } else if (sort === "Name") {
-                                op = a.description.localeCompare(b.description)
-                              }
-                              return op
-                            })
-                 .map(item => {
+          { processedItems.length > 0 ?            
+            processedItems.filter( item => item.avail_weight > 0 && item.active).map(item => {
               return(
                 <LineItem 
                   key={item.id} 
@@ -248,35 +337,42 @@ const NewOrder = () => {
                 />
             )})
             : 
-            items.filter(item => item.avail_weight > 0 && item.active)
-                 .map(item => {
-              return(
-                <LineItem 
-                  key={item.id} 
-                  id={item.item_number}
-                  item={item} 
-                  prevTarget={target}
-                  totalCost={totalCost}
-                  setTotalCost={setTotalCost}
-                  setCart={setCart}
-                  cart={cart}
-                  setTargetAndTotalCost={(newTarget, cost) => {
-                    if (newTarget.value.length > 1) {
-                      setTotalCost(0)
-                    }
-                    if (cost === 0) {
-                      setTotalCost(0)
-                    }
-                    if (isNum(newTarget.value)) {
-                      setTotalCost(cost)
-                    }
-                    if (newTarget !== target && isNum(newTarget.value)) {
-                      setTotalCost(totalCost + cost) 
-                    }
-                    return setTarget(newTarget)
-                  }}
-                />
-            )})            
+              searched !== '' ?
+                <Table.Row>
+                  <Table.Cell colSpan='6'>
+                    <Header textAlign='center' as='h3'>No Item Found</Header>
+                  </Table.Cell>
+                </Table.Row>
+              :
+                items.filter( item => item.avail_weight > 0 && item.active).sort((a,b) => b.active - a.active).map( item => {
+                  return( 
+                    <LineItem
+                      key={item.id} 
+                      id={item.item_number}
+                      item={item} 
+                      prevTarget={target}
+                      totalCost={totalCost}
+                      setTotalCost={setTotalCost}
+                      setCart={setCart}
+                      cart={cart}
+                      setTargetAndTotalCost={(newTarget, cost) => {
+                        if (newTarget.value.length > 1) {
+                          setTotalCost(0)
+                        }
+                        if (cost === 0) {
+                          setTotalCost(0)
+                        }
+                        if (isNum(newTarget.value)) {
+                          setTotalCost(cost)
+                        }
+                        if (newTarget !== target && isNum(newTarget.value)) {
+                          setTotalCost(totalCost + cost) 
+                        }
+                        return setTarget(newTarget)
+                      }}
+                    />
+                  )
+                })           
           }
         </Table.Body>
 
@@ -309,7 +405,9 @@ const NewOrder = () => {
           </Table.Row>
         </Table.Footer>
       </Table>
-      
+      :
+      <Header textAlign='center' colSpan='6' as='h2'><Icon name='spinner' />Loading Today's Catch...</Header>
+      }
     </Container> 
   )
 }

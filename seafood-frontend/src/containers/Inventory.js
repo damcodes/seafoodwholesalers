@@ -109,7 +109,7 @@ const Inventory = () => {
     } 
     // debugger
     return processed ? setProcessedItems(processed) : setProcessedItems([])
-  }, [ sort, searched, items, prevSearched ])
+  }, [ sort, searched, items, prevSearched, sortedUp ])
 
   function usePrevious(value) {
     const ref = useRef()
@@ -197,6 +197,9 @@ const Inventory = () => {
           </Grid.Column>
         </Grid.Row>
       </Grid> 
+
+      { items.length > 0 || processedItems.length > 0 ? 
+
       <Table striped celled definition>
         <Table.Header>
           <Table.Row>
@@ -262,6 +265,9 @@ const Inventory = () => {
           </Table.Row>
         </Table.Footer>
       </Table>
+      :
+      <Header textAlign='center' colSpan='6' as='h2'><Icon name='spinner' />Loading Inventory...</Header>
+      }    
     </Container>
   )
 }
