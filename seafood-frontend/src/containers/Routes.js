@@ -1,4 +1,4 @@
-import { Grid, Table, Segment, Container, Header } from 'semantic-ui-react'
+import { Grid, Container, Header, Icon } from 'semantic-ui-react'
 import { useEffect, useState } from 'react'
 import Route from '../components/Route'
 
@@ -29,6 +29,7 @@ const Routes = () => {
 
     return(
     <Container>
+      { routes.length > 0 ? 
       <Grid centered>
         <Grid.Row columns={2}>
           <Grid.Column>
@@ -61,6 +62,9 @@ const Routes = () => {
         </Grid.Row>
 
       </Grid>
+      :
+      <Header textAlign='center' colSpan='6' as='h2'><Icon name='spinner' />Loading Info...</Header>
+      } 
     </Container>
   )
 }
