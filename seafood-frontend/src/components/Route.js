@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import RouteLineItem from '../components/RouteLineItem'
 
 const Route = ({ route }) => {
-  console.log(route)
+
   return( 
     route ? 
     <Segment textAlign='center'>
@@ -18,7 +18,7 @@ const Route = ({ route }) => {
         </Table.Header>
 
         <Table.Body>
-          { route.orders.map( order => {
+          { route.orders.sort( (a,b) => a.stop - b.stop ).map( order => {
             return(
               <RouteLineItem order={order} />
             )

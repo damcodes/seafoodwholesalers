@@ -3,12 +3,20 @@ import { Redirect, Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Header, Container, Segment, Icon, List } from 'semantic-ui-react'
 
-const ProcessingOrders = ({ currentUser }) => {
+const ProcessingOrders = ({ orders, currentUser }) => {
 
-  const [ orders, setOrders ] = useState([])
-  const [ user, setUser ] = useState(currentUser)
+  const [ allOrders, setAllOrders ] = useState([])
+  // const [ user, setUser ] = useState(currentUser)
+  const [ refresh, setRefresh ] = useState(2000)
 
   useEffect(() => {
+    if (refresh && refresh > 0 && currentUser.admin) {
+      const interval = setInterval(fetchAllOrders, refresh)
+      return () => clearInterval(interval)
+    }
+  })
+
+  const fetchAllOrders = () => {
     fetch(`http://localhost:3001/orders`, {
       method: "GET",
       headers: {
@@ -17,11 +25,10 @@ const ProcessingOrders = ({ currentUser }) => {
       }
     })
     .then( res => res.json() )
-    .then( orders => setOrders(orders) )
-  }, [])
+    .then( ordersData => setAllOrders(ordersData) )
+  }
 
-  return( 
-    // <Container textAlign='center' id='orders-window'>
+  return(
       <List textAlign='center' selection verticalAlign="middle">
         { !currentUser.admin ? 
           orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).map(order => {
@@ -37,7 +44,7 @@ const ProcessingOrders = ({ currentUser }) => {
             )
           })
           :
-          orders.filter( order => order.order_status === 'processing').map(order => {
+          allOrders.filter( order => order.order_status === 'processing').map(order => {
             return(
               <List.Item key={order.id} as='a'>
                 <Link to={`/orders/${order.id}`}>
@@ -50,7 +57,6 @@ const ProcessingOrders = ({ currentUser }) => {
           })
         }
       </List>
-    // </Container>
   )
 }
 

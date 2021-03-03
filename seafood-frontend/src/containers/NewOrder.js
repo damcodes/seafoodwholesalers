@@ -17,6 +17,7 @@ const NewOrder = () => {
   const [ currentOrder, setCurrentOrder ] = useState(null)
   const [ sort, setSort ] = useState(null)
   const [ searched, setSearched ] = useState(null)
+  const [ refresh, setRefresh ] = useState(2000)
 
   useEffect(() => {
     fetch('http://localhost:3001/current-user', {
@@ -50,6 +51,25 @@ const NewOrder = () => {
       setTotalCost(0)
     }
   }, [cart])
+
+  useEffect(() => {
+    if (refresh && refresh > 0) {
+      const interval = setInterval(fetchProducts, refresh)
+      return () => clearInterval(interval)
+    }
+  })
+
+  const fetchProducts = () => {
+    fetch('http://localhost:3001/products', {
+      method: "GET",
+      headers: {
+        "Content-type":"applicaton/json"
+        // "Authorization": localStorage.getItem("auth_key")
+      }
+    })
+    .then( res => res.json() )
+    .then( products => setItems(products) )
+  }
 
   const countDecimals = (val) => {
     if( Math.floor(val) === val ) return 0

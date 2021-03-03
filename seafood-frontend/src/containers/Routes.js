@@ -5,12 +5,26 @@ import Route from '../components/Route'
 const Routes = () => {
   
   const [ routes, setRoutes ] = useState([])
+  const [ refreshInterval, setRefreshInterval ] = useState(2000)
   
   useEffect(() => {
     fetch(`http://localhost:3001/routes`)
     .then( res => res.json() )
     .then( routes => setRoutes(routes) )
   }, [])
+
+  useEffect(() => {
+    if (refreshInterval && refreshInterval > 0) {
+      const interval = setInterval(fetchRoutes, refreshInterval)
+      return () => clearInterval(interval)
+    }
+  })
+
+  const fetchRoutes = () => {
+    fetch(`http://localhost:3001/routes`)
+    .then( res => res.json() )
+    .then( routes => setRoutes(routes) )
+  }
 
 
     return(

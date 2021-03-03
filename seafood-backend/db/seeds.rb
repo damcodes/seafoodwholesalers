@@ -14,23 +14,40 @@ north = Route.create(name: 'North')
 sfwRoute = Route.create(name: 'SFW')
 
 sfw = Company.create(name: "Seafood Wholesalers", address: "6060b Southwest Freeway, Houston, TX 77057", route_id: sfwRoute.id)
+
+# downtown
 f17 = Company.create(name: "Fiesta 17", address: "4200 San Jacinto St, Houston, TX 77004", route_id: dt.id)
+
+# north stores
 f9 = Company.create(name: "Fiesta 9", address: "10401 Jensen Dr, Houston, TX 77093", route_id: north.id )
-f47 = Company.create(name: "Fiesta 47", address: "1530 Independence Blvd, Missouri City, TX 77489", route_id: sugar.id)
-f8 = Company.create(name: "Fiesta 8", address: "2323 Wirt Rd, Houston, TX 77055", route_id: katy.id)
 f11 = Company.create(name: "Fiesta 11", address: "4711 Airline Dr, Houston, TX 77022", route_id: north.id)
+
+# sugarland stores
+f47 = Company.create(name: "Fiesta 47", address: "1530 Independence Blvd, Missouri City, TX 77489", route_id: sugar.id)
+
+# katy stores
+f8 = Company.create(name: "Fiesta 8", address: "2323 Wirt Rd, Houston, TX 77055", route_id: katy.id)
 f82 = Company.create(name: "Fiesta 82", address: "20331 Farm to Market Rd 529, Katy, TX 77449", route_id: katy.id)
 f66 = Company.create(name: "Fiesta 66", address: "333 Mason Rd, Katy, TX 77450", route_id: katy.id)
 
+# south stores
+f5 = Company.create(name: "Fiesta 5", address: '5600 Mykawa Rd, Houston, TX 77033', route_id: south.id)
+f4 = Company.create(name: "Fiesta 4", address: "1603 Spencer Hwy, South Houston, TX 77587", route_id: south.id)
+f201 = Company.create(name: "Fiesta 201", address: "2877 S Richey Richey St, Houston, TX 77017", route_id: south.id)
+
 david = User.create(first_name: "David", last_name: 'Molina', email: 'david@seafoodwholesalers.com', password: '123456', company: sfw, admin: true, role: 'management')
-ash = User.create(first_name: "Ash:", last_name: "Molina", email: "ash@email.com", password: '123456', company: sfw, admin: false, role: 'transportation')
+ash = User.create(first_name: "Ash", last_name: "Molina", email: "ash@email.com", password: '123456', company: sfw, admin: false, role: 'transportation')
 john = User.create(first_name: "John", last_name: "Doe", email: 'jdoe@email.com', password: '123456', company: f11, admin: false)
 letty = User.create(first_name: "Letty", last_name: 'Moreira', email: 'lmoreira@email.com', password: '123456', company: f17, admin: false)
 lily = User.create(first_name: "Lily", last_name: 'Cornelio', email: 'lcornelio@email.com', password: '123456', company: f9, admin: false)
 jorge = User.create(first_name: "Jorge", last_name: 'Molina', email: 'jmolina@email.com', password: '123456', company: f47, admin: false)
 jj = User.create(first_name: "JJ", last_name: 'Molina', email: 'jjmolina@email.com', password: '123456', company: f8, admin: false)
-letty = User.create(first_name: "Angela", last_name: 'Coppell', email: 'acoppell@email.com', password: '123456', company: f66, admin: false)
-letty = User.create(first_name: "Thomas", last_name: 'Coppell', email: 'tcoppell@email.com', password: '123456', company: f82, admin: false)
+angela = User.create(first_name: "Angela", last_name: 'Coppell', email: 'acoppell@email.com', password: '123456', company: f66, admin: false)
+thomas = User.create(first_name: "Thomas", last_name: 'Coppell', email: 'tcoppell@email.com', password: '123456', company: f82, admin: false)
+steph = User.create(first_name: "Stephanie", last_name: "De Leon", email: "sdeleon@email.com", password: '123456', company: f4, admin: false)
+ricky = User.create(first_name: "Ricky", last_name: "De Leon", email: "rdeleon@email.com", password: '123456', company: f5, admin: false)
+aldo = User.create(first_name: "Aldo", last_name: 'Mendoza', email: 'amendoza@email.com', password: '123456', company: f201, admin: false)
+
 
 p1 = Product.create(item_number: '005014C', description: '8/12 EZ Peel "Fish Tales"', price: 8.15, avail_weight: 100)
 p2 = Product.create(item_number: '005038', description: '26/30 EZ Peel FR White', price: 3.98)

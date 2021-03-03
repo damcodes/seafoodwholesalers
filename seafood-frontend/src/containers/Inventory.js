@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react' 
-import { Button, Checkbox, Icon, Table, Container, Input, Tab, Label, Grid } from 'semantic-ui-react'
+import { useState, useEffect, useRef } from 'react' 
+import { Button, Icon, Table, Container, Input, Header, Label, Grid } from 'semantic-ui-react'
 import InventoryLineItem from '../components/InventoryLineItem'
 
 const Inventory = () => {
@@ -7,7 +7,9 @@ const Inventory = () => {
   const [ items, setItems ] = useState([])
   const [ sort, setSort ] = useState('')
   const [ searched, setSearched ] = useState('')
-  const [ processedItems, setProcessed ] = useState([])
+  const [ processedItems, setProcessedItems ] = useState([])
+  const [ refresh, setRefresh ] = useState(500)
+  const prevSearched = usePrevious(searched)
 
   useEffect(() => {
     fetch('http://localhost:3001/products', {
@@ -22,38 +24,83 @@ const Inventory = () => {
   }, [])
 
   useEffect(() => {
-    if (sort !== '' && searched !== '') {
-      items.filter( item => item.description.includes(searched) )
-      .sort( (a, b) => {
-        let op 
-        if (sort === 'Weight') {
-          op = b.avail_weight - a.avail_weight
-        } else if (sort === 'Price') {
-          op = b.price - a.price
-        } else if (sort === 'Name') {
-          op = a.description.localeCompare(b.description)
-        }
-        return op 
-      })
-    } else if (sort === '' && searched !== '') {
-      items.filter( item => item.description.includes(searched) )
-    } else if (sort !== '' && searched === '') {
-      items.sort( (a, b) => {
-        let op 
-        if (sort === 'Weight') {
-          op = b.avail_weight - a.avail_weight
-        } else if (sort === 'Price') {
-          op = b.price - a.price
-        } else if (sort === 'Name') {
-          op = a.description.localeCompare(b.description)
-        }
-        return op 
-      })
-    } else {
-      items.sort( (a,b) => b.active - a.active)
+    if (refresh && refresh > 0 && (sort !== '' || searched !== '')) {
+      const interval = setInterval(fetchProducts, refresh)
+      return () => clearInterval(interval)
     }
-    setProcessed(items)
-  }, [ sort, searched, items ])
+  })
+
+  useEffect(() => {
+    let processed
+    if (sort !== '' && searched !== '') {
+      processed = items.filter( item => {
+        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
+        // debugger
+        // const descriptionWords = item.description.split(' ')
+        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
+          // debugger
+          return true
+        } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
+          // debugger
+          if (item.description.includes(searched)) return true
+        } //else if () {
+        //   debugger
+        //   return true 
+        // }
+        return false
+        }).sort( (a, b) => {
+          let op 
+          if (sort === 'Weight') {
+            op = b.avail_weight - a.avail_weight
+          } else if (sort === 'Price') {
+            op = b.price - a.price
+          } else if (sort === 'Name') {
+            op = a.description.localeCompare(b.description)
+          }
+          return op 
+        })
+    } else if (sort === '' && searched !== '') {
+      // debugger
+      processed = items.filter( item => {
+        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
+        // debugger
+        // const descriptionWords = item.description.split(' ')
+        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
+          // debugger
+          return true
+        } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
+          // debugger
+          if (item.description.includes(searched)) return true
+        } //else if () {
+        //   debugger
+        //   return true 
+        // }
+        return false
+      })
+    } else if (sort !== '' && searched === '') {
+      processed = items.sort( (a, b) => {
+        let op 
+        if (sort === 'Weight') {
+          op = b.avail_weight - a.avail_weight
+        } else if (sort === 'Price') {
+          op = b.price - a.price
+        } else if (sort === 'Name') {
+          op = a.description.localeCompare(b.description)
+        }
+        return op 
+      })
+    } 
+    // debugger
+    return processed ? setProcessedItems(processed) : setProcessedItems([])
+  }, [ sort, searched ])
+
+  function usePrevious(value) {
+    const ref = useRef()
+    useEffect(() => {
+      ref.current = value
+    })
+    return ref.current
+  }
 
   const newItem = () => {
     fetch(`http://localhost:3001/products`, {
@@ -91,36 +138,46 @@ const Inventory = () => {
     })
   }
 
+  const fetchProducts = () => {
+    fetch('http://localhost:3001/products', {
+      method: "GET",
+      headers: {
+        "Content-type":"applicaton/json"
+        // "Authorization": localStorage.getItem("auth_key")
+      }
+    })
+    .then( res => res.json() )
+    .then( products => setItems(products) )
+  }
+
+
+
   return( 
     <Container>
       <Grid>
         <Grid.Row columns={2}>
           <Grid.Column textAlign='left'>
-            {/* <Segment > */}
-              <Label>
-                Sort By: 
-              </Label>
-              <select onChange={(e) => setSort(e.target.value)}>
-                <option></option>
-                <option>Weight</option>
-                <option>Price</option>
-                <option>Name</option>
-              </select>
-            {/* </Segment> */}
-            { sort === 'Weight' || sort === 'Price' ?
-              <div>
-                <Button positive><Icon name='sort amount up' /></Button>
-                <Button positive><Icon name='sort amount down' /></Button>
-              </div>
-              : 
-              null  
-            }
+            <Label>
+              Sort By: 
+            </Label>
+            <select onChange={(e) => setSort(e.target.value)}>
+              <option></option>
+              <option>Weight</option>
+              <option>Price</option>
+              <option>Name</option>
+            </select>
+          { sort === 'Weight' || sort === 'Price' ?
+            <div>
+              <Button positive><Icon name='sort amount up' /></Button>
+              <Button positive><Icon name='sort amount down' /></Button>
+            </div>
+            : 
+            null  
+          }
           </Grid.Column>
 
           <Grid.Column textAlign='right'>
-            {/* <Segment> */}
-              <Input icon='search' placeholder='Search...' onChange={e => setSearched(e.target.value)}/>
-            {/* </Segment> */}
+            <Input icon='search' placeholder='Search...' onChange={e => setSearched(e.target.value)}/>
           </Grid.Column>
         </Grid.Row>
       </Grid> 
@@ -137,82 +194,33 @@ const Inventory = () => {
         </Table.Header>
 
         <Table.Body>
-          {/* { searched !== '' && sort !== '' ? 
-            items.filter( item => item.description.includes(searched) )
-            .sort( (a, b) => {
-              let op 
-              if (sort === 'Weight') {
-                op = b.avail_weight - a.avail_weight
-              } else if (sort === 'Price') {
-                op = b.price - a.price
-              } else if (sort === 'Name') {
-                op = a.description.localeCompare(b.description)
-              }
-              return op 
-            })
-            .map(item => {
-              return(
-                <InventoryLineItem 
-                  key={item.id} 
-                  item={item}
-                  deleteItem={deleteItem}
-                />
-              )
-            })
-            :
-            searched !== '' && sort === '' ? 
-            items.filter( item => item.description.includes(searched) )
-            .map( item => {
-              return(
-                <InventoryLineItem 
-                  key={item.id} 
-                  item={item}
-                  deleteItem={deleteItem}
-                />
-              )
-            })
-            : 
-            items.sort( (a,b) => {
-              let op 
-              if (sort === 'Weight') {
-                op = b.avail_weight - a.avail_weight
-              } else if (sort === 'Price') {
-                op = b.price - a.price 
-              } else if (sort === 'Name') {
-                op = a.description.localeCompare(b.description)
-              }
-              return op
-            })
-            .map( item => {
-              return(
-                <InventoryLineItem 
-                  key={item.id} 
-                  item={item}
-                  deleteItem={deleteItem}
-                />
-              )
-            })
-          } */}
           { processedItems.length > 0 ? 
             processedItems.map( item => {
               return(
-                <InventoryLineItem
-                 key={item.id}
-                 item={item}
-                 deleteItem={deleteItem}
-                />
-              )
-            })
-          :
-            items.map( item => {
-              return( 
                 <InventoryLineItem
                   key={item.id}
                   item={item}
                   deleteItem={deleteItem}
                 />
               )
-            }) 
+            })
+          :
+            searched !== '' ?
+              <Table.Row>
+                <Table.Cell colSpan='6'>
+                  <Header textAlign='center' as='h3'>No Item Found</Header>
+                </Table.Cell>
+              </Table.Row>
+            :
+              items.sort((a,b) => b.active - a.active).map( item => {
+                return( 
+                  <InventoryLineItem
+                    key={item.id}
+                    item={item}
+                    deleteItem={deleteItem}
+                  />
+                )
+              }) 
           }
         </Table.Body>
 

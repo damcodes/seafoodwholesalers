@@ -14,6 +14,7 @@ function Profile() {
   const [ orders, setOrders ] = useState([])
   // const [ admin, setAdmin ] = useState(currentUser ? currentUser.admin : null )
   const [ currentUser, setUser ] = useState({})
+  const [ refreshInterval, setRefreshInterval ] = useState(2000)
 
   useEffect(() => {
     const auth = localStorage.getItem("auth_key")
@@ -31,6 +32,13 @@ function Profile() {
     })
   }, [])
 
+  useEffect(() => {
+    if (refreshInterval && refreshInterval > 0) {
+      const interval = setInterval(fetchData, refreshInterval)
+      return () => clearInterval(interval)
+    }
+  })
+
   // const ifAdmin = () => {
   //   if (currentUser && currentUser.admin ) {
   //     return(
@@ -42,6 +50,22 @@ function Profile() {
   //     ) 
   //   }
   // }
+
+  const fetchData = () => {
+    const auth = localStorage.getItem("auth_key")
+    fetch('http://localhost:3001/current-user', {
+      method: "GET", 
+      headers: {
+        "Content-type":"application/json",
+        "Authorization": auth
+      }
+    })
+    .then( res => res.json() )
+    .then( user => {
+      setUser(user)
+      setOrders(user.orders) 
+    })
+  }
 
 
   return(
@@ -61,7 +85,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Being Processed</Header>
-              <ProcessingOrders currentUser={currentUser}/>
+              <ProcessingOrders currentUser={currentUser} orders={orders}/>
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -70,7 +94,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Ready for Routing</Header>
-              <CompletedOrders currentUser={currentUser} />
+              <CompletedOrders currentUser={currentUser} orders={orders}/>
             </Segment>
           </Grid.Column>
 
@@ -92,7 +116,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Orders By Date</Header>
-              <DailyOrders currentUser={currentUser} />
+              <DailyOrders currentUser={currentUser} orders={orders}/>
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -110,7 +134,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>In Processing</Header>
-              <ProcessingOrders currentUser={currentUser} />
+              <ProcessingOrders currentUser={currentUser} orders={orders}/>
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -126,7 +150,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Being Routed</Header>
-              <CompletedOrders currentUser={currentUser} />
+              <CompletedOrders currentUser={currentUser} orders={orders}/>
             </Segment>
           </Grid.Column>
 

@@ -6,6 +6,7 @@ import { Header, Container, Segment, Icon, List } from 'semantic-ui-react'
 const IncomingOrders = () => {
 
   const [ orders, setOrders ] = useState([])
+  const [ refresh, setRefresh ] = useState(2000)
 
   useEffect(() => {
     fetch(`http://localhost:3001/orders`, {
@@ -18,6 +19,25 @@ const IncomingOrders = () => {
     .then( res => res.json() )
     .then( orders => setOrders(orders) )
   }, [])
+
+  useEffect(() => {
+    if (refresh && refresh > 0) {
+      const interval = setInterval(fetchOrders, refresh)
+      return () => clearInterval(interval)
+    }
+  })
+
+  const fetchOrders = () => {
+    fetch(`http://localhost:3001/orders`, {
+      method: "GET",
+      headers: {
+        "Content-type":"application/json",
+        "Authorization":localStorage.getItem("auth_key")
+      }
+    })
+    .then( res => res.json() )
+    .then( orders => setOrders(orders) )
+  }
 
   return( 
     // <Container textAlign='center' id='orders-window'>
