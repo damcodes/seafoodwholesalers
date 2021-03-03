@@ -1,0 +1,116 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#orders-window {
+  text-align: left;
+  padding: 5px;
+  border-radius: 10px;
+  /* display: inline-block; */
+  width: auto;
+  float: left;
+}
+
+#logging-out-message {
+  font-size: 25px;
+}
+
+#logout-choice {
+  text-align: center;
+}
+
+/* #new-order {
+  border: 2px solid black;
+} */
+
+.logout-options {
+  color: white;
+}
+
+#new-order-price, #new-order-weight, #weight-ordered {
+  text-align: right;
+}
+
+#new-order-price-header, #new-order-weight-header, #weight-ordered-header {
+  text-align: right;
+}
+
+#submit-order-footer {
+  text-align: center;
+}
+
+.line-item-total {
+  background-color:#F5F5F5;
+}
+
+#total-price-footer {
+  background-color: #F5F5F5;
+  text-align: right;
+  font-style: bold;
+}
+
+#changed-weight-header, #changed-weight {
+  text-align: center;
+}
+
+#inventory-price, #inventory-price-header {
+  text-align: right;
+}
+
+#delete-product-btn {
+  background-color: rgb(246, 244, 244);
+}
+
+#order-conf-total-price {
+  font-weight: bolder;
+  font-size: 25px;
+}
+
+.order-info {
+  font-family: 'Papyrus', 'Copperplate', fantasy;
+}
+
+.route-headers {
+  text-decoration: underline;
+}
+#item-num-sort-icon, #item-sort-icon {
+  float: right;
+}
+#item-weight-sort-icon {
+  float: left;
+}
