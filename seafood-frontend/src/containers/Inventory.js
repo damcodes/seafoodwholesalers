@@ -6,6 +6,7 @@ const Inventory = () => {
 
   const [ items, setItems ] = useState([])
   const [ sort, setSort ] = useState('')
+  const [ sortedUp, setSortedUp ] = useState(false)
   const [ searched, setSearched ] = useState('')
   const [ processedItems, setProcessedItems ] = useState([])
   const [ refresh, setRefresh ] = useState(500)
@@ -51,9 +52,17 @@ const Inventory = () => {
         }).sort( (a, b) => {
           let op 
           if (sort === 'Weight') {
-            op = b.avail_weight - a.avail_weight
+            if (!sortedUp) {
+              op = b.avail_weight - a.avail_weight
+            } else {
+              op = a.avail_weight - b.avail_weight
+            }
           } else if (sort === 'Price') {
-            op = b.price - a.price
+            if (!sortedUp) {
+              op = b.price - a.price
+            } else {
+              op = a.price - b.price
+            }
           } else if (sort === 'Name') {
             op = a.description.localeCompare(b.description)
           }
@@ -81,9 +90,17 @@ const Inventory = () => {
       processed = items.sort( (a, b) => {
         let op 
         if (sort === 'Weight') {
-          op = b.avail_weight - a.avail_weight
+          if (!sortedUp) {
+            op = b.avail_weight - a.avail_weight
+          } else {
+            op = a.avail_weight - b.avail_weight
+          }
         } else if (sort === 'Price') {
-          op = b.price - a.price
+          if (!sortedUp) {
+            op = b.price - a.price
+          } else {
+            op = a.price - b.price
+          }
         } else if (sort === 'Name') {
           op = a.description.localeCompare(b.description)
         }
@@ -92,7 +109,7 @@ const Inventory = () => {
     } 
     // debugger
     return processed ? setProcessedItems(processed) : setProcessedItems([])
-  }, [ sort, searched ])
+  }, [ sort, searched, items, prevSearched ])
 
   function usePrevious(value) {
     const ref = useRef()
@@ -150,8 +167,6 @@ const Inventory = () => {
     .then( products => setItems(products) )
   }
 
-
-
   return( 
     <Container>
       <Grid>
@@ -168,8 +183,9 @@ const Inventory = () => {
             </select>
           { sort === 'Weight' || sort === 'Price' ?
             <div>
-              <Button positive><Icon name='sort amount up' /></Button>
-              <Button positive><Icon name='sort amount down' /></Button>
+              <Button positive={sortedUp} onClick={() => setSortedUp(!sortedUp)} ><Icon name='sort amount up' /></Button>
+
+              <Button positive={!sortedUp} onClick={() => setSortedUp(!sortedUp)} ><Icon name='sort amount down' /></Button>
             </div>
             : 
             null  
