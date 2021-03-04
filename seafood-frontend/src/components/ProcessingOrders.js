@@ -35,7 +35,6 @@ const ProcessingOrders = ({ orders, currentUser }) => {
             return(
               <List.Item key={order.id} as='a'>
                 <Link to={`/orders/${order.id}`}>
-                  {/* <Icon name='angle double right' /> */}
                   <List.Content >
                     <List.Header >{`#${order.order_number}`}</List.Header>
                   </List.Content>

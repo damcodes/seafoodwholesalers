@@ -114,3 +114,9 @@
 #item-weight-sort-icon {
   float: left;
 }
+.order-route-card {
+  max-height: 150px;
+  overflow-x: auto;
+}
+.profile-routes-row {
+}

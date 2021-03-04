@@ -5,6 +5,7 @@ import { Header, Container, Segment, Icon, List } from 'semantic-ui-react'
 
 const CompletedOrders = ({ orders, currentUser }) => {
 
+  const [ incomingOrders, setIncomingOrders ] = useState([])
   const [ allOrders, setAllOrders ] = useState([])
   // const [ user, setUser ] = useState(currentUser)
   const [ refresh, setRefresh ] = useState(2000)
@@ -42,7 +43,8 @@ const CompletedOrders = ({ orders, currentUser }) => {
 
   return( 
     // <Container textAlign='center' id='orders-window'>
-      <List textAlign='center' selection verticalAlign="middle">
+      incomingOrders.length > 0 || allOrders.length > 0 ?
+      <List className='order-route-card' textAlign='center' selection verticalAlign="middle">
         { !currentUser.admin ? 
           orders.filter( order => order.order_status === 'completed' && order.user_id === currentUser.id).map(order => {
             return(
@@ -69,7 +71,8 @@ const CompletedOrders = ({ orders, currentUser }) => {
           })
         }
       </List>
-    // </Container>
+      :
+      <Header as='h4'><Icon name='spinner'/>Loading Orders...</Header>
   )
 }
 

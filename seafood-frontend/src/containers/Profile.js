@@ -74,9 +74,9 @@ function Profile() {
       <br/>
       { currentUser.admin ?
       <Grid centered={true}>
-        <Grid.Row id='new-order' columns={2}>
+        <Grid.Row id='new-order' columns={2} >
           <Grid.Column>
-            <Segment textAlign='center'>
+            <Segment  textAlign='center'>
               <Header as='h2' textAlign='center'>Incoming Orders</Header>
               <IncomingOrders />
             </Segment>
@@ -99,7 +99,7 @@ function Profile() {
           </Grid.Column>
 
           <Grid.Column>
-            <Segment textAlign='center'>
+            <Segment className='order-route-card' textAlign='center'>
               <Header as='h2' textAlign='center'>Routes</Header>
             </Segment>
           </Grid.Column>
@@ -107,14 +107,14 @@ function Profile() {
 
         <Grid.Row columns={3}>
           <Grid.Column>
-              <Segment textAlign='center'>
+              <Segment className='order-route-card' textAlign='center'>
                 <Header as='h2' textAlign='center'>Your Orders</Header>
                 <OrdersWindow orders={orders} currentUser={currentUser} />
               </Segment>
           </Grid.Column>
 
           <Grid.Column>
-            <Segment textAlign='center'>
+            <Segment className='order-route-card' textAlign='center'>
               <Header as='h2' textAlign='center'>Orders By Date</Header>
               <DailyOrders currentUser={currentUser} orders={orders}/>
             </Segment>

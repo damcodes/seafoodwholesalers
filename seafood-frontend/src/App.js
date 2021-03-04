@@ -57,6 +57,7 @@ function App() {
         </Switch>
         {/* { loggedIn ? <Redirect to='/profile' /> : <Redirect to='/login' /> } */}
       </Router>
+      
     </div>
   );
 }
