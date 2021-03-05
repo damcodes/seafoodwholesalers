@@ -1,17 +1,34 @@
 import React, { useState, useEffect } from 'react'
-import { Button } from 'semantic-ui-react'
+import { Button, Header } from 'semantic-ui-react'
 import Login from '../components/Login'
 import Signup from '../components/Signup'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 
-function LoginSignup({ setUser, logIn, isLoggedIn }) {
+function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
 
-  const [loginState, setLoginState] = useState(true)
-  const [loggedIn, setLoggedIn] = useState(isLoggedIn)
+  const [ loginState, setLoginState ] = useState(true)
+  const [ loggedIn, setLoggedIn ] = useState(isLoggedIn)
+  // const [ error, setError ] = useState(null)
+  const history = useHistory()
 
   const isBlank = (str) => {
     return (!str || /^\s*$/.test(str));
   }
+
+  const handleResponse = res => {
+    return res.json()
+    .then(json => {
+      if (!res.ok) {
+        const err = Object.assign({}, json, {
+          status: res.status,
+          statusText: res.statusText
+        })
+        return Promise.reject(err)
+      }
+      return json 
+    })
+  }
+
 
   const login = (e, email, password) => {
     e.preventDefault()
@@ -20,7 +37,7 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
       return
     }
     logIn(loggedIn)
-    setLoggedIn(true)
+    // setLoggedIn(true)
     fetch('http://localhost:3001/login', {
       method: "POST",
       headers: { "Content-type":"application/json" },
@@ -31,13 +48,19 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
         }
       })
     })
-    .then( res => res.json() )
+    .then( res => handleResponse(res) )
     .then( data => {
+      setLoggedIn(true)
       const newUser = JSON.parse(data.user)
       localStorage.setItem('auth_key', data['jwt'])
       // logIn(loggedIn)
       // setLoggedIn(true)
       setUser(newUser)
+      setError(null)
+    })
+    .catch(err => {
+      setError(err.message)
+      console.log(err.message)
     })
   }
   
@@ -70,13 +93,17 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
     }) 
   }
 
-  const buttonText = loginState ? "Don't have an account? Sign Up." : "Already have an account? Login."
+  const buttonText = loginState ? "Don't have an account? Sign Up!" : "Already have an account? Login!"
 
   return(
     <div>
+      { error && error.length > 0 && loginState ? <Header id='login-error-handling' as='h4'>{error}</Header> : null }
       { loggedIn ? <Redirect to='/profile' /> : null }
       { loginState ? <Login login={login} /> : <Signup signup={signup} /> }
-      <Button onClick={() => setLoginState(!loginState)}>{buttonText}</Button>
+      <Button onClick={() => {
+          setLoginState(!loginState) 
+          // setError(null)
+        }}>{buttonText}</Button>
     </div>
   )
 }

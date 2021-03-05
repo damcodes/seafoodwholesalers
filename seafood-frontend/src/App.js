@@ -18,6 +18,7 @@ function App() {
 
   const [ loggedIn, setLoggedIn ] = useState(localStorage.getItem('auth_key') ? true : false)
   const [ user, setUser ] = useState(null)
+  const [ error, setError ] = useState(null)
 
   useEffect(() => {
     if ( localStorage.getItem('auth_key')) {
@@ -45,7 +46,7 @@ function App() {
         <NavBar user={user} logIn={setLoggedIn} />
         <Switch>
           <Route exact path='/inventory' component={user ? Inventory : null} />
-          <Route exact path='/login' component={() => <LoginSignup isloggedIn={loggedIn} setUser={user => setUser(user)} logIn={bool => setLoggedIn(bool)}/>} />
+          <Route exact path='/login' component={() => <LoginSignup error={error} setError={setError} isloggedIn={loggedIn} setUser={user => setUser(user)} logIn={bool => setLoggedIn(bool)}/>} />
           <Route exact path='/logout' component={() => <Logout setUser={user => setUser(user)} />} />
           <Route exact path='/home' component={Home} />
           <Route exact path='/about' component={About} />
