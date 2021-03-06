@@ -18,7 +18,7 @@ class UsersController < ApplicationController
   def create
     company = Company.find_by(name: user_params[:company])
     @user = User.new(first_name: user_params[:first_name], last_name: user_params[:last_name], 
-                      email: user_params[:email], password: user_params[:password], company: company)
+                      email: user_params[:email], password: user_params[:password], company: company, password_confirmation: user_params[:password_confirmation])
 
     if @user.save
       token = encode_token(user_id: @user.id)
@@ -55,6 +55,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :company, :password, :admin)
+      params.require(:user).permit(:first_name, :last_name, :email, :company, :password, :password_confirmation, :admin)
     end
 end

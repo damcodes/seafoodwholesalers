@@ -6,7 +6,7 @@ import { Redirect, useHistory } from 'react-router-dom'
 
 function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
 
-  const [ loginState, setLoginState ] = useState(true)
+  const [ loginState, setLoginState ] = useState(error ? error.login ? true : false : true )
   const [ loggedIn, setLoggedIn ] = useState(isLoggedIn)
   // const [ error, setError ] = useState(null)
   const history = useHistory()
@@ -59,12 +59,12 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
       setError(null)
     })
     .catch(err => {
-      setError(err.message)
+      setError(Object.assign({}, {login: err}))
       console.log(err.message)
     })
   }
   
-  const signup = (e, firstName, lastName, email, password, company) => {
+  const signup = (e, firstName, lastName, email, password, passwordConf, company) => {
     e.preventDefault()
     if (isBlank(firstName) || isBlank(lastName) || isBlank(email) || isBlank(password) || company === 'none') {
       alert('All fields are required')
@@ -80,29 +80,37 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
           last_name: lastName,
           email: email,
           password: password,
+          password_confirmation: passwordConf,
           company: company
         }
       })
     })
-    .then( res => res.json() )
+    .then( res => handleResponse(res) )
     .then( data => {
-      localStorage.setItem('auth_key', data['jwt'])
-      logIn(loggedIn)
       setLoggedIn(true)
-      setUser(JSON.parse(data.user))
+      const newUser = JSON.parse(data.user)
+      localStorage.setItem('auth_key', data['jwt'])
+      // logIn(loggedIn)
+      setUser(newUser)
+      setError(null)
     }) 
+    .catch( err => {
+      console.log(err)
+      setError(Object.assign({}, {signup: err}))
+      debugger
+    })
   }
 
   const buttonText = loginState ? "Don't have an account? Sign Up!" : "Already have an account? Login!"
 
   return(
     <div>
-      { error && error.length > 0 && loginState ? <Header id='login-error-handling' as='h4'>{error}</Header> : null }
+      {/* { error && error.length > 0 ? <Header id='login-error-handling' as='h4'>{error}</Header> : null } */}
       { loggedIn ? <Redirect to='/profile' /> : null }
-      { loginState ? <Login login={login} /> : <Signup signup={signup} /> }
+      { loginState ? <Login error={error} login={login} /> : <Signup error={error} signup={signup} /> }
       <Button onClick={() => {
-          setLoginState(!loginState) 
           // setError(null)
+          setLoginState(!loginState)
         }}>{buttonText}</Button>
     </div>
   )
