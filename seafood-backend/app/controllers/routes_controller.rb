@@ -7,4 +7,16 @@ class RoutesController < ApplicationController
     render json: RouteSerializer.new(@routes).serialize
   end
 
+  def show
+    @route = Route.find_by(id: params[:id])
+
+    render json: RouteSerializer.new(@route).serialize
+  end
+
+  
+  private
+  def route_params 
+    params.require(:route).permit(:id)
+  end
+
 end
