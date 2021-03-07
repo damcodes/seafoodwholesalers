@@ -1,5 +1,6 @@
 import { Grid, Container, Header, Icon } from 'semantic-ui-react'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Route from '../components/Route'
 
 const Routes = () => {

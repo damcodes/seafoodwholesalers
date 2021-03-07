@@ -7,7 +7,7 @@ class RouteSerializer
     options = {
       include: {
         orders: {
-          except: [ :created_at, :updated_at]
+          
         }, 
         companies: {
           except: [ :created_at, :updated_at ]

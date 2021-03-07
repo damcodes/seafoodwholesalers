@@ -34,6 +34,9 @@ f66 = Company.create(name: "Fiesta 66", address: "333 Mason Rd, Katy, TX 77450",
 f5 = Company.create(name: "Fiesta 5", address: '5600 Mykawa Rd, Houston, TX 77033', route_id: south.id)
 f4 = Company.create(name: "Fiesta 4", address: "1603 Spencer Hwy, South Houston, TX 77587", route_id: south.id)
 f201 = Company.create(name: "Fiesta 201", address: "2877 S Richey Richey St, Houston, TX 77017", route_id: south.id)
+f18 = Company.create(name: 'Fiesta 18', address: '8130 Kirby Dr, Houston, TX 77054', route_id: south.id)
+f51 = Company.create(name: 'Fiesta 51', address: '9420 Cullen Blvd, Houston, TX 77051', route_id: south.id)
+f3 = Company.create(name: 'Fiesta 3', address: '800 S Wayside Dr, Houston, TX 77023', route_id: south.id)
 
 david = User.create(first_name: "David", last_name: 'Molina', email: 'david@seafoodwholesalers.com', password: '123456', company: sfw, admin: true, role: 'management')
 ash = User.create(first_name: "Ash", last_name: "Molina", email: "ash@email.com", password: '123456', company: sfw, admin: false, role: 'transportation')

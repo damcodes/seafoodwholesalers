@@ -42,7 +42,7 @@ const IncomingOrders = () => {
   return( 
     // <Container textAlign='center' id='orders-window'>
       orders.length > 0 ? 
-      <List className='order-route-card' textAlign='center' selection verticalAlign="middle">
+      <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
         { orders.filter( order => order.order_status === 'pending').map(order => {
             return(
               <List.Item key={order.id} as='a'>

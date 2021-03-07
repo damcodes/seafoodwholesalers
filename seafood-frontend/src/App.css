@@ -114,10 +114,27 @@
 #item-weight-sort-icon {
   float: left;
 }
-.order-route-card {
+.order-card-list {
   max-height: 150px;
+  overflow-x: auto;
+}
+.route-card-list {
+  max-height: 300px;
+  overflow-x: auto;
+}
+.route-card-segment {
+  height: 200px;
   overflow-x: auto;
 }
 #login-error-handling {
   color: rgb(219, 6, 6);
+}
+#route-by-id-card {
+  height: 700px;
+  width: 800px;
+  left: -90px;
+}
+#route-show-card-segment {
+  height: 670px;
+  overflow-x: auto;
 }

@@ -44,7 +44,7 @@ const CompletedOrders = ({ orders, currentUser }) => {
   return( 
     // <Container textAlign='center' id='orders-window'>
       incomingOrders.length > 0 || allOrders.length > 0 ?
-      <List className='order-route-card' textAlign='center' selection verticalAlign="middle">
+      <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
         { !currentUser.admin ? 
           orders.filter( order => order.order_status === 'completed' && order.user_id === currentUser.id).map(order => {
             return(

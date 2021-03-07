@@ -10,7 +10,7 @@ const OrdersWindow = ({ orders, currentUser }) => {
   return( 
     // <Container textAlign='center' id='orders-window'>
       // <Header textAlign='center' as='h2' >Your Orders</Header>
-      <List textAlign='center' selection verticalAlign="middle">
+      <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
         { orders.filter( order => order.order_status !== 'completed').map(order => {
             return(
               <List.Item key={order.id} as='a'>

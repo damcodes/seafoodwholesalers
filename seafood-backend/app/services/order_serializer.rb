@@ -12,8 +12,7 @@ class OrderSerializer
         user: {
           except: [ :created_at, :updated_at, :password_digest ]
         }
-      }, 
-      except: [ :updated_at ]
+      }
     }
     @order.to_json(options)
   end

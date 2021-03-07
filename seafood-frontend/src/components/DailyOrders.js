@@ -29,7 +29,7 @@ const DailyOrders = () => {
     // debugger
     const filtered = orders.filter( order => order.created_at.slice(0,10) === date)
     return(
-      <List selection verticalAlign="middle">
+      <List className='order-card-list' selection verticalAlign="middle">
         { filtered.length > 0 ? 
         filtered.map( order => {
           return(

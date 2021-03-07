@@ -93,13 +93,13 @@ function Profile() {
         <Grid.Row columns={2}>
           <Grid.Column>
             <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Ready for Routing</Header>
+              <Header as='h2' textAlign='center'>Completed Orders</Header>
               <CompletedOrders currentUser={currentUser} orders={orders}/>
             </Segment>
           </Grid.Column>
 
           <Grid.Column>
-            <Segment className='order-route-card' textAlign='center'>
+            <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Routes</Header>
             </Segment>
           </Grid.Column>
@@ -107,7 +107,7 @@ function Profile() {
 
         <Grid.Row columns={3}>
           <Grid.Column>
-              <Segment className='order-route-card' textAlign='center'>
+              <Segment textAlign='center'>
                 <Header as='h2' textAlign='center'>Your Orders</Header>
                 <OrdersWindow orders={orders} currentUser={currentUser} />
               </Segment>

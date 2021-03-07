@@ -29,7 +29,7 @@ const ProcessingOrders = ({ orders, currentUser }) => {
   }
 
   return(
-      <List textAlign='center' selection verticalAlign="middle">
+      <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
         { !currentUser.admin ? 
           orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).map(order => {
             return(
