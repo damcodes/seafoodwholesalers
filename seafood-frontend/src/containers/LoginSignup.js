@@ -6,10 +6,12 @@ import { Redirect, useHistory } from 'react-router-dom'
 
 function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
 
-  const [ loginState, setLoginState ] = useState(true)
+  const [ loginState, setLoginState ] = useState(error ? error.login ? true : false : true )
   const [ loggedIn, setLoggedIn ] = useState(isLoggedIn)
+  const [ loginError, setLoginError ] = useState(null)
+  const [ signupError, setSignupError ] = useState(null)
   // const [ error, setError ] = useState(null)
-  const history = useHistory()
+  // const history = useHistory()
 
   const isBlank = (str) => {
     return (!str || /^\s*$/.test(str));
@@ -28,7 +30,6 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
       return json 
     })
   }
-
 
   const login = (e, email, password) => {
     e.preventDefault()
@@ -59,12 +60,12 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
       setError(null)
     })
     .catch(err => {
-      setError(err.message)
+      setLoginError(err)
       console.log(err.message)
     })
   }
   
-  const signup = (e, firstName, lastName, email, password, company) => {
+  const signup = (e, firstName, lastName, email, password, passwordConf, company) => {
     e.preventDefault()
     if (isBlank(firstName) || isBlank(lastName) || isBlank(email) || isBlank(password) || company === 'none') {
       alert('All fields are required')
@@ -80,29 +81,43 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
           last_name: lastName,
           email: email,
           password: password,
+          password_confirmation: passwordConf,
           company: company
         }
       })
     })
-    .then( res => res.json() )
+    .then( res => handleResponse(res) )
     .then( data => {
-      localStorage.setItem('auth_key', data['jwt'])
-      logIn(loggedIn)
       setLoggedIn(true)
-      setUser(JSON.parse(data.user))
+      const newUser = JSON.parse(data.user)
+      localStorage.setItem('auth_key', data['jwt'])
+      // logIn(loggedIn)
+      setUser(newUser)
+      setError(null)
     }) 
+    .catch( err => {
+      console.log(err)
+      setSignupError(err)
+    })
   }
 
   const buttonText = loginState ? "Don't have an account? Sign Up!" : "Already have an account? Login!"
 
   return(
     <div>
-      { error && error.length > 0 && loginState ? <Header id='login-error-handling' as='h4'>{error}</Header> : null }
+      {/* { error && error.length > 0 ? <Header id='login-error-handling' as='h4'>{error}</Header> : null } */}
       { loggedIn ? <Redirect to='/profile' /> : null }
-      { loginState ? <Login login={login} /> : <Signup signup={signup} /> }
+      { loginState ? <Login loginError={loginError ? loginError : null} login={login} /> : <Signup signupError={signupError ? signupError : null} signup={signup} /> }
       <Button onClick={() => {
-          setLoginState(!loginState) 
           // setError(null)
+          if (loginState && loginError) {
+            setLoginError(null)
+          }
+          if (!loginState && signupError) {
+            setSignupError(null)
+          }
+          setLoginState(!loginState)
+          
         }}>{buttonText}</Button>
     </div>
   )

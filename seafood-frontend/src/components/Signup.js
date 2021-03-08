@@ -1,25 +1,34 @@
 import { Segment, Form, Button } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
+import Errors from './Errors'
 
-function Signup({ signup }) {
+function Signup({ signup, signupError }) {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConf, setPasswordConf] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [company, setCompany] = useState('')
   const [companies, setCompanies] = useState([])
+  const [ errors, setErrors ] = useState(null)
 
-  useEffect(async () => {
-    const response = await fetch('http://localhost:3001/companies')
-    const data = await response.json()
-    setCompanies(data)
+  useEffect(() => {
+    fetch('http://localhost:3001/companies', {
+      method: "GET",
+      headers: {
+        "Content-type":"application/json"
+      }
+    })
+    .then( res => res.json() )
+    .then( companies => setCompanies(companies))
   }, [])
 
   return(
     <Segment>
+      { signupError ? <Errors signupError={signupError} /> : null }
       <h1>Sign Up</h1>
-      <Form onSubmit={e => signup(e, firstName, lastName, email, password, company)}>
+      <Form onSubmit={e => signup(e, firstName, lastName, email, password, passwordConf, company)}>
         <Form.Field>
           <input onChange={e => setFirstName(e.target.value)} placeholder="First Name" />
         </Form.Field>
@@ -31,6 +40,9 @@ function Signup({ signup }) {
         </Form.Field>
         <Form.Field>
           <input onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" />
+        </Form.Field>
+        <Form.Field>
+          <input onChange={e => setPasswordConf(e.target.value)} type="password" placeholder="Confirm Password" />
         </Form.Field>
         <Form.Field>
           <label>Company</label>
