@@ -2,24 +2,18 @@ import React, { useState } from 'react'
 import { input, Menu } from 'semantic-ui-react'
 import { NavLink, withRouter } from 'react-router-dom'
 
-const NavBar = ({ user, setUser }) => {
+const NavBar = ({ user }) => {
   const [ activeItem, setActiveItem ] = useState(null)
-  const [ loggedIn, setLoggedIn ] = useState(false)
 
   const handleItemClick = (e, { name }) => {
     setActiveItem(name)
-  }
-
-  const isLoggedIn = () => {
-    const authToken = localStorage.getItem('auth_key')
-    return authToken === null ? false : true
   }
 
   const isEmpty = (obj) => {
     return Object.keys(obj).length === 0;
   }
   
-  return (
+  return(
     <Menu pointing widths={10}>
       <Menu.Item
         as={NavLink} to='/home'

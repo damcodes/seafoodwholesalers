@@ -14,6 +14,7 @@ import Order from './components/Order'
 import OrderById from './containers/OrderById'
 import Routes from './containers/Routes'
 import RouteById from './components/RouteById'
+import Footer from './components/Footer'
 
 function App() {
 
@@ -43,7 +44,7 @@ function App() {
     <div className="App">
       <img src="https://www.seafoodwholesalers.com/image/131551250.png" alt="seafood logo" />
       <Router>
-        <NavBar user={user} logIn={setLoggedIn} />
+        <NavBar user={user} />
         <Switch>
           <Route exact path='/inventory' component={user ? Inventory : null} />
           <Route exact path='/login' component={() => <LoginSignup isloggedIn={loggedIn} setUser={user => setUser(user)} logIn={bool => setLoggedIn(bool)}/>} />
@@ -57,9 +58,8 @@ function App() {
           <Route exact path='/routes' component={Routes} />
           <Route exact path='/routes/:id' component={() => <RouteById />} />
         </Switch>
-        {/* { loggedIn ? <Redirect to='/profile' /> : <Redirect to='/login' /> } */}
       </Router>
-      
+      <Footer/>
     </div>
   );
 }

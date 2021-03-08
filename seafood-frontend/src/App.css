@@ -141,3 +141,12 @@
 #signup-error-handling {
   color: rgb(219, 6, 6);
 }
+#footer {
+  background-color: #80ff80;
+  width: 100%;
+  bottom: 0px;
+  position: fixed;
+  z-index:150;
+  height: 10px;
+  background-image: linear-gradient(to right, #0000ff, #0066ff, #4da6ff, #006622, #00b33c, #00e673, #66ff66, #ff3333, #ff0000);
+}
