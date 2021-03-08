@@ -134,9 +134,7 @@ const OrderById = () => {
 
   return(
     !currentOrder || !orderProducts ? 
-    <div>
-      Order Not Found
-    </div>
+    <Header as='h3'><Icon name='spinner'/>Loading New Order...</Header>
     :
     <Container>
       <Segment>
