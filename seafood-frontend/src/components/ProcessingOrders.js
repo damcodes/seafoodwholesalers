@@ -31,17 +31,20 @@ const ProcessingOrders = ({ orders, currentUser }) => {
   return(
       <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
         { !currentUser.admin ? 
-          orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).map(order => {
-            return(
-              <List.Item key={order.id} as='a'>
-                <Link to={`/orders/${order.id}`}>
-                  <List.Content >
-                    <List.Header >{`#${order.order_number}`}</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-            )
-          })
+            orders.length > 0 ? 
+            orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).map(order => {
+              return(
+                <List.Item key={order.id} as='a'>
+                  <Link to={`/orders/${order.id}`}>
+                    <List.Content >
+                      <List.Header >{`#${order.order_number}`}</List.Header>
+                    </List.Content>
+                  </Link>
+                </List.Item>
+              )
+            }) 
+            : 
+            <Header as='h4'><Icon name='spinner'/>Loading Orders...</Header>
           :
           allOrders.filter( order => order.order_status === 'processing').map(order => {
             return(

@@ -59,6 +59,8 @@ function App() {
           <Route exact path='/routes/:id' component={() => <RouteById />} />
         </Switch>
       </Router>
+      <br />
+      <br />
       <Footer/>
     </div>
   );
