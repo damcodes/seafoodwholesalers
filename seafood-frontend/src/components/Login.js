@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Form, Segment, Header } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Button, Form, Segment } from 'semantic-ui-react'
 import Errors from './Errors'
 
 function Login({ login, loginError }) {
@@ -7,6 +7,7 @@ function Login({ login, loginError }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  // debugger
   return(
     <Segment >
         { loginError ? <Errors loginError={loginError} /> : null }

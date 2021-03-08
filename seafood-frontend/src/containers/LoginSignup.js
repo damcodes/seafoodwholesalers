@@ -4,14 +4,12 @@ import Login from '../components/Login'
 import Signup from '../components/Signup'
 import { Redirect, useHistory } from 'react-router-dom'
 
-function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
+function LoginSignup({ setUser, logIn, isLoggedIn }) {
 
-  const [ loginState, setLoginState ] = useState(error ? error.login ? true : false : true )
+  const [ loginState, setLoginState ] = useState(true)
   const [ loggedIn, setLoggedIn ] = useState(isLoggedIn)
   const [ loginError, setLoginError ] = useState(null)
   const [ signupError, setSignupError ] = useState(null)
-  // const [ error, setError ] = useState(null)
-  // const history = useHistory()
 
   const isBlank = (str) => {
     return (!str || /^\s*$/.test(str));
@@ -57,9 +55,9 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
       // logIn(loggedIn)
       // setLoggedIn(true)
       setUser(newUser)
-      setError(null)
     })
     .catch(err => {
+      debugger
       setLoginError(err)
       console.log(err.message)
     })
@@ -93,7 +91,6 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
       localStorage.setItem('auth_key', data['jwt'])
       // logIn(loggedIn)
       setUser(newUser)
-      setError(null)
     }) 
     .catch( err => {
       console.log(err)
@@ -105,11 +102,9 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
 
   return(
     <div>
-      {/* { error && error.length > 0 ? <Header id='login-error-handling' as='h4'>{error}</Header> : null } */}
       { loggedIn ? <Redirect to='/profile' /> : null }
       { loginState ? <Login loginError={loginError ? loginError : null} login={login} /> : <Signup signupError={signupError ? signupError : null} signup={signup} /> }
       <Button onClick={() => {
-          // setError(null)
           if (loginState && loginError) {
             setLoginError(null)
           }
