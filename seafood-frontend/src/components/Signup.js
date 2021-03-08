@@ -2,7 +2,7 @@ import { Segment, Form, Button } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 import Errors from './Errors'
 
-function Signup({ signup, error }) {
+function Signup({ signup, signupError }) {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,20 +24,9 @@ function Signup({ signup, error }) {
     .then( companies => setCompanies(companies))
   }, [])
 
-  // useEffect(() => {
-  //   if (error && error.signup) {
-  //     if (error.email) {
-  //       setErrors([...errors, "Invalid email address"])
-  //     }
-  //     if (error.password_confirmation) {
-  //       setErrors([...errors, error.password_confirmation[0]])
-  //     }
-  //   }
-  // }, [ error, errors ])
-
   return(
     <Segment>
-      { error ? <Errors errors={errors} /> : null }
+      { signupError ? <Errors signupError={signupError} /> : null }
       <h1>Sign Up</h1>
       <Form onSubmit={e => signup(e, firstName, lastName, email, password, passwordConf, company)}>
         <Form.Field>

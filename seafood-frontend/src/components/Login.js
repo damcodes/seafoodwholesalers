@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Button, Form, Segment, Header } from 'semantic-ui-react'
 import Errors from './Errors'
 
-function Login({ login, error }) {
+function Login({ login, loginError }) {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   return(
     <Segment >
-        { error ? <Errors error={error} /> : null }
+        { loginError ? <Errors loginError={loginError} /> : null }
         <h1>Login</h1>
         <Form onSubmit={e => login(e, email, password)} >
           <Form.Field>

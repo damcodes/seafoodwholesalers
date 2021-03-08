@@ -8,8 +8,10 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
 
   const [ loginState, setLoginState ] = useState(error ? error.login ? true : false : true )
   const [ loggedIn, setLoggedIn ] = useState(isLoggedIn)
+  const [ loginError, setLoginError ] = useState(null)
+  const [ signupError, setSignupError ] = useState(null)
   // const [ error, setError ] = useState(null)
-  const history = useHistory()
+  // const history = useHistory()
 
   const isBlank = (str) => {
     return (!str || /^\s*$/.test(str));
@@ -28,7 +30,6 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
       return json 
     })
   }
-
 
   const login = (e, email, password) => {
     e.preventDefault()
@@ -59,7 +60,7 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
       setError(null)
     })
     .catch(err => {
-      setError(Object.assign({}, {login: err}))
+      setLoginError(err)
       console.log(err.message)
     })
   }
@@ -96,8 +97,7 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
     }) 
     .catch( err => {
       console.log(err)
-      setError(Object.assign({}, {signup: err}))
-      debugger
+      setSignupError(err)
     })
   }
 
@@ -107,10 +107,17 @@ function LoginSignup({ setUser, logIn, isLoggedIn, error, setError }) {
     <div>
       {/* { error && error.length > 0 ? <Header id='login-error-handling' as='h4'>{error}</Header> : null } */}
       { loggedIn ? <Redirect to='/profile' /> : null }
-      { loginState ? <Login error={error} login={login} /> : <Signup error={error} signup={signup} /> }
+      { loginState ? <Login loginError={loginError ? loginError : null} login={login} /> : <Signup signupError={signupError ? signupError : null} signup={signup} /> }
       <Button onClick={() => {
           // setError(null)
+          if (loginState && loginError) {
+            setLoginError(null)
+          }
+          if (!loginState && signupError) {
+            setSignupError(null)
+          }
           setLoginState(!loginState)
+          
         }}>{buttonText}</Button>
     </div>
   )
