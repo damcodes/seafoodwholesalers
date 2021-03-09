@@ -59,6 +59,24 @@ const NavBar = ({ user }) => {
           /> : null 
       }
 
+      { user && !isEmpty(user) && user.admin ? 
+        <Menu.Item
+          name={user ? 'customers':null }
+          as={NavLink} to="/companies"
+          active={activeItem === 'companies'}
+          onClick={handleItemClick}
+          /> : null
+      }
+
+      { user && !isEmpty(user) && user.admin ? 
+        <Menu.Item
+          name={user ? 'new customer':null }
+          as={NavLink} to="/new-customer"
+          active={activeItem === 'new customer'}
+          onClick={handleItemClick}
+          /> : null
+      }
+
       <Menu.Item
         name={user && !isEmpty(user) ? 'logout' : 'login'}
         as={NavLink} to={ user && !isEmpty(user) ? '/logout' : '/login' }

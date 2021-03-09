@@ -150,3 +150,15 @@
   height: 10px;
   background-image: linear-gradient(to right, #0000ff, #0066ff, #4da6ff, #006622, #00b33c, #00e673, #66ff66, #ff3333, #ff0000);
 }
+#new-customer-card {
+  min-width: 500px;
+  min-height: 500px;
+}
+input#new-customer-input {
+  margin-bottom: 10px;
+  text-align: center;
+}
+#new-customer-header {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}

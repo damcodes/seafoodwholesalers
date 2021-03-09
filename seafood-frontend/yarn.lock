@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@atomap/use-places-autocomplete@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@atomap/use-places-autocomplete/-/use-places-autocomplete-1.0.4.tgz#1a4e51b1bd8d8e69339e905a30df4f633d9af191"
+  integrity sha512-HmqxO52xrCEO8Vjd/gVOgOlzqkRYvYm2am4N4HbHVo4zJOQsNzlKCgSv5EpMhHPR3cn8RsDq2LI8tXCoDeZQvw==
+
 "@babel/code-frame@7.10.4", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.5.5":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.10.4.tgz#168da1a36e90da68ae8d49c0f1b48c7c6249213a"
