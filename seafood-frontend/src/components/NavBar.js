@@ -15,57 +15,76 @@ const NavBar = ({ user }) => {
   
   return(
     <Menu pointing widths={10}>
-      <Menu.Item
+      {user && !isEmpty(user) && user.role === 'customer' ? <Menu.Item
         as={NavLink} to='/home'
         name='home'
         active={activeItem === 'home'}
         onClick={handleItemClick}
       />
+      :
+      null
+      }
 
-      <Menu.Item
+
+      {user && !isEmpty(user) && user.role === 'customer' ? <Menu.Item
         as={NavLink} to='/about'
         name='about'
         active={activeItem === 'about'}
         onClick={handleItemClick}
       />
+      : 
+      null
+      }
 
       {user && !isEmpty(user) ? <Menu.Item 
           name='profile'
           as={NavLink} to='/profile'
           active={activeItem === 'profile'}
-          onClick={handleItemClick}/> : null }
+          onClick={handleItemClick}/>
+      : 
+      null
+      }
 
       {user && !isEmpty(user) ? <Menu.Item
         name='new order'
         as={NavLink} to='/new-order'
         active={activeItem === 'new order'}
-        onClick={handleItemClick}/> : null }
+        onClick={handleItemClick}/> 
+      :
+      null 
+      }
 
-      { user && !isEmpty(user) && user.admin ?
+      {user && !isEmpty(user) && user.admin ?
         <Menu.Item
               name={user ? 'inventory' : null}
               as={NavLink} to={ user ? '/inventory' : '/login' }
               active={activeItem === 'login'}
               onClick={handleItemClick}
-            /> : null
+         /> 
+      : 
+      null
       }
 
-      { user && !isEmpty(user) && (user.role === 'transportation' || user.admin) ? 
+      {user && !isEmpty(user) && (user.role === 'transportation' || user.admin) ? 
         <Menu.Item
           name={user ? 'routes' : null }
           as={NavLink} to='/routes'
           active={activeItem === 'routes'}
           onClick={handleItemClick} 
-          /> : null 
+          /> 
+      : 
+      null 
       }
 
-      { user && !isEmpty(user) && user.admin ? 
+      {user && !isEmpty(user) && user.admin ? 
         <Menu.Item
           name={user ? 'customers':null }
           as={NavLink} to="/companies"
           active={activeItem === 'companies'}
           onClick={handleItemClick}
-          /> : null
+          /> 
+      : 
+      null
       }
 
       <Menu.Item
