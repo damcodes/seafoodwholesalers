@@ -1,10 +1,14 @@
-import { Grid, Table, Segment, Container, Header, Sticky } from 'semantic-ui-react'
-import { useEffect, useState } from 'react'
+import { Table, Segment, Header, Modal, Button } from 'semantic-ui-react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import RouteLineItem from '../components/RouteLineItem'
 import FullRouteLineItem from '../components/FullRouteLineItem'
+import RouteById from '../components/RouteById'
 
 const Route = ({ route, routeChanged, setRouteChanged }) => {
+
+  const [ open, setOpen ] = useState(false)
+
   return( 
     route.name ? 
     route.routeById ? 
@@ -35,7 +39,22 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
     </Segment>
     :
     <Segment textAlign='center' className='route-card-segment' >
-      <Link to={`/routes/${route.id}`}><Header className='route-headers' as='h3'>{route.name}</Header></Link>
+      <Link>
+        <Header className='route-headers' as='h3'>
+          <Modal 
+            className='routes-modal'
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
+            open={open}
+            trigger={<Button positive >{route.name}</Button>}
+            dimmer='blurring'
+            >
+              <Modal.Content>
+                <RouteById id={route.id}/>
+              </Modal.Content>
+          </Modal>
+        </Header>
+      </Link>
       <Table celled selectable>
         <Table.Header>
           <Table.Row>

@@ -132,7 +132,6 @@
 #route-by-id-card {
   height: 700px;
   width: 800px;
-  left: -90px;
 }
 #route-show-card-segment {
   height: 670px;
@@ -172,4 +171,9 @@ input#new-customer-input {
 }
 #new-product-header {
   text-align: center;
+}
+.routes-modal {
+  max-height: fit-content;
+  max-width: fit-content;
+  top: 50px;
 }
