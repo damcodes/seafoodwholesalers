@@ -21,7 +21,7 @@ function Signup({ signup, signupError }) {
       }
     })
     .then( res => res.json() )
-    .then( companies => setCompanies(companies))
+    .then( companies => setCompanies(companies.filter( company => company.name !== 'Seafood Wholesalers')))
   }, [])
 
   return(
@@ -48,7 +48,7 @@ function Signup({ signup, signupError }) {
           <label>Company</label>
           <select onChange={e => setCompany(e.target.value)}>
             <option value="none">Select your company</option>
-            {companies.slice(1).map(company => {
+            {companies.map(company => {
               return <option key={company.id} value={company.name}>{company.name}</option>
             })}
           </select>
