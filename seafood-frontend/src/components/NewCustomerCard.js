@@ -3,10 +3,12 @@ import { useState, useEffect } from 'react'
 import usePlacesAutocomplete from '@atomap/use-places-autocomplete'
 import StateSelection from '../components/StateSelection'
 import RouteSelection from '../components/RouteSelection'
+import PhoneInput from 'react-phone-number-input/input'
 
 const NewCustomerCard = ({ addNewCustomer }) => {
 
   const [ name, setName ] = useState(null)
+  const [ number, setNumber ] = useState(null)
   const [ address, setAddress ] = useState(null)
   const [ city, setCity ] = useState(null)
   const [ state, setState ] = useState(null)
@@ -15,14 +17,22 @@ const NewCustomerCard = ({ addNewCustomer }) => {
 
 
   return(
-    <Segment id='new-customer-card'>
+    <Segment id='new-customer-card' textAlign='center'>
       <h1 id='new-customer-header'>New Customer</h1>
-      <Form id='new-customer-form' onSubmit={() => addNewCustomer(name, address, city, state, zip, routeId)}>
+      <Form id='new-customer-form' onSubmit={() => addNewCustomer(name, number, address, city, state, zip, routeId)}>
         <Grid centered>
           <Grid.Row centered>
             <Grid.Column>
               <Form.Field>
                 <Input id='new-customer-input' onChange={e => setName(e.target.value)} placeholder="Company/Restaurant name" />
+              </Form.Field>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row centered>
+            <Grid.Column>
+              <Form.Field>
+                <PhoneInput country='US' id='new-customer-input' value={number} onChange={setNumber} placeholder="Phone Number" />
               </Form.Field>
             </Grid.Column>
           </Grid.Row>

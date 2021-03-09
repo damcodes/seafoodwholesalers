@@ -162,3 +162,7 @@ input#new-customer-input {
   margin-top: 25px;
   margin-bottom: 25px;
 }
+#customers-list-card {
+  max-height: 500px;
+  overflow-x: auto;
+}
