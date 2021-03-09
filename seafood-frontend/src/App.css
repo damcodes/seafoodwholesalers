@@ -166,3 +166,10 @@ input#new-customer-input {
   max-height: 500px;
   overflow-x: auto;
 }
+#inventory {
+  max-height: 450px;
+  overflow-x: auto;
+}
+#new-product-header {
+  text-align: center;
+}

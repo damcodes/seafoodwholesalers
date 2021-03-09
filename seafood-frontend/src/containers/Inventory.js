@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react' 
-import { Button, Icon, Table, Container, Input, Header, Label, Grid } from 'semantic-ui-react'
+import { Button, Icon, Table, Container, Input, Header, Label, Grid, Segment, Modal } from 'semantic-ui-react'
 import InventoryLineItem from '../components/InventoryLineItem'
+import NewProductCard from '../components/NewProductCard'
+import { useHistory } from 'react-router-dom'
 
 const Inventory = () => {
 
@@ -10,7 +12,9 @@ const Inventory = () => {
   const [ searched, setSearched ] = useState('')
   const [ processedItems, setProcessedItems ] = useState([])
   const [ refresh, setRefresh ] = useState(500)
+  const [ open, setOpen ] = useState(false)
   const prevSearched = usePrevious(searched)
+  let history = useHistory()
 
   useEffect(() => {
     fetch('http://localhost:3001/products', {
@@ -119,7 +123,9 @@ const Inventory = () => {
     return ref.current
   }
 
-  const newItem = () => {
+  const addNewItem = (e, description, itemNumber, price, initialWeight, active) => {
+    e.preventDefault()
+    // debugger
     fetch(`http://localhost:3001/products`, {
       method: "POST",
       headers: {
@@ -128,11 +134,11 @@ const Inventory = () => {
       },
       body: JSON.stringify({
         product: {
-          active: false,
-          description: "New Item",
-          item_number: "New Item",
-          avail_weight: 0, 
-          price: 0.0
+          active: active,
+          description: description,
+          item_number: itemNumber,
+          avail_weight: initialWeight, 
+          price: price
         }
       })
     })
@@ -198,73 +204,78 @@ const Inventory = () => {
         </Grid.Row>
       </Grid> 
 
-      { items.length > 0 || processedItems.length > 0 ? 
-
-      <Table striped celled definition>
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Active?</Table.HeaderCell>
-            <Table.HeaderCell>Item Number</Table.HeaderCell>
-            <Table.HeaderCell>Item</Table.HeaderCell>
-            <Table.HeaderCell id='inventory-price-header'>$/lb.</Table.HeaderCell>
-            <Table.HeaderCell id='new-order-weight-header'>Available Weight</Table.HeaderCell>
-            <Table.HeaderCell id='changed-weight-header'>Weight Change</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-
-        <Table.Body>
-          { processedItems.length > 0 ? 
-            processedItems.map( item => {
-              return(
-                <InventoryLineItem
-                  key={item.id}
-                  item={item}
-                  deleteItem={deleteItem}
-                />
-              )
-            })
-          :
-            searched !== '' ?
+      { items.length > 0 || processedItems.length > 0 ?
+      <> 
+        <Segment id='inventory'>
+          <Table striped celled definition>
+            <Table.Header>
               <Table.Row>
-                <Table.Cell colSpan='6'>
-                  <Header textAlign='center' as='h3'>No Item Found</Header>
-                </Table.Cell>
+                <Table.HeaderCell>Active?</Table.HeaderCell>
+                <Table.HeaderCell>Item Number</Table.HeaderCell>
+                <Table.HeaderCell>Item</Table.HeaderCell>
+                <Table.HeaderCell id='inventory-price-header'>$/lb.</Table.HeaderCell>
+                <Table.HeaderCell id='new-order-weight-header'>Available Weight</Table.HeaderCell>
+                <Table.HeaderCell id='changed-weight-header'>Weight Change</Table.HeaderCell>
               </Table.Row>
-            :
-              items.sort((a,b) => b.active - a.active).map( item => {
-                return( 
-                  <InventoryLineItem
-                    key={item.id}
-                    item={item}
-                    deleteItem={deleteItem}
-                  />
-                )
-              }) 
-          }
-        </Table.Body>
+            </Table.Header>
 
-        <Table.Footer fullWidth>
-          <Table.Row >
-          </Table.Row>
+            <Table.Body>
+              { processedItems.length > 0 ? 
+                processedItems.map( item => {
+                  return(
+                    <InventoryLineItem
+                      key={item.id}
+                      item={item}
+                      deleteItem={deleteItem}
+                    />
+                  )
+                })
+              :
+                searched !== '' ?
+                  <Table.Row>
+                    <Table.Cell colSpan='6'>
+                      <Header textAlign='center' as='h3'>No Item Found</Header>
+                    </Table.Cell>
+                  </Table.Row>
+                :
+                  items.sort((a,b) => b.active - a.active).map( item => {
+                    return( 
+                      <InventoryLineItem
+                        key={item.id}
+                        item={item}
+                        deleteItem={deleteItem}
+                      />
+                    )
+                  }) 
+              }
+            </Table.Body>
 
-          <Table.Row>
-            <Table.HeaderCell 
-              colSpan='6'
-              id='submit-order-footer'
-            >
-              <Button 
-                floated='left'
-                id='submit-order-btn'
-                size='small'
-                positive={true}
-                onClick={newItem}
-              >
-                <Icon name='plus' />Add Item
-              </Button>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
-      </Table>
+            <Table.Footer fullWidth>
+              <Table.Row >
+              </Table.Row>
+
+              <Table.Row>
+                <Table.HeaderCell 
+                  colSpan='6'
+                  id='submit-order-footer'
+                >
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Footer>
+          </Table>
+        </Segment>
+        <Modal
+          onClose={() => setOpen(false)}
+          onOpen={() => setOpen(true)}
+          open={open}
+          trigger={<Button positive><Icon name='plus'/>Add Item</Button>}
+          dimmer='blurring'
+        >
+          <Modal.Content>
+            <NewProductCard setOpen={setOpen} addNewItem={addNewItem} />
+          </Modal.Content>
+        </Modal>
+      </>
       :
       <Header textAlign='center' colSpan='6' as='h2'><Icon name='spinner' />Loading Inventory...</Header>
       }    
