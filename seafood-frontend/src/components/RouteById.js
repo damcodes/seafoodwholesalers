@@ -56,15 +56,11 @@ const RouteById = ({ id }) => {
     route ? 
     <Grid>
       <Grid.Row textAlign='center'>
-        {/* <Grid.Column /> */}
-
         <Grid.Column >
           <Segment id='route-by-id-card'>
             <Route setRouteChanged={setRouteChanged} route={{...route, routeById: true}} />
           </Segment>
         </Grid.Column>
-
-        {/* <Grid.Column /> */}
       </Grid.Row>
     </Grid>
     :

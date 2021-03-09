@@ -13,7 +13,6 @@ import Inventory from './containers/Inventory'
 import Order from './components/Order'
 import OrderById from './containers/OrderById'
 import Routes from './containers/Routes'
-import RouteById from './components/RouteById'
 import Footer from './components/Footer'
 import CustomerPageById from './containers/CustomerPageById'
 import Customers from './containers/Customers'
@@ -58,7 +57,6 @@ function App() {
           <Route exact path='/new-order' component={() => <NewOrder user={user} />} />
           <Route exact path='/orders/:id' component={() => <OrderById />} />
           <Route exact path='/routes' component={Routes} />
-          <Route exact path='/routes/:id' component={() => <RouteById />} />
           <Route exact path='/companies/:id' component={CustomerPageById} />
           <Route exact path='/companies' component={Customers} />
         </Switch>
