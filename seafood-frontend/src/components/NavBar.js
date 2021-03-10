@@ -15,7 +15,7 @@ const NavBar = ({ user }) => {
   
   return(
     <Menu pointing widths={10}>
-      {user && !isEmpty(user) && user.role === 'customer' ? <Menu.Item
+      {(user && !isEmpty(user) && user.role === 'customer') || !localStorage.getItem('auth_key') ? <Menu.Item
         as={NavLink} to='/home'
         name='home'
         active={activeItem === 'home'}
@@ -26,7 +26,7 @@ const NavBar = ({ user }) => {
       }
 
 
-      {user && !isEmpty(user) && user.role === 'customer' ? <Menu.Item
+      {/* {(user && !isEmpty(user) && user.role === 'customer') || !localStorage.getItem('auth_key') ? <Menu.Item
         as={NavLink} to='/about'
         name='about'
         active={activeItem === 'about'}
@@ -34,7 +34,7 @@ const NavBar = ({ user }) => {
       />
       : 
       null
-      }
+      } */}
 
       {user && !isEmpty(user) ? <Menu.Item 
           name='profile'

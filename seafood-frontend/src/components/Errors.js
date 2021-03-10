@@ -29,7 +29,7 @@ const Errors = ({ loginError, signupError }) => {
       return <Header id='signup-error-handling' as='h4'>{message}</Header>
     })
   }
-  debugger
+  // debugger
   return( loginError && loginError.message === "Incorrect username or password" ? 
     <Header id='login-error-handling' as='h4'>{loginError.message}</Header>
     :

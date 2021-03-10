@@ -57,7 +57,7 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
       setUser(newUser)
     })
     .catch(err => {
-      debugger
+      // debugger
       setLoginError(err)
       console.log(err.message)
     })
