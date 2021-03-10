@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { Header, Grid, Table, Segment } from 'semantic-ui-react'
 import Route from './Route'
 
-const RouteById = () => {
+const RouteById = ({ id }) => {
 
-  let { id } = useParams()
   const [ route, setRoute ] = useState(null)
   const [ routeChanged, setRouteChanged ] = useState(false)
 
@@ -57,16 +55,12 @@ const RouteById = () => {
   return(
     route ? 
     <Grid>
-      <Grid.Row textAlign='center' centered columns='3' >
-        <Grid.Column floated='left'/>
-
+      <Grid.Row textAlign='center'>
         <Grid.Column >
           <Segment id='route-by-id-card'>
             <Route setRouteChanged={setRouteChanged} route={{...route, routeById: true}} />
           </Segment>
         </Grid.Column>
-
-        <Grid.Column floated='right'/>
       </Grid.Row>
     </Grid>
     :
