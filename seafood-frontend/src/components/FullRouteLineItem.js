@@ -37,7 +37,7 @@ const FullRouteLineItem = ({ order, setRouteChanged }) => {
 
   const routeStop = () => {
     if (order.stop === 0) return <Button onClick={() => setInput(!input)} size='tiny'>Route</Button>
-    return <Button onClick={() => setInput(!input)} size='tiny'>{order.stop}</Button>
+    return <Button positive onClick={() => setInput(!input)} size='tiny'>{order.stop}</Button>
   }
   
   const formatTime = (dateTimeStr) => {
