@@ -6,6 +6,7 @@ import { Header, Container, Segment, Icon, List } from 'semantic-ui-react'
 const ProcessingOrders = ({ orders, currentUser }) => {
 
   const [ allOrders, setAllOrders ] = useState([])
+  const [ processingOrders, setProcessingOrders ] = useState(null)
   // const [ user, setUser ] = useState(currentUser)
   const [ refresh, setRefresh ] = useState(2000)
 
@@ -15,6 +16,24 @@ const ProcessingOrders = ({ orders, currentUser }) => {
       return () => clearInterval(interval)
     }
   })
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/orders`, {
+      method: "GET",
+      headers: {
+        "Content-type":"application/json",
+        "Authorization":localStorage.getItem("auth_key")
+      }
+    })
+    .then( res => res.json() )
+    .then( orders => {
+      if (currentUser.admin) {
+        setProcessingOrders(orders)  
+      } else {
+        setProcessingOrders(orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id))
+      }
+    })
+  }, [ currentUser ])
 
   const fetchAllOrders = () => {
     fetch(`http://localhost:3001/orders`, {
@@ -29,9 +48,10 @@ const ProcessingOrders = ({ orders, currentUser }) => {
   }
 
   return(
+    processingOrders ? 
       <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
         { !currentUser.admin ? 
-            orders.length > 0 ? 
+        orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).length > 0 ? 
             orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).map(order => {
               return(
                 <List.Item key={order.id} as='a'>
@@ -43,8 +63,8 @@ const ProcessingOrders = ({ orders, currentUser }) => {
                 </List.Item>
               )
             }) 
-            : 
-            <Header as='h4'><Icon name='spinner'/>Loading Orders...</Header>
+            :
+            <List.Item>No Processing Orders</List.Item>
           :
           allOrders.filter( order => order.order_status === 'processing').map(order => {
             return(
@@ -59,6 +79,8 @@ const ProcessingOrders = ({ orders, currentUser }) => {
           })
         }
       </List>
+    :
+      <Header as='h4'><Icon name='spinner'/>Loading Orders...</Header>
   )
 }
 
