@@ -95,7 +95,7 @@ const Customers = () => {
             onClose={() => setOpen(false)}
             onOpen={() => setOpen(true)}
             open={open}
-            trigger={<Button positive>+ Add Customer</Button>}
+            trigger={<Button positive><Icon name='plus'/>Add Customer</Button>}
             dimmer='blurring'
           >
             <Modal.Content>
