@@ -86,6 +86,7 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
     })
     .then( res => handleResponse(res) )
     .then( data => {
+      debugger
       setLoggedIn(true)
       const newUser = JSON.parse(data.user)
       localStorage.setItem('auth_key', data['jwt'])

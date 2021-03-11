@@ -38,7 +38,7 @@ const UserInfo = () => {
                   </Grid.Column>
 
                   <Grid.Column textAlign='center'>
-                    {user.company.name ? user.company.name : null}
+                    {user.company && user.company.name ? user.company.name : null}
                   </Grid.Column>
 
                   <Grid.Column textAlign='left'>
