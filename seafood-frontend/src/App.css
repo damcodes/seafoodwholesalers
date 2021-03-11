@@ -177,3 +177,9 @@ input#new-customer-input {
   max-width: fit-content;
   top: 50px;
 }
+/* #dont-delete-product-btn {
+  text-align: center;
+} */
+#delete-product-msg {
+  color:rgb(255, 0, 0)
+}

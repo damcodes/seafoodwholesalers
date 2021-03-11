@@ -30,6 +30,9 @@ f8 = Company.create(name: "Fiesta 8", address: "2323 Wirt Rd, Houston, TX 77055"
 f82 = Company.create(name: "Fiesta 82", address: "20331 Farm to Market Rd 529, Katy, TX 77449", route_id: katy.id, phone_number: '2818555960')
 f66 = Company.create(name: "Fiesta 66", address: "333 Mason Rd, Katy, TX 77450", route_id: katy.id, phone_number: '2815996350')
 
+#galveston
+gaidos = Company.create(name: "Gaido's Seafood Kitchen", address: '3828 Seawall Blvd, Galveston, TX 77550', route_id: galv.id, phone_number: '4097615500')
+
 # south stores
 f5 = Company.create(name: "Fiesta 5", address: '5600 Mykawa Rd, Houston, TX 77033', route_id: south.id, phone_number: '7136441611')
 f4 = Company.create(name: "Fiesta 4", address: "1603 Spencer Hwy, South Houston, TX 77587", route_id: south.id, phone_number: '7139437651')
@@ -50,6 +53,7 @@ thomas = User.create(first_name: "Thomas", last_name: 'Coppell', email: 'tcoppel
 steph = User.create(first_name: "Stephanie", last_name: "De Leon", email: "sdeleon@email.com", password: '123456', company: f4, admin: false)
 ricky = User.create(first_name: "Ricky", last_name: "De Leon", email: "rdeleon@email.com", password: '123456', company: f5, admin: false)
 aldo = User.create(first_name: "Aldo", last_name: 'Mendoza', email: 'amendoza@email.com', password: '123456', company: f201, admin: false)
+joey = User.create(first_name: 'Joey', last_name: 'Janazzo', email: 'jjanazzo@email.com', password: '123456', company: gaidos, admin: false)
 
 
 p1 = Product.create(item_number: '005014C', description: '8/12 EZ Peel "Fish Tales"', price: 8.15, avail_weight: 100)

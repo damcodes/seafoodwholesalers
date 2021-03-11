@@ -1,5 +1,5 @@
-import { Table, Input, Checkbox, Icon, Button, Label, Divider, Container } from 'semantic-ui-react'
-import { useState, useEffect } from 'react'
+import { Table, Input, Checkbox, Icon, Button, Label, Modal, Header } from 'semantic-ui-react'
+import { useState } from 'react'
 
 const InventoryLineItem = ({ item, deleteItem }) => {
 
@@ -13,6 +13,7 @@ const InventoryLineItem = ({ item, deleteItem }) => {
   const [ updatedItemNumberState, setUpdateItemNumberState ] = useState(false)
   const [ updateDescriptState, setUpdateDescriptionState ] = useState(false)
   const [ description, setDescription ] = useState(item.description)
+  const [ open, setOpen ] = useState(false)
 
   const countDecimals = (val) => {
     if( Math.floor(val) === val ) return 0
@@ -56,6 +57,8 @@ const InventoryLineItem = ({ item, deleteItem }) => {
         }
       })
     })
+    .then( res => res.json() )
+    .then(setCurrentItem)
   }
 
   const handlePriceChange = e => {
@@ -142,7 +145,50 @@ const InventoryLineItem = ({ item, deleteItem }) => {
           }} 
         />
         <br/>
-        <Button id='delete-product-btn' size='mini' onClick={e => deleteItem(currentItem)}><Icon size='large' name='trash alternate outline' /></Button>
+
+        <Modal
+          centered
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
+          open={open}
+          trigger={<Button id='delete-product-btn' size='mini'><Icon size='large' name='trash alternate outline' /></Button>}
+        >
+          <Modal.Content>
+            <>
+              <Header as='h3' textAlign='center'><span id='delete-product-msg'>DELETE ITEM?</span></Header>
+              <Table>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Item Number</Table.HeaderCell>
+                    <Table.HeaderCell>Description</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+
+                <Table.Body>
+                  <Table.Row>
+                    <Table.Cell>{currentItem.item_number}</Table.Cell>
+                    <Table.Cell>{currentItem.description}</Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table>
+            </>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button
+              onClick={() => setOpen(false)}
+              negative
+            >
+              No
+            </Button>
+
+            <Button
+              onClick={() => deleteItem(currentItem)}
+              positive
+            >
+              Yes
+            </Button>
+          </Modal.Actions>
+        </Modal>
       </Table.Cell>
 
       <Table.Cell>
