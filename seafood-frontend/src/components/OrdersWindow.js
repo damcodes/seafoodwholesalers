@@ -29,17 +29,20 @@ const OrdersWindow = ({ orders, currentUser }) => {
   return(
     activeOrders ? 
       <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
-        { orders.filter( order => order.order_status !== 'completed').map(order => {
-            return(
-              <List.Item key={order.id} as='a'>
-                <Link to={`/orders/${order.id}`}>
-                  <List.Content >
-                    <List.Header >{`#${order.order_number}`}</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-            )
-          })
+        { orders.filter( order => order.order_status !== 'completed').length > 0 ? 
+            orders.filter( order => order.order_status !== 'completed').map(order => {
+              return(
+                <List.Item key={order.id} as='a'>
+                  <Link to={`/orders/${order.id}`}>
+                     <List.Content >
+                      <List.Header >{`#${order.order_number}`}</List.Header>
+                    </List.Content>
+                  </Link>
+                </List.Item>
+              )
+            })
+            :
+            <List.Item>No Active Orders</List.Item>
         }
       </List>
     : 
