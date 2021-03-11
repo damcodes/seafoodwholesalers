@@ -1,5 +1,5 @@
 import { Table, Segment, Header, Modal, Button } from 'semantic-ui-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import RouteLineItem from '../components/RouteLineItem'
 import FullRouteLineItem from '../components/FullRouteLineItem'
@@ -8,6 +8,21 @@ import RouteById from '../components/RouteById'
 const Route = ({ route, routeChanged, setRouteChanged }) => {
 
   const [ open, setOpen ] = useState(false)
+  const [ currentRoute , setCurrentRoute ] = useState(null)
+
+  useEffect(() => {
+    if (routeChanged) {
+      fetch(`http://localhost:3001/routes/${route.id}`, {
+        method: "GET",
+        headers: {
+          'Content-type':'application/json',
+          'Authorization': localStorage.getItem('auth_key')
+        }
+      })
+      .then( res => res.json() )
+      .then( route => setCurrentRoute(route))
+    }
+  }, [])
 
   return( 
     route.name ? 

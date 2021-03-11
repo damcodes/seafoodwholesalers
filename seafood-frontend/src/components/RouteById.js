@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Header, Grid, Table, Segment } from 'semantic-ui-react'
+import { Header, Grid, Segment } from 'semantic-ui-react'
 import Route from './Route'
 
 const RouteById = ({ id }) => {
@@ -46,11 +46,10 @@ const RouteById = ({ id }) => {
     .then( res => handleResponse(res) )
     .then( route => {
       setRoute(route) 
-      setRouteChanged(false)
+      // setRouteChanged(false)
     })
     }
   }, [ routeChanged, id ])
-  // debugger
   
   return(
     route ? 
@@ -58,7 +57,7 @@ const RouteById = ({ id }) => {
       <Grid.Row textAlign='center'>
         <Grid.Column >
           <Segment id='route-by-id-card'>
-            <Route setRouteChanged={setRouteChanged} route={{...route, routeById: true}} />
+            <Route setRouteChanged={setRouteChanged} route={{...route, routeById: true}} routeChanged={routeChanged}/>
           </Segment>
         </Grid.Column>
       </Grid.Row>

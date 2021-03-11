@@ -2,9 +2,9 @@ import { Table, Icon, Button, Input, List } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-const FullRouteLineItem = ({ order, setRouteChanged }) => {
+const FullRouteLineItem = ({ order, setRouteChanged, routeChanged }) => {
   
-  // const [ currentOrder , setCurrentOrder ] = useState({})
+  const [ currentOrder , setCurrentOrder ] = useState(null)
   const [ customer, setCustomer ] = useState({})
   const [ input, setInput ] = useState(false)
   const [ stop, setStop ] = useState(null)
@@ -35,7 +35,7 @@ const FullRouteLineItem = ({ order, setRouteChanged }) => {
     })
   }
 
-  const routeStop = () => {
+  const routeStop = (order) => {
     if (order.stop === 0) return <Button onClick={() => setInput(!input)} size='tiny'>Route</Button>
     return <Button positive onClick={() => setInput(!input)} size='tiny'>{order.stop}</Button>
   }
@@ -47,9 +47,7 @@ const FullRouteLineItem = ({ order, setRouteChanged }) => {
   }
 
   const updateStopNumber = () => {
-    // debugger
     if (stop !== '0' && stop !== '') {
-      // updateStop()
       fetch(`http://localhost:3001/orders/${order.id}`, {
         method: "PATCH",
         headers: {
@@ -62,14 +60,14 @@ const FullRouteLineItem = ({ order, setRouteChanged }) => {
       })
       .then( res => handleResponse(res))
       .then( order => {
-        // debugger 
         setInput(!input)
+        setCurrentOrder(order)
       })
     }
-    setRouteChanged(true)
+    setRouteChanged({changed: true, id: order.id})
   }
-  // debugger
-  return (
+  
+  return (!currentOrder ? 
     <Table.Row>
       <Table.Cell textAlign='center'>
         {input ? 
@@ -82,13 +80,34 @@ const FullRouteLineItem = ({ order, setRouteChanged }) => {
             </Button>
           </>
           : 
-          routeStop()
+          routeStop(order)
         }
       </Table.Cell>
       <Table.Cell textAlign='center'><Link to={`/orders/${order.id}`}>{order.order_number}</Link></Table.Cell>
       <Table.Cell textAlign='center'>{customer.company ? customer.company.name : null}</Table.Cell>
       <Table.Cell textAlign='center'>{formatTime(order.created_at)}</Table.Cell>
       <Table.Cell textAlign='center'>{order.order_status === 'completed' ? formatTime(order.updated_at) : order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)}</Table.Cell>
+    </Table.Row>
+    :
+    <Table.Row>
+      <Table.Cell textAlign='center'>
+        {input ? 
+          <>
+            <Input onChange={e => setStop(e.target.value)} type='number'/> 
+            <Button positive 
+              onClick={() => updateStopNumber()
+            }>
+              <Icon name='check'/>
+            </Button>
+          </>
+          : 
+          routeStop(currentOrder)
+        }
+      </Table.Cell>
+      <Table.Cell textAlign='center'><Link to={`/orders/${currentOrder.id}`}>{currentOrder.order_number}</Link></Table.Cell>
+      <Table.Cell textAlign='center'>{customer.company ? customer.company.name : null}</Table.Cell>
+      <Table.Cell textAlign='center'>{formatTime(currentOrder.created_at)}</Table.Cell>
+      <Table.Cell textAlign='center'>{currentOrder.order_status === 'completed' ? formatTime(currentOrder.updated_at) : currentOrder.order_status.slice(0,1).toUpperCase() + currentOrder.order_status.slice(1)}</Table.Cell>
     </Table.Row>
   )
 
