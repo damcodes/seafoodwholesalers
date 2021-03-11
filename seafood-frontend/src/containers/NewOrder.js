@@ -67,19 +67,11 @@ const NewOrder = () => {
     let processed
     if (sort !== '' && searched !== '') {
       processed = items.filter( item => {
-        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
-        // debugger
-        // const descriptionWords = item.description.split(' ')
-        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
-          // debugger
+        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {                                           
           return true
         } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-          // debugger
           if (item.description.includes(searched)) return true
-        } //else if () {
-        //   debugger
-        //   return true 
-        // }
+        } 
         return false
         }).sort( (a, b) => {
           let op 
@@ -101,21 +93,12 @@ const NewOrder = () => {
           return op 
         })
     } else if (sort === '' && searched !== '') {
-      // debugger
       processed = items.filter( item => {
-        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
-        // debugger
-        // const descriptionWords = item.description.split(' ')
         if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
-          // debugger
           return true
         } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-          // debugger
           if (item.description.includes(searched)) return true
-        } //else if () {
-        //   debugger
-        //   return true 
-        // }
+        } 
         return false
       })
     } else if (sort !== '' && searched === '') {
@@ -139,7 +122,6 @@ const NewOrder = () => {
         return op 
       })
     } 
-    // debugger
     return processed ? setProcessedItems(processed) : setProcessedItems([])
   }, [ sort, searched, items, prevSearched, sortedUp ])
 
@@ -157,7 +139,6 @@ const NewOrder = () => {
       method: "GET",
       headers: {
         "Content-type":"applicaton/json"
-        // "Authorization": localStorage.getItem("auth_key")
       }
     })
     .then( res => res.json() )
@@ -241,7 +222,6 @@ const NewOrder = () => {
   }
 
   const submitOrder = () => {
-    // setConfirming(!confirming)
     newOrder()
   }
 
