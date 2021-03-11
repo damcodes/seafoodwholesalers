@@ -39,19 +39,11 @@ const Inventory = () => {
     let processed
     if (sort !== '' && searched !== '') {
       processed = items.filter( item => {
-        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
-        // debugger
-        // const descriptionWords = item.description.split(' ')
-        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
-          // debugger
+        if ((item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) || item.item_number.slice(0, searched.length) === searched) {
           return true
         } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-          // debugger
-          if (item.description.includes(searched)) return true
-        } //else if () {
-        //   debugger
-        //   return true 
-        // }
+          if (item.description.includes(searched) || item.item_number.includes(searched)) return true
+        } 
         return false
         }).sort( (a, b) => {
           let op 
@@ -73,23 +65,14 @@ const Inventory = () => {
           return op 
         })
     } else if (sort === '' && searched !== '') {
-      // debugger
       processed = items.filter( item => {
-        // item.description.startsWith(searched || searched.toUpperCase() ? :  )
-        // debugger
-        // const descriptionWords = item.description.split(' ')
-        if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) {
-          // debugger
+        if ((item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) || item.item_number.slice(0, searched.length) === searched) {
           return true
         } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-          // debugger
-          if (item.description.includes(searched)) return true
-        } //else if () {
-        //   debugger
-        //   return true 
-        // }
+          if (item.description.includes(searched) || item.item_number.includes(searched)) return true
+        } 
         return false
-      })
+        })
     } else if (sort !== '' && searched === '') {
       processed = items.sort( (a, b) => {
         let op 
@@ -111,7 +94,7 @@ const Inventory = () => {
         return op 
       })
     } 
-    // debugger
+    
     return processed ? setProcessedItems(processed) : setProcessedItems([])
   }, [ sort, searched, items, prevSearched, sortedUp ])
 
@@ -125,7 +108,6 @@ const Inventory = () => {
 
   const addNewItem = (e, description, itemNumber, price, initialWeight, active) => {
     e.preventDefault()
-    // debugger
     fetch(`http://localhost:3001/products`, {
       method: "POST",
       headers: {
