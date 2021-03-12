@@ -100,19 +100,13 @@ function Profile() {
 
           <Grid.Column>
             <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Routes</Header>
+              <Header as='h2' textAlign='center'>Your Orders</Header>
+              <OrdersWindow orders={orders} currentUser={currentUser} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
 
         <Grid.Row columns={3}>
-          <Grid.Column>
-              <Segment textAlign='center'>
-                <Header as='h2' textAlign='center'>Your Orders</Header>
-                <OrdersWindow orders={orders} currentUser={currentUser} />
-              </Segment>
-          </Grid.Column>
-
           <Grid.Column>
             <Segment className='order-route-card' textAlign='center'>
               <Header as='h2' textAlign='center'>Orders By Date</Header>

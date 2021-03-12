@@ -66,6 +66,7 @@ const ProcessingOrders = ({ orders, currentUser }) => {
             :
             <List.Item>No Processing Orders</List.Item>
           :
+          allOrders.filter( order => order.order_status === 'processing').length > 0 ? 
           allOrders.filter( order => order.order_status === 'processing').map(order => {
             return(
               <List.Item key={order.id} as='a'>
@@ -77,6 +78,8 @@ const ProcessingOrders = ({ orders, currentUser }) => {
               </List.Item>
             )
           })
+          :
+          <List.Item>No Orders Processing</List.Item>
         }
       </List>
     :

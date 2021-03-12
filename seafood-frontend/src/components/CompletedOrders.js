@@ -81,6 +81,7 @@ const CompletedOrders = ({ orders, currentUser }) => {
           <List.Item>No Completed Orders</List.Item>
           :
           allOrders ? 
+          allOrders.filter( order => order.order_status === 'completed').length > 0 ? 
           allOrders.filter( order => order.order_status === 'completed').map(order => {
             return(
               <List.Item key={order.id} as='a'>
@@ -92,6 +93,8 @@ const CompletedOrders = ({ orders, currentUser }) => {
               </List.Item>
             )
           })
+          : 
+          <List.Item>No Completed Orders</List.Item>
           : 
           <Header as='h4'><Icon name='spinner'/>Loading Orders...</Header>
         }
