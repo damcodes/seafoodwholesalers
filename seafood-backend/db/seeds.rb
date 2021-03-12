@@ -131,9 +131,9 @@ p72 = Product.create(item_number: '002488', description: 'Tilapia, 950/up Whole 
 p73 = Product.create(item_number: '002266', description: 'Tuna, Portions 4oz', price: 4.80)
 p74 = Product.create(item_number: '002495', description: 'Whiting H&G', price: 1.85)
 
-order = Order.create(user_id: david.id, order_number: 101010, order_total: 81.5, route_id: sfwRoute.id)
-order2 = Order.create(user_id: john.id, order_number: 646000, order_total: 846.45, route_id: john.company.route_id)
+# order = Order.create(user_id: david.id, order_number: 101010, order_total: 81.5, route_id: sfwRoute.id)
+# order2 = Order.create(user_id: john.id, order_number: 646000, order_total: 846.45, route_id: john.company.route_id)
 
-orderProduct = OrderProduct.create(product_id: p1.id, order_id: order.id, weight: 10)
-orderProduct2 = OrderProduct.create(product_id: p5.id, order_id: order2.id, weight: 200)
-orderProduct3 = OrderProduct.create(product_id: p8.id, order_id: order2.id, weight: 5)
+# orderProduct = OrderProduct.create(product_id: p1.id, order_id: order.id, weight: 10)
+# orderProduct2 = OrderProduct.create(product_id: p5.id, order_id: order2.id, weight: 200)
+# orderProduct3 = OrderProduct.create(product_id: p8.id, order_id: order2.id, weight: 5)

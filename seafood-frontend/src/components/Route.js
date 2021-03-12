@@ -1,4 +1,4 @@
-import { Table, Segment, Header, Modal, Button, Tab } from 'semantic-ui-react'
+import { Table, Segment, Header, Modal, Button, Label } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import RouteLineItem from '../components/RouteLineItem'
@@ -58,7 +58,6 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
     })
     .then( res => res.json() )
     .then( route => {
-      debugger
       setCurrentRoute(route)
       setShipped(true)
       setOpen(false)
@@ -77,7 +76,7 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
             <Table.HeaderCell textAlign='center'>Order #</Table.HeaderCell>
             <Table.HeaderCell textAlign='center'>Company</Table.HeaderCell>
             <Table.HeaderCell textAlign='center'>Time Placed</Table.HeaderCell>
-            <Table.HeaderCell textAlign='center'>Time Completed</Table.HeaderCell>
+            <Table.HeaderCell textAlign='center'>Order Status</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -118,6 +117,7 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
             trigger={<Button positive >{route.name}</Button>}
             dimmer='blurring'
             >
+              { route.status === 'delivered' ? <Label attached='top right'>Delivered</Label> : null }
               <Modal.Content>
                 <RouteById id={route.id}/>
               </Modal.Content>

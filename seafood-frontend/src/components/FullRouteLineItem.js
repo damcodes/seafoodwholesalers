@@ -89,7 +89,7 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
       <Table.Cell textAlign='center'><Link to={`/orders/${order.id}`}>{order.order_number}</Link></Table.Cell>
       <Table.Cell textAlign='center'>{customer.company ? customer.company.name : null}</Table.Cell>
       <Table.Cell textAlign='center'>{formatTime(order.created_at)}</Table.Cell>
-      <Table.Cell textAlign='center'>{order.order_status === 'completed' ? formatTime(order.updated_at) : order.order_status === 'delivered' ? `${order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)} @ ${formatTime(order.updated_at)}` : order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)}</Table.Cell>
+      <Table.Cell textAlign='center'>{`${order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)} @ ${formatTime(order.updated_at)}`}</Table.Cell>
     </Table.Row>
     :
     <Table.Row>
