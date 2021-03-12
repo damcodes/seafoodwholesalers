@@ -12,7 +12,7 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
   const [ shipped, setShipped ] = useState(false)
 
   const statuses = route.orders.map( order => order.order_status ) 
-  const stopNumbers = route.orders.map( order => order.stop )
+  const stopNumbers = route.orders.map( order => order.stop ) 
 
   useEffect(() => {
     if (routeChanged) {
@@ -58,8 +58,10 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
     })
     .then( res => res.json() )
     .then( route => {
+      debugger
       setCurrentRoute(route)
       setShipped(true)
+      setOpen(false)
     })
   }
 
@@ -120,7 +122,7 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
                 <RouteById id={route.id}/>
               </Modal.Content>
               <Modal.Actions>
-                { !shipped ? 
+                { route.status !== 'shipped' ? 
                 <Button
                   onClick={ship}
                   disabled={(statuses.includes('pending') || statuses.includes('processing') || stopNumbers.includes(0)) || !route.orders.length > 0}

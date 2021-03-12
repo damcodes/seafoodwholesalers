@@ -1,6 +1,5 @@
 import { Grid, Container, Header, Icon } from 'semantic-ui-react'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import Route from '../components/Route'
 
 const Routes = () => {
@@ -11,7 +10,7 @@ const Routes = () => {
   useEffect(() => {
     fetch(`http://localhost:3001/routes`)
     .then( res => res.json() )
-    .then( routes => setRoutes(routes) )
+    .then( routes => setRoutes(routes.filter( route => route.name !== 'SFW')) )
   }, [])
 
   useEffect(() => {
@@ -24,10 +23,10 @@ const Routes = () => {
   const fetchRoutes = () => {
     fetch(`http://localhost:3001/routes`)
     .then( res => res.json() )
-    .then( routes => setRoutes(routes) )
+    .then( routes => setRoutes(routes.filter(route => route.name !== 'SFW')) )
   }
 
-
+  // debugger
     return(
     <Container>
       { routes.length > 0 ? 

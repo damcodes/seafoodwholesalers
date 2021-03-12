@@ -45,10 +45,15 @@ class OrdersController < ApplicationController
 
   # PATCH/PUT /orders/1
   def update
-    if @order.update(order_params)
-      render json: OrderSerializer.new(@order).serialize
+    @order = Order.find_by(id: params[:id])
+    if @order.order_status != 'delivered'
+      if @order.update(order_params)
+        render json: OrderSerializer.new(@order).serialize
+      else
+        render json: @order.errors, status: :unprocessable_entity
+      end
     else
-      render json: @order.errors, status: :unprocessable_entity
+      render json: { message: 'Cannot patch, order already delivered.'}
     end
   end
 

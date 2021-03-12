@@ -37,7 +37,7 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
 
   const routeStop = (order) => {
     if (order.stop === 0 && !shipped) return <Button onClick={() => setInput(!input)} size='tiny'>Route</Button>
-    if (order.stop !== 0 && shipped) return order.stop
+    if (order.order_status === 'delivered')  return order.stop
     return <Button positive onClick={() => setInput(!input)} size='tiny'>{order.stop}</Button>
   }
   
@@ -56,7 +56,9 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
           "Authorization": localStorage.getItem('auth_key')
         },
         body: JSON.stringify({
-          stop: stop
+          order: {
+            stop: stop
+          }
         })
       })
       .then( res => handleResponse(res))
@@ -87,7 +89,7 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
       <Table.Cell textAlign='center'><Link to={`/orders/${order.id}`}>{order.order_number}</Link></Table.Cell>
       <Table.Cell textAlign='center'>{customer.company ? customer.company.name : null}</Table.Cell>
       <Table.Cell textAlign='center'>{formatTime(order.created_at)}</Table.Cell>
-      <Table.Cell textAlign='center'>{order.order_status === 'completed' ? formatTime(order.updated_at) : order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)}</Table.Cell>
+      <Table.Cell textAlign='center'>{order.order_status === 'completed' ? formatTime(order.updated_at) : order.order_status === 'delivered' ? `${order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)} @ ${formatTime(order.updated_at)}` : order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)}</Table.Cell>
     </Table.Row>
     :
     <Table.Row>

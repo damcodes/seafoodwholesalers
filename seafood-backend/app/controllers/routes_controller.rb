@@ -13,10 +13,22 @@ class RoutesController < ApplicationController
     render json: RouteSerializer.new(@route).serialize
   end
 
+  def update
+    @route = Route.find_by(id: params[:id])
+    if @route.status != 'delivered'
+      if @route.update(route_params)
+        render json: RouteSerializer.new(@route).serialize
+      else
+        render json: @route.errors
+      end
+    else
+      render json: { message: 'Cannot patch, route already delivered'}
+    end
+  end
   
   private
   def route_params 
-    params.require(:route).permit(:id)
+    params.require(:route).permit(:id, :status)
   end
 
 end

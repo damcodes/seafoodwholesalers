@@ -117,6 +117,22 @@ const OrderById = () => {
     return timeStr
   }
 
+  const markDelivered = () => {
+    fetch(`http://localhost:3001/orders/${currentOrder.id}`, {
+      method: "PATCH",
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': localStorage.getItem('auth_key')
+      },
+      body: JSON.stringify({
+        order: {
+          order_status: 'delivered'
+        }
+      })
+    })
+    .then( () => history.push('/profile') )
+  }
+
   return(
     !currentOrder || !orderProducts ? 
     <Header as='h3'><Icon name='spinner'/>Loading New Order...</Header>
@@ -185,6 +201,12 @@ const OrderById = () => {
       { currentOrder.order_status === 'processing' && user.admin ? 
         <Button positive onClick={complete}>Complete</Button> 
         : 
+        null
+      }
+
+      { currentOrder.order_status === 'shipped' && user.admin ? 
+        <Button positive onClick={markDelivered}>Mark as Delivered</Button>
+        :
         null
       }
     </Container>

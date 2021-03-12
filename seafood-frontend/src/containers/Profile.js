@@ -58,7 +58,7 @@ function Profile() {
 
 
   return(
-    <Container>
+    <Container id='profile-page'>
       <UserInfo />
       <br/>
       { currentUser.admin ?
