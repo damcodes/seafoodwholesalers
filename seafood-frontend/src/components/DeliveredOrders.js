@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Header, Icon, List } from 'semantic-ui-react'
 
-const ShippedOrders = ({ orders, currentUser }) => {
+const DeliveredOrders = ({ orders, currentUser }) => {
 
-  const [ shippedOrders, setShippedOrders ] = useState(null)
+  const [ deliveredOrders, setDeliveredOrders ] = useState(null)
   const [ refresh, setRefresh ] = useState(2000)
 
   useEffect(() => {
@@ -19,9 +19,9 @@ const ShippedOrders = ({ orders, currentUser }) => {
     .then( res => res.json() )
     .then( orders => {
       if (currentUser.admin) {
-        setShippedOrders(orders.filter( order => order.order_status === 'shipped'))  
+        setDeliveredOrders(orders.filter( order => order.order_status === 'delivered'))  
       } else {
-        setShippedOrders(orders.filter( order => order.order_status === 'shipped' && order.user_id === currentUser.id))
+        setDeliveredOrders(orders.filter( order => order.order_status === 'delivered' && order.user_id === currentUser.id))
       }
     })
   }, [ currentUser ])
@@ -43,14 +43,14 @@ const ShippedOrders = ({ orders, currentUser }) => {
       }
     })
     .then( res => res.json() )
-    .then( orders => setShippedOrders(orders.filter(order => order.order_status === 'shipped')) )   
+    .then( orders => setDeliveredOrders(orders.filter(order => order.order_status === 'delivered')) )   
   }
 
   return(
-      shippedOrders ? 
+      deliveredOrders ? 
       <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
-        { shippedOrders.length > 0 ? 
-          shippedOrders.map(order => {
+        { deliveredOrders.length > 0 ? 
+          deliveredOrders.map(order => {
             return(
               <List.Item key={order.id} as='a'>
                 <Link to={`/orders/${order.id}`}>
@@ -62,7 +62,7 @@ const ShippedOrders = ({ orders, currentUser }) => {
             )
           })
           : 
-          <List.Item>No Shipped Orders</List.Item>
+          <List.Item>No Delivered Orders</List.Item>
         }
       </List>
       :
@@ -70,4 +70,4 @@ const ShippedOrders = ({ orders, currentUser }) => {
   )
 }
 
-export default ShippedOrders
+export default DeliveredOrders

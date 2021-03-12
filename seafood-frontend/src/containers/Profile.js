@@ -9,6 +9,7 @@ import PendingOrders from '../components/PendingOrders'
 import CompletedOrders from '../components/CompletedOrders'
 import UserInfo from '../components/UserInfo'
 import ShippedOrders from '../components/ShippedOrders'
+import DeliveredOrders from '../components/DeliveredOrders'
 
 function Profile() {
 
@@ -97,6 +98,15 @@ function Profile() {
         <Grid.Row>
           <Grid.Column>
             <Segment textAlign='center'>
+              <Header as='h2' textAlign='center'>Delivered Orders</Header>
+              <DeliveredOrders orders={orders} currentUser={currentUser} />
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns={2}>
+        <Grid.Column>
+            <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Your Orders</Header>
               <OrdersWindow orders={orders} currentUser={currentUser} />
             </Segment>
@@ -131,13 +141,6 @@ function Profile() {
         </Grid.Row>
 
         <Grid.Row columns={2}>
-          {/* <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Active Orders</Header>
-              <OrdersWindow orders={orders} currentUser={currentUser} />
-            </Segment>
-          </Grid.Column> */}
-
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Processed/Being Routed</Header>
@@ -153,13 +156,13 @@ function Profile() {
           </Grid.Column>
         </Grid.Row>
 
-        <Grid.Row columns='2'>
-          {/* <Grid.Column>
+        <Grid.Row>
+          <Grid.Column>
             <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Shipped</Header>
-              <ShippedOrders currentUser={currentUser} orders={orders} />
+              <Header as='h2' textAlign='center'>Delivered Orders</Header>
+              <DeliveredOrders orders={orders} currentUser={currentUser} />
             </Segment>
-          </Grid.Column> */}
+          </Grid.Column>
         </Grid.Row>
       </Grid>
       }
