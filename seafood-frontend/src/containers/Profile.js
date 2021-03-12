@@ -8,11 +8,11 @@ import ProcessingOrders from '../components/ProcessingOrders'
 import PendingOrders from '../components/PendingOrders'
 import CompletedOrders from '../components/CompletedOrders'
 import UserInfo from '../components/UserInfo'
+import ShippedOrders from '../components/ShippedOrders'
 
 function Profile() {
 
   const [ orders, setOrders ] = useState([])
-  // const [ admin, setAdmin ] = useState(currentUser ? currentUser.admin : null )
   const [ currentUser, setUser ] = useState({})
   const [ refreshInterval, setRefreshInterval ] = useState(2000)
 
@@ -38,18 +38,6 @@ function Profile() {
       return () => clearInterval(interval)
     }
   })
-
-  // const ifAdmin = () => {
-  //   if (currentUser && currentUser.admin ) {
-  //     return(
-  //       // <Grid.Row id='current-orders-row'>
-  //       // <Grid.Column >
-  //             <DailyOrders currentUser={currentUser}/>
-  //       // </Grid.Column>
-  //       // {/* </Grid.Row> */}
-  //     ) 
-  //   }
-  // }
 
   const fetchData = () => {
     const auth = localStorage.getItem("auth_key")
@@ -100,6 +88,15 @@ function Profile() {
 
           <Grid.Column>
             <Segment textAlign='center'>
+              <Header as='h2' textAlign='center'>Shipped Orders</Header>
+              <ShippedOrders currentUser={currentUser} orders={orders} />
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row>
+          <Grid.Column>
+            <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Your Orders</Header>
               <OrdersWindow orders={orders} currentUser={currentUser} />
             </Segment>
@@ -134,25 +131,35 @@ function Profile() {
         </Grid.Row>
 
         <Grid.Row columns={2}>
-          <Grid.Column>
+          {/* <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Active Orders</Header>
               <OrdersWindow orders={orders} currentUser={currentUser} />
             </Segment>
-          </Grid.Column>
+          </Grid.Column> */}
 
           <Grid.Column>
             <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Being Routed</Header>
+              <Header as='h2' textAlign='center'>Processed/Being Routed</Header>
               <CompletedOrders currentUser={currentUser} orders={orders}/>
             </Segment>
           </Grid.Column>
 
-          {/* <Segment textAlign='center' floated='right'>
-            <Grid.Column floated='right'>
-              <DailyOrders currentUser={currentUser}/> 
-            </Grid.Column>
-          </Segment> */}
+          <Grid.Column>
+            <Segment textAlign='center'>
+              <Header as='h2' textAlign='center'>Shipped</Header>
+              <ShippedOrders currentUser={currentUser} orders={orders} />
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
+
+        <Grid.Row columns='2'>
+          {/* <Grid.Column>
+            <Segment textAlign='center'>
+              <Header as='h2' textAlign='center'>Shipped</Header>
+              <ShippedOrders currentUser={currentUser} orders={orders} />
+            </Segment>
+          </Grid.Column> */}
         </Grid.Row>
       </Grid>
       }

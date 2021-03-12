@@ -1,4 +1,4 @@
-import { Table, Segment, Header, Modal, Button } from 'semantic-ui-react'
+import { Table, Segment, Header, Modal, Button, Tab } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import RouteLineItem from '../components/RouteLineItem'
@@ -9,6 +9,10 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
 
   const [ open, setOpen ] = useState(false)
   const [ currentRoute , setCurrentRoute ] = useState(null)
+  const [ shipped, setShipped ] = useState(false)
+
+  const statuses = route.orders.map( order => order.order_status ) 
+  const stopNumbers = route.orders.map( order => order.stop )
 
   useEffect(() => {
     if (routeChanged) {
@@ -22,7 +26,42 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
       .then( res => res.json() )
       .then( route => setCurrentRoute(route))
     }
-  }, [])
+  }, [ routeChanged, route ])
+
+  const ship = () => {
+    const ids = route.orders.map( order => order.id )
+    ids.map( id => {
+      return fetch(`http://localhost:3001/orders/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-type':'application/json',
+          'Authorization': localStorage.getItem('auth_key')
+        },
+        body: JSON.stringify({
+          order: {
+            order_status: 'shipped'
+          }
+        })
+      })
+    })
+    fetch(`http://localhost:3001/routes/${route.id}`,{
+      method: "PATCH",
+      headers: {
+        'Content-type':'application/json',
+        'Authorization':localStorage.getItem('auth_key')
+      },
+      body: JSON.stringify({
+        route: {
+          status: 'shipped'
+        }
+      })
+    })
+    .then( res => res.json() )
+    .then( route => {
+      setCurrentRoute(route)
+      setShipped(true)
+    })
+  }
 
   return( 
     route.name ? 
@@ -41,13 +80,25 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
         </Table.Header>
 
         <Table.Body className='route-card-list'>
-          { route.orders.sort( (a,b) => a.stop - b.stop ).map( order => {
-            return(route.routeById ? 
-              <FullRouteLineItem setRouteChanged={setRouteChanged} routeChanged={routeChanged} order={order} />
-              :
-              <RouteLineItem order={order} />
-            )
-          })}
+          { route.orders.sort( (a,b) => a.stop - b.stop ).length > 0 ? 
+            route.orders.sort( (a,b) => a.stop - b.stop ).map( order => {
+              return(route.routeById ? 
+                <FullRouteLineItem setRouteChanged={setRouteChanged} routeChanged={routeChanged} order={order} shipped={shipped}/>
+                :
+                <RouteLineItem order={order} />
+              )
+            })
+            :
+            <>
+              <Table.Row>
+                <Table.Cell/>
+                <Table.Cell/>
+                <Table.Cell><Header textAlign='center' as='h4'>No orders</Header></Table.Cell>
+                <Table.Cell/>
+                <Table.Cell/>
+              </Table.Row>
+            </>
+        }
         </Table.Body>
 
       </Table>
@@ -58,6 +109,7 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
         <Header className='route-headers' as='h3'>
           <Modal 
             className='routes-modal'
+            centered
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
             open={open}
@@ -67,6 +119,19 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
               <Modal.Content>
                 <RouteById id={route.id}/>
               </Modal.Content>
+              <Modal.Actions>
+                { !shipped ? 
+                <Button
+                  onClick={ship}
+                  disabled={(statuses.includes('pending') || statuses.includes('processing') || stopNumbers.includes(0)) || !route.orders.length > 0}
+                  positive
+                >
+                  Ship
+                </Button>
+                : 
+                null
+                }
+              </Modal.Actions>
           </Modal>
         </Header>
       </Link>
@@ -80,11 +145,21 @@ const Route = ({ route, routeChanged, setRouteChanged }) => {
         </Table.Header>
 
         <Table.Body className='route-card-list'>
-          { route.orders.sort( (a,b) => a.stop - b.stop ).map( order => {
+          { route.orders.sort( (a,b) => a.stop - b.stop ).length > 0 ? 
+          route.orders.sort( (a,b) => a.stop - b.stop ).map( order => {
             return(
               <RouteLineItem order={order} />
             )
-          })}
+          })
+          : 
+          <>
+              <Table.Row>
+                <Table.Cell/>
+                <Table.Cell><Header textAlign='center' as='h4'>No orders</Header></Table.Cell>
+                <Table.Cell/>
+              </Table.Row>
+            </>
+        }
         </Table.Body>
 
       </Table>

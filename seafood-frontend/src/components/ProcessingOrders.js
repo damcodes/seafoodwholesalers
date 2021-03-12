@@ -1,14 +1,12 @@
 import React from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Header, Container, Segment, Icon, List } from 'semantic-ui-react'
+import { Header, Icon, List } from 'semantic-ui-react'
 
 const ProcessingOrders = ({ orders, currentUser }) => {
 
-  const [ allOrders, setAllOrders ] = useState([])
   const [ processingOrders, setProcessingOrders ] = useState(null)
-  // const [ user, setUser ] = useState(currentUser)
-  const [ refresh, setRefresh ] = useState(2000)
+  const [ refresh, setRefresh ] = useState(5000)
 
   useEffect(() => {
     if (refresh && refresh > 0 && currentUser.admin) {
@@ -28,7 +26,7 @@ const ProcessingOrders = ({ orders, currentUser }) => {
     .then( res => res.json() )
     .then( orders => {
       if (currentUser.admin) {
-        setProcessingOrders(orders)  
+        setProcessingOrders(orders.filter( order => order.order_status === 'processing'))  
       } else {
         setProcessingOrders(orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id))
       }
@@ -44,15 +42,14 @@ const ProcessingOrders = ({ orders, currentUser }) => {
       }
     })
     .then( res => res.json() )
-    .then( ordersData => setAllOrders(ordersData) )
+    .then( ordersData => setProcessingOrders(ordersData.filter( order => order.order_status === 'processing')) )
   }
 
   return(
     processingOrders ? 
       <List className='order-card-list' textAlign='center' selection verticalAlign="middle">
-        { !currentUser.admin ? 
-        orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).length > 0 ? 
-            orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id).map(order => {
+        {processingOrders.length > 0 ? 
+            processingOrders.map(order => {
               return(
                 <List.Item key={order.id} as='a'>
                   <Link to={`/orders/${order.id}`}>
@@ -65,21 +62,6 @@ const ProcessingOrders = ({ orders, currentUser }) => {
             }) 
             :
             <List.Item>No Processing Orders</List.Item>
-          :
-          allOrders.filter( order => order.order_status === 'processing').length > 0 ? 
-          allOrders.filter( order => order.order_status === 'processing').map(order => {
-            return(
-              <List.Item key={order.id} as='a'>
-                <Link to={`/orders/${order.id}`}>
-                  <List.Content>
-                      <List.Header>{`#${order.order_number}`}</List.Header>
-                  </List.Content>
-                </Link>
-              </List.Item>
-            )
-          })
-          :
-          <List.Item>No Orders Processing</List.Item>
         }
       </List>
     :

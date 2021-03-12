@@ -2,7 +2,7 @@ import { Table, Icon, Button, Input, List } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-const FullRouteLineItem = ({ order, setRouteChanged, routeChanged }) => {
+const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
   
   const [ currentOrder , setCurrentOrder ] = useState(null)
   const [ customer, setCustomer ] = useState({})
@@ -36,7 +36,8 @@ const FullRouteLineItem = ({ order, setRouteChanged, routeChanged }) => {
   }
 
   const routeStop = (order) => {
-    if (order.stop === 0) return <Button onClick={() => setInput(!input)} size='tiny'>Route</Button>
+    if (order.stop === 0 && !shipped) return <Button onClick={() => setInput(!input)} size='tiny'>Route</Button>
+    if (order.stop !== 0 && shipped) return order.stop
     return <Button positive onClick={() => setInput(!input)} size='tiny'>{order.stop}</Button>
   }
   

@@ -34,7 +34,6 @@ const RouteById = ({ id }) => {
   }, [ id ])
 
   useEffect(() => {
-    // debugger
     if (routeChanged) {
       fetch(`http://localhost:3001/routes/${id}`, {
       method: "GET",
@@ -45,8 +44,7 @@ const RouteById = ({ id }) => {
     })
     .then( res => handleResponse(res) )
     .then( route => {
-      setRoute(route) 
-      // setRouteChanged(false)
+      setRoute(route)
     })
     }
   }, [ routeChanged, id ])

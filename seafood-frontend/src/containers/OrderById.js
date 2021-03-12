@@ -1,7 +1,6 @@
 import { Table, Button, Container, Icon, Label, Header, Segment } from 'semantic-ui-react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import ProcessingOrders from '../components/ProcessingOrders'
 
 const OrderById = () => {
   let { id } = useParams()
@@ -10,24 +9,6 @@ const OrderById = () => {
   const [ orderProducts, setOrderProducts ] = useState([])
   const [ user, setUser ] = useState({})
   const [ customer, setCustomer ] = useState({})
-
-  // const fetchOrderProducts = order => {
-  //   if (order) {
-  //     fetch(`http://localhost:3001/order_products`, {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-type":"application/json",
-  //         "Authorization":localStorage.getItem("auth_key")
-  //       }
-  //     })
-  //     .then( res => res.json() )
-  //     .then( data => {
-  //       const ops = data.filter( op => op.order_id === order.id )
-  //       return orderProducts.includes(ops) ? null : setOrderProducts([...orderProducts, ops])
-  //       // setOrderProducts(orderProducts.includes(ops) ? orderProducts : [...orderProducts, ops])
-  //     })
-  //   }
-  // }
 
   useEffect(() => {
     fetch(`http://localhost:3001/current-user`,{
@@ -64,9 +45,7 @@ const OrderById = () => {
       .then( res => res.json() )
       .then( data => {
         const ops = data.filter( op => op.order_id === order.id )
-        // debugger
         return setOrderProducts([...orderProducts, ops])
-        // setOrderProducts(orderProducts.includes(ops) ? orderProducts : [...orderProducts, ops])
       })
     })
   }, [])
@@ -132,6 +111,12 @@ const OrderById = () => {
     return date.slice(0,10)
   }
 
+  const formatTime = (dateTimeStr) => {
+    const date = new Date(dateTimeStr)
+    const timeStr = date.toLocaleTimeString()
+    return timeStr
+  }
+
   return(
     !currentOrder || !orderProducts ? 
     <Header as='h3'><Icon name='spinner'/>Loading New Order...</Header>
@@ -182,7 +167,7 @@ const OrderById = () => {
           { user.admin || user.id === currentOrder.user_id ? 
             <Table.Footer fullWidth>
               <Table.Row textAlign='center' >
-                <Table.HeaderCell colSpan='4' textAlign='center'>Order Status: {currentOrder.order_status === 'completed' ? 'Being routed' : currentOrder.order_status.charAt(0).toUpperCase() + currentOrder.order_status.slice(1)}</Table.HeaderCell>
+                <Table.HeaderCell colSpan='4' textAlign='center'>Order Status: {currentOrder.order_status === 'completed' ? 'Being routed' : currentOrder.order_status === 'shipped' ? `Shipped @ ${formatTime(currentOrder.updated_at)}` : currentOrder.order_status.charAt(0).toUpperCase() + currentOrder.order_status.slice(1)}</Table.HeaderCell>
               </Table.Row>
             </Table.Footer> 
             :
