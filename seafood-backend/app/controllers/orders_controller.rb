@@ -18,32 +18,23 @@ class OrdersController < ApplicationController
     user = current_user
     user_company = user.company
     route_id = user_company.route_id
-    byebug
     if Order.all.length == 0 
       if user_company.name == 'Seafood Wholesalers'
         @order = Order.new(user_id: order_params[:user_id], order_number: 101010, order_total: order_params[:order_total], route_id: route_id)
       else 
         @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
       end
-    elsif Order.select{ |order| order.user.company.name == 'Seafood Wholesalers'}.length == 0 
-      if user_company.name == 'Seafood Wholesalers'
-        @order = Order.new(user_id: order_params[:user_id], order_number: 101010, order_total: order_params[:order_total], route_id: route_id)
-      end
-    elsif Order.select{ |order| order.user.company.name != 'Seafood Wholesalers'}.length == 0 
-      if user_company.name != 'Seafood Wholesalers'
-        @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
-      end 
     else
-      # byebug
-      if user_company.name == 'Seafood Wholesalers' 
-        last_order = Order.all.select{ |order| order.order_number < 645999 }.last
-      else 
-        last_order = Order.all.select{ |order| order.order_number > 645999 }.last
+      if user_company.name == 'Seafood Wholesalers'
+        last_order = Order.select{|order| order.user.company.name == 'Seafood Wholesalers'}.last 
+        new_order_num = last_order.order_number + 1
+        @order = Order.new(user_id: order_params[:user_id], order_number: new_order_num, order_total: order_params[:order_total], route_id: route_id)
+      else
+        last_order = Order.select{|order| order.user.company.name != 'Seafood Wholesalers'}.last
+        new_order_num = last_order.order_number + 1
+        @order =  Order.new(user_id: order_params[:user_id], order_number: new_order_num, order_total: order_params[:order_total], route_id: route_id)
       end
-      new_order_num = last_order.order_number + 1
-      @order = Order.new(user_id: order_params[:user_id], order_number: new_order_num, order_total: order_params[:order_total], route_id: route_id)
     end
-    byebug
     if @order.save
       render json: OrderSerializer.new(@order).serialize, status: :created, location: @order
     else
