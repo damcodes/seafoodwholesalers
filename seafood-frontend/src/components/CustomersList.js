@@ -1,5 +1,5 @@
 import { List, Segment, Header, Grid } from 'semantic-ui-react'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 const CustomersList = ({ sort, searched, companies }) => {
   let history = useHistory()

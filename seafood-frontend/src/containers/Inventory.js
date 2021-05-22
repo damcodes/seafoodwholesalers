@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react' 
 import { Button, Icon, Table, Container, Input, Header, Label, Grid, Segment, Modal } from 'semantic-ui-react'
-import InventoryLineItem from '../components/InventoryLineItem'
 import NewProductCard from '../components/NewProductCard'
+import InventoryList from '../components/InventoryList';
 
 const Inventory = () => {
 
@@ -9,8 +9,6 @@ const Inventory = () => {
   const [ sort, setSort ] = useState('')
   const [ sortedUp, setSortedUp ] = useState(false)
   const [ searched, setSearched ] = useState('')
-  const [ processedItems, setProcessedItems ] = useState([])
-  const [ refresh ] = useState(500)
   const [ open, setOpen ] = useState(false)
   const prevSearched = usePrevious(searched)
 
@@ -18,66 +16,15 @@ const Inventory = () => {
     fetch('http://localhost:3001/products', {
       method: "GET",
       headers: {
-        "Content-type":"applicaton/json"
-        // "Authorization": localStorage.getItem("auth_key")
+        "Content-type":"applicaton/json",
+        "Authorization": localStorage.getItem("auth_key")
       }
     })
     .then( res => res.json() )
-    .then( products => setItems(products) )
+    .then( items => setItems(items) )
   }, [])
 
-  useEffect(() => {
-    if (refresh && refresh > 0 && (sort !== '' || searched !== '')) {
-      const interval = setInterval(fetchProducts, refresh)
-      return () => clearInterval(interval)
-    }
-  })
-  
-  useEffect(() => {
-    let processed;
-    if (sort !== '' && searched !== '') {
-      processed = items.filter(searchAlgo).sort(sortAlgo)
-    } else if (sort === '' && searched !== '') {
-      processed = items.filter(searchAlgo)
-    } else if (sort !== '' && searched === '') {
-      processed = items.sort(sortAlgo)
-    } 
-    
-    return processed ? setProcessedItems(processed) : setProcessedItems([])
-  }, [items, searched, setProcessedItems, sort])
-
-  const sortAlgo = (a, b) => {
-    let op 
-    if (sort === 'Weight') {
-      if (!sortedUp) {
-        op = b.avail_weight - a.avail_weight;
-      } else {
-        op = a.avail_weight - b.avail_weight;
-      }
-    } else if (sort === 'Price') {
-      if (!sortedUp) {
-        op = b.price - a.price;
-      } else {
-        op = a.price - b.price;
-      }
-    } else if (sort === 'Name') {
-      op = a.description.localeCompare(b.description);
-    }
-    return op;
-  }
-
-  const searchAlgo = item => {
-    if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1) || item.item_number.slice(0, searched.length) === searched) {
-      return true;
-    } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-      if (item.description.toUpperCase().includes(searched.toUpperCase()) || item.item_number.includes(searched)) {
-        return true;
-      }
-    } 
-    return false;
-  }
-
-  function usePrevious(value) {
+  function usePrevious(value) { // holds previous search term
     const ref = useRef()
     useEffect(() => {
       ref.current = value
@@ -122,18 +69,6 @@ const Inventory = () => {
     })
   }
 
-  const fetchProducts = () => {
-    fetch('http://localhost:3001/products', {
-      method: "GET",
-      headers: {
-        "Content-type":"applicaton/json"
-        // "Authorization": localStorage.getItem("auth_key")
-      }
-    })
-    .then( res => res.json() )
-    .then( products => setItems(products) )
-  }
-
   return( 
     <Container>
       <Grid>
@@ -165,7 +100,7 @@ const Inventory = () => {
         </Grid.Row>
       </Grid> 
 
-      { items.length > 0 || processedItems.length > 0 ?
+      { items.length > 0 ?
       <> 
         <Segment id='inventory'>
           <Table striped celled definition>
@@ -181,34 +116,14 @@ const Inventory = () => {
             </Table.Header>
 
             <Table.Body>
-              { processedItems.length > 0 ? 
-                processedItems.map( item => {
-                  return(
-                    <InventoryLineItem
-                      key={item.id}
-                      item={item}
-                      deleteItem={deleteItem}
-                    />
-                  )
-                })
-              :
-                searched !== '' ?
-                  <Table.Row>
-                    <Table.Cell colSpan='6'>
-                      <Header textAlign='center' as='h3'>No Item Found</Header>
-                    </Table.Cell>
-                  </Table.Row>
-                :
-                  items.sort((a,b) => b.active - a.active).map( item => {
-                    return( 
-                      <InventoryLineItem
-                        key={item.id}
-                        item={item}
-                        deleteItem={deleteItem}
-                      />
-                    )
-                  }) 
-              }
+              <InventoryList
+                items={items}
+                searched={searched}
+                sort={sort}
+                sortedUp={sortedUp}
+                prevSearched={prevSearched}
+                deleteItem={deleteItem}
+                />
             </Table.Body>
 
             <Table.Footer fullWidth>
