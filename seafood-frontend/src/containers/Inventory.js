@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { Button, Icon, Table, Container, Input, Header, Label, Grid, Segment, Modal } from 'semantic-ui-react'
 import InventoryLineItem from '../components/InventoryLineItem'
 import NewProductCard from '../components/NewProductCard'
-import { useHistory } from 'react-router-dom'
 
 const Inventory = () => {
 
@@ -11,10 +10,9 @@ const Inventory = () => {
   const [ sortedUp, setSortedUp ] = useState(false)
   const [ searched, setSearched ] = useState('')
   const [ processedItems, setProcessedItems ] = useState([])
-  const [ refresh, setRefresh ] = useState(500)
+  const [ refresh ] = useState(500)
   const [ open, setOpen ] = useState(false)
   const prevSearched = usePrevious(searched)
-  let history = useHistory()
 
   useEffect(() => {
     fetch('http://localhost:3001/products', {
@@ -34,69 +32,50 @@ const Inventory = () => {
       return () => clearInterval(interval)
     }
   })
-
+  
   useEffect(() => {
-    let processed
+    let processed;
     if (sort !== '' && searched !== '') {
-      processed = items.filter( item => {
-        if ((item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) || item.item_number.slice(0, searched.length) === searched) {
-          return true
-        } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-          if (item.description.includes(searched) || item.item_number.includes(searched)) return true
-        } 
-        return false
-        }).sort( (a, b) => {
-          let op 
-          if (sort === 'Weight') {
-            if (!sortedUp) {
-              op = b.avail_weight - a.avail_weight
-            } else {
-              op = a.avail_weight - b.avail_weight
-            }
-          } else if (sort === 'Price') {
-            if (!sortedUp) {
-              op = b.price - a.price
-            } else {
-              op = a.price - b.price
-            }
-          } else if (sort === 'Name') {
-            op = a.description.localeCompare(b.description)
-          }
-          return op 
-        })
+      processed = items.filter(searchAlgo).sort(sortAlgo)
     } else if (sort === '' && searched !== '') {
-      processed = items.filter( item => {
-        if ((item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1)) || item.item_number.slice(0, searched.length) === searched) {
-          return true
-        } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-          if (item.description.includes(searched) || item.item_number.includes(searched)) return true
-        } 
-        return false
-        })
+      processed = items.filter(searchAlgo)
     } else if (sort !== '' && searched === '') {
-      processed = items.sort( (a, b) => {
-        let op 
-        if (sort === 'Weight') {
-          if (!sortedUp) {
-            op = b.avail_weight - a.avail_weight
-          } else {
-            op = a.avail_weight - b.avail_weight
-          }
-        } else if (sort === 'Price') {
-          if (!sortedUp) {
-            op = b.price - a.price
-          } else {
-            op = a.price - b.price
-          }
-        } else if (sort === 'Name') {
-          op = a.description.localeCompare(b.description)
-        }
-        return op 
-      })
+      processed = items.sort(sortAlgo)
     } 
     
     return processed ? setProcessedItems(processed) : setProcessedItems([])
-  }, [ sort, searched, items, prevSearched, sortedUp ])
+  }, [items, searched, setProcessedItems, sort])
+
+  const sortAlgo = (a, b) => {
+    let op 
+    if (sort === 'Weight') {
+      if (!sortedUp) {
+        op = b.avail_weight - a.avail_weight;
+      } else {
+        op = a.avail_weight - b.avail_weight;
+      }
+    } else if (sort === 'Price') {
+      if (!sortedUp) {
+        op = b.price - a.price;
+      } else {
+        op = a.price - b.price;
+      }
+    } else if (sort === 'Name') {
+      op = a.description.localeCompare(b.description);
+    }
+    return op;
+  }
+
+  const searchAlgo = item => {
+    if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1) || item.item_number.slice(0, searched.length) === searched) {
+      return true;
+    } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
+      if (item.description.toUpperCase().includes(searched.toUpperCase()) || item.item_number.includes(searched)) {
+        return true;
+      }
+    } 
+    return false;
+  }
 
   function usePrevious(value) {
     const ref = useRef()

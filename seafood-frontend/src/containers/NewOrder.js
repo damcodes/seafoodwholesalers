@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react' 
-import { Redirect, useHistory } from 'react-router-dom'
-import { Button, Checkbox, Icon, Table, Container, Input, Tab, Label, Header, Grid } from 'semantic-ui-react'
+import { useHistory } from 'react-router-dom'
+import { Button, Icon, Table, Container, Input, Label, Header, Grid } from 'semantic-ui-react'
 import LineItem from '../components/LineItem'
 import Order from '../components/Order'
 
