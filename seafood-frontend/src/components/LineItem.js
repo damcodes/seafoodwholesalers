@@ -62,6 +62,7 @@ const LineItem = ({ item, prevTarget, setTargetAndTotalCost, setCart, cart, setT
           labelPosition='right'
           disabled={checked}
           id={`${item.id}-weight`}
+          type="number"
         />
       </Table.Cell>
       <Table.Cell className='line-item-total'>

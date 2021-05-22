@@ -30,8 +30,12 @@ class OrdersController < ApplicationController
         new_order_num = last_order.order_number + 1
         @order = Order.new(user_id: order_params[:user_id], order_number: new_order_num, order_total: order_params[:order_total], route_id: route_id)
       else
-        last_order = Order.select{|order| order.user.company.name != 'Seafood Wholesalers'}.last
-        new_order_num = last_order.order_number + 1
+        if Order.select{|order| order.user.company.name != "Seafood Wholesalers"}.length == 0
+          new_order_num = 646000
+        else
+          last_order = Order.select{|order| order.user.company.name != 'Seafood Wholesalers'}.last
+          new_order_num = last_order.order_number + 1
+        end
         @order =  Order.new(user_id: order_params[:user_id], order_number: new_order_num, order_total: order_params[:order_total], route_id: route_id)
       end
     end
