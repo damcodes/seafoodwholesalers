@@ -19,7 +19,7 @@ const NewOrder = () => {
   const [ sortedUp, setSortedUp ] = useState(false)
   const [ searched, setSearched ] = useState('')
   const [ processedItems, setProcessedItems ] = useState([])
-  const [ refresh, setRefresh ] = useState(500)
+  const [ refresh ] = useState(500)
   const prevSearched = usePrevious(searched)
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const NewOrder = () => {
   }, [cart])
 
   useEffect(() => {
-    if (refresh && refresh > 0 && (sort !== '' || searched !== '')) {
+    if (refresh && refresh > 0) {
       const interval = setInterval(fetchProducts, refresh)
       return () => clearInterval(interval)
     }
