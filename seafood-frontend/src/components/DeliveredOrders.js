@@ -6,7 +6,7 @@ import { Header, Icon, List } from 'semantic-ui-react'
 const DeliveredOrders = ({ orders, currentUser }) => {
 
   const [ deliveredOrders, setDeliveredOrders ] = useState(null)
-  const [ refresh, setRefresh ] = useState(2000)
+  const [ refresh ] = useState(2000)
 
   useEffect(() => {
     fetch(`http://localhost:3001/orders`, {
