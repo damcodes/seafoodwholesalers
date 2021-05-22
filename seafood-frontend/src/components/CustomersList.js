@@ -5,24 +5,24 @@ const CustomersList = ({ sort, searched, companies }) => {
   let history = useHistory()
   let customers = []
 
+  const searchAlgo = (company) => {
+    return company.name.toUpperCase().slice(0, searched.length) ===  searched.toUpperCase(); 
+  }
+
+  const sortAlgo = (a, b) => {
+    if (a[sort].includes('Fiesta') && b[sort].includes("Fiesta")) {
+      return Number(a[sort].split(' ')[1]) - Number(b[sort].split(' ')[1])
+    }
+    return a[sort].localeCompare(b[sort]) 
+  }
+
   
   if (sort && !searched) {
-    customers = companies.sort( (a, b) => {
-      if (a[sort].includes('Fiesta') && b[sort].includes("Fiesta")) {
-        return Number(a[sort].split(' ')[1]) - Number(b[sort].split(' ')[1])
-      }
-      return a[sort].localeCompare(b[sort]) 
-    })
+    customers = companies.sort(sortAlgo)
   } else if (!sort && searched) {
-    customers = companies.filter( company => company.name.toUpperCase().slice(0, searched.length) ===  searched.toUpperCase() )
+    customers = companies.filter(searchAlgo)
   } else if (sort && searched) {
-    customers = companies.sort( (a, b) => {
-      if (a[sort].includes('Fiesta') && b[sort].includes("Fiesta")) {
-        return Number(a[sort].split(' ')[1]) - Number(b[sort].split(' ')[1])
-      }
-      return a[sort].localeCompare(b[sort]) 
-    })
-    .filter( company => company.name.toUpperCase().slice(0, searched.length) ===  searched.toUpperCase() )
+    customers = companies.sort(sortAlgo).filter(searchAlgo)
   } else {
     customers = companies
   }

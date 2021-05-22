@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Grid, List, Segment, Header, Icon, Label, Input, Button, Modal } from 'semantic-ui-react'
-import { Link, useHistory } from 'react-router-dom'
+import { Grid, Segment, Header, Icon, Label, Input, Button, Modal } from 'semantic-ui-react'
+import { useHistory } from 'react-router-dom'
 import CustomersList from '../components/CustomersList'
 import NewCustomerCard from '../components/NewCustomerCard'
 

@@ -83,7 +83,8 @@ const NewOrder = () => {
   }
 
   const searchAlgo = item => {
-    if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1) || item.item_number.slice(0, searched.length) === searched) {
+    if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1) || 
+    item.item_number.slice(0, searched.length) === searched) {
       return true;
     } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
       if (item.description.toUpperCase().includes(searched.toUpperCase()) || item.item_number.includes(searched)) {
@@ -106,7 +107,7 @@ const NewOrder = () => {
     return processed ? setProcessedItems(processed) : setProcessedItems([])
   }, [ sort, searched, items, prevSearched, sortedUp ])
 
-  function usePrevious(value) {
+  function usePrevious(value) { // holds value of previous search input
     const ref = useRef()
     useEffect(() => {
       ref.current = value
@@ -135,7 +136,7 @@ const NewOrder = () => {
     const numString = num.toString()
     if (Number.isInteger(num)) return `$${num}.00`
     if (countDecimals(num) === 1) return `$${num}0`
-    if (countDecimals(num) > 2) return `$${numString.slice(0, numString.indexOf('.') + 3)}`
+    // if (countDecimals(num) > 2) return `$${numString.slice(0, numString.indexOf('.') + 3)}`
     return `$${num}`
   }
 
