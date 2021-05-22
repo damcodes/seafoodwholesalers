@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react' 
-import { useHistory } from 'react-router-dom'
-import { Button, Icon, Table, Container, Input, Label, Header, Grid } from 'semantic-ui-react'
-import LineItem from '../components/LineItem'
-import Order from '../components/Order'
+import { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Button, Icon, Table, Container, Input, Label, Header, Grid } from 'semantic-ui-react';
+import TodaysCatch from '../components/TodaysCatch';
+import Order from '../components/Order';
 
 const NewOrder = () => {
   
@@ -18,8 +18,6 @@ const NewOrder = () => {
   const [ sort, setSort ] = useState('')
   const [ sortedUp, setSortedUp ] = useState(false)
   const [ searched, setSearched ] = useState('')
-  const [ processedItems, setProcessedItems ] = useState([])
-  const [ refresh ] = useState(500)
   const prevSearched = usePrevious(searched)
 
   useEffect(() => {
@@ -38,8 +36,8 @@ const NewOrder = () => {
     fetch('http://localhost:3001/products', {
       method: "GET",
       headers: {
-        "Content-type":"applicaton/json"
-        // "Authorization": localStorage.getItem("auth_key")
+        "Content-type":"applicaton/json",
+        "Authorization": localStorage.getItem("auth_key")
       }
     })
     .then( res => res.json() )
@@ -55,58 +53,6 @@ const NewOrder = () => {
     }
   }, [cart])
 
-  useEffect(() => {
-    if (refresh && refresh > 0) {
-      const interval = setInterval(fetchProducts, refresh)
-      return () => clearInterval(interval)
-    }
-  })
-
-  const sortAlgo = (a, b) => {
-    let op 
-    if (sort === 'Weight') {
-      if (!sortedUp) {
-        op = b.avail_weight - a.avail_weight;
-      } else {
-        op = a.avail_weight - b.avail_weight;
-      }
-    } else if (sort === 'Price') {
-      if (!sortedUp) {
-        op = b.price - a.price;
-      } else {
-        op = a.price - b.price;
-      }
-    } else if (sort === 'Name') {
-      op = a.description.localeCompare(b.description);
-    }
-    return op;
-  }
-
-  const searchAlgo = item => {
-    if (item.description.slice(0, searched.length) === searched.slice(0,1).toUpperCase() + searched.slice(1) || 
-    item.item_number.slice(0, searched.length) === searched) {
-      return true;
-    } else if (searched === prevSearched + searched.slice(prevSearched.length)) {
-      if (item.description.toUpperCase().includes(searched.toUpperCase()) || item.item_number.includes(searched)) {
-        return true;
-      }
-    } 
-    return false;
-  }
-
-
-  useEffect(() => {
-    let processed
-    if (sort !== '' && searched !== '') {
-      processed = items.filter(searchAlgo).sort(sortAlgo);
-    } else if (sort === '' && searched !== '') {
-      processed = items.filter(searchAlgo);
-    } else if (sort !== '' && searched === '') {
-      processed = items.sort(sortAlgo);
-    } 
-    return processed ? setProcessedItems(processed) : setProcessedItems([])
-  }, [ sort, searched, items, prevSearched, sortedUp ])
-
   function usePrevious(value) { // holds value of previous search input
     const ref = useRef()
     useEffect(() => {
@@ -115,33 +61,15 @@ const NewOrder = () => {
     return ref.current
   }
 
-
-  const fetchProducts = () => {
-    fetch('http://localhost:3001/products', {
-      method: "GET",
-      headers: {
-        "Content-type":"applicaton/json"
-      }
-    })
-    .then( res => res.json() )
-    .then( products => setItems(products) )
-  }
-
   const countDecimals = (val) => {
     if( Math.floor(val) === val ) return 0
     return val.toString().split(".")[1].length || 0
   }
 
   const pricifyAndStringify = (num) => {
-    const numString = num.toString()
     if (Number.isInteger(num)) return `$${num}.00`
     if (countDecimals(num) === 1) return `$${num}0`
-    // if (countDecimals(num) > 2) return `$${numString.slice(0, numString.indexOf('.') + 3)}`
     return `$${num}`
-  }
-
-  const isNum = (str) => {
-    return /^\d+$/.test(str)
   }
 
   const newOrder = () => {
@@ -254,7 +182,7 @@ const NewOrder = () => {
         </Grid.Row>
       </Grid>
 
-      { items.length > 0 || processedItems.length > 0 ?
+      { items.length > 0 ?
       <Table striped compact celled definition>
         <Table.Header>
           <Table.Row>
@@ -269,73 +197,19 @@ const NewOrder = () => {
         </Table.Header>
 
         <Table.Body>
-          { processedItems.length > 0 ?            
-            processedItems.filter( item => item.avail_weight > 0 && item.active).map(item => {
-              return(
-                <LineItem 
-                  key={item.id} 
-                  id={item.item_number}
-                  item={item} 
-                  prevTarget={target}
-                  totalCost={totalCost}
-                  setTotalCost={setTotalCost}
-                  setCart={setCart}
-                  cart={cart}
-                  setTargetAndTotalCost={(newTarget, cost) => {
-                    if (newTarget.value.length > 1) {
-                      setTotalCost(0)
-                    }
-                    if (cost === 0) {
-                      setTotalCost(0)
-                    }
-                    if (isNum(newTarget.value)) {
-                      setTotalCost(cost)
-                    }
-                    if (newTarget !== target && isNum(newTarget.value)) {
-                      setTotalCost(totalCost + cost) 
-                    }
-                    return setTarget(newTarget)
-                  }}
-                />
-            )})
-            : 
-              searched !== '' ?
-                <Table.Row>
-                  <Table.Cell colSpan='6'>
-                    <Header textAlign='center' as='h3'>No Item Found</Header>
-                  </Table.Cell>
-                </Table.Row>
-              :
-                items.filter( item => item.avail_weight > 0 && item.active).sort((a,b) => b.active - a.active).map( item => {
-                  return( 
-                    <LineItem
-                      key={item.id} 
-                      id={item.item_number}
-                      item={item} 
-                      prevTarget={target}
-                      totalCost={totalCost}
-                      setTotalCost={setTotalCost}
-                      setCart={setCart}
-                      cart={cart}
-                      setTargetAndTotalCost={(newTarget, cost) => {
-                        if (newTarget.value.length > 1) {
-                          setTotalCost(0)
-                        }
-                        if (cost === 0) {
-                          setTotalCost(0)
-                        }
-                        if (isNum(newTarget.value)) {
-                          setTotalCost(cost)
-                        }
-                        if (newTarget !== target && isNum(newTarget.value)) {
-                          setTotalCost(totalCost + cost) 
-                        }
-                        return setTarget(newTarget)
-                      }}
-                    />
-                  )
-                })           
-          }
+          <TodaysCatch 
+            items={items.filter(item => item.avail_weight > 0 && item.active)}
+            sort={sort}
+            searched={searched}
+            sortedUp={sortedUp}
+            target={target}
+            prevSearched={prevSearched}
+            setTarget={setTarget}
+            totalCost={totalCost}
+            setTotalCost={setTotalCost}
+            cart={cart}
+            setCart={setCart}
+          />
         </Table.Body>
 
         <Table.Footer fullWidth>

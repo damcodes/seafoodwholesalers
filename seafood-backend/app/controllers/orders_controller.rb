@@ -20,7 +20,7 @@ class OrdersController < ApplicationController
     route_id = user_company.route_id
     if Order.all.length == 0 
       if user_company.name == 'Seafood Wholesalers'
-        @order = Order.new(user_id: order_params[:user_id], order_number: 101010, order_total: order_params[:order_total], route_id: route_id)
+        @order = Order.new(user_id: order_params[:user_id], order_number: 101000, order_total: order_params[:order_total], route_id: route_id)
       else 
         @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
       end

@@ -1,7 +1,7 @@
-import { Header, Table } from 'semantic-ui-react';
-import InventoryLineItem from './InventoryLineItem';
+import { Table, Header } from 'semantic-ui-react';
+import LineItem from './LineItem';
 
-const InventoryList = ({ sort, searched, items, sortedUp, prevSearched, deleteItem }) => {
+const TodaysCatch = ({ sort, searched, sortedUp, prevSearched, items, target, setTarget, totalCost, setTotalCost, cart, setCart }) => {
 
   const sortAlgo = (a, b) => {
     let op 
@@ -38,6 +38,10 @@ const InventoryList = ({ sort, searched, items, sortedUp, prevSearched, deleteIt
     return false;
   }
 
+  const isNum = (str) => {
+    return /^\d+$/.test(str)
+  }
+
   if (sort && !searched) {
     items = items.sort(sortAlgo)
   } else if (!sort && searched) {
@@ -48,15 +52,37 @@ const InventoryList = ({ sort, searched, items, sortedUp, prevSearched, deleteIt
 
   return(
     <>
-      {items.map( item => {
-        return(
-          <InventoryLineItem
-            key={item.id}
-            item={item}
-            deleteItem={deleteItem}
-          />
-        )
-      })}
+      {
+        items.map( item => {
+          return(
+            <LineItem
+              key={item.id} 
+              id={item.item_number}
+              item={item} 
+              prevTarget={target}
+              totalCost={totalCost}
+              setTotalCost={setTotalCost}
+              setCart={setCart}
+              cart={cart}
+              setTargetAndTotalCost={(newTarget, cost) => {
+                if (newTarget.value.length > 1) {
+                  setTotalCost(0)
+                }
+                if (cost === 0) {
+                  setTotalCost(0)
+                }
+                if (isNum(newTarget.value)) {
+                  setTotalCost(cost)
+                }
+                if (newTarget !== target && isNum(newTarget.value)) {
+                  setTotalCost(totalCost + cost) 
+                }
+                return setTarget(newTarget)
+              }}
+            />
+          )
+        })
+      }
 
       {searched !== '' && items.length === 0 ? 
         <Table.Row>
@@ -71,4 +97,4 @@ const InventoryList = ({ sort, searched, items, sortedUp, prevSearched, deleteIt
   )
 }
 
-export default InventoryList
+export default TodaysCatch
