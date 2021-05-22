@@ -95,6 +95,9 @@
 #delete-product-btn {
   background-color: rgb(246, 244, 244);
 }
+#delete-product-btn:hover {
+  color: red;
+}
 
 #order-conf-total-price {
   font-weight: bolder;
@@ -177,9 +180,6 @@ input#new-customer-input {
   max-width: fit-content;
   top: 50px;
 }
-/* #dont-delete-product-btn {
-  text-align: center;
-} */
 #delete-product-msg {
   color:rgb(255, 0, 0)
 }
@@ -188,4 +188,12 @@ input#new-customer-input {
 }
 #edit-email-check:hover {
     color: green;
+}
+#edit-item-number:hover, #edit-description:hover, #edit-price:hover, #plus-weight:hover, #orders-by-date:hover {
+  color: white;
+  background-color: lightseagreen;
+}
+#minus-weight:hover {
+  color: white;
+  background-color: red;
 }

@@ -194,14 +194,14 @@ const InventoryLineItem = ({ item, deleteItem }) => {
       <Table.Cell>
         {updatedItemNumberState ? <Input onChange={e => setItemNumber(e.target.value)} placeholder={itemNumber} size="mini" type="text" /> : itemNumber}
         <br/>
-        { checked && !updatedItemNumberState ? <Button onClick={handleEditItemNumber} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
+        { checked && !updatedItemNumberState ? <Button id="edit-item-number" onClick={handleEditItemNumber} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
         { checked && updatedItemNumberState ? <Button onClick={handleEditItemNumber} textAlign='center' size='mini'><Icon name='check'/></Button> : null}
       </Table.Cell>
 
       <Table.Cell>
         {updateDescriptState ? <Input onChange={e => setDescription(e.target.value)} placeholder={description} size="mini" type="text" /> : description}
         <br/>
-        { checked && !updateDescriptState ? <Button onClick={handleEditDescription} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
+        { checked && !updateDescriptState ? <Button id="edit-description" onClick={handleEditDescription} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
         { checked && updateDescriptState ? <Button onClick={handleEditDescription} textAlign='center' size='mini'><Icon name='check'/></Button> : null}
       </Table.Cell>
 
@@ -235,7 +235,7 @@ const InventoryLineItem = ({ item, deleteItem }) => {
                       </Label>
                       <br/>
                       <br/>
-                      <Button onClick={e => {
+                      <Button id="edit-price" onClick={e => {
                                   setUpdatePriceState(!updatePriceState)
                                   handlePriceChange(e)
                                   
@@ -267,12 +267,12 @@ const InventoryLineItem = ({ item, deleteItem }) => {
           size='mini'
         />
         <br/>
-        <Button size='mini' onClick={e => {
+        <Button id='minus-weight' size='mini' onClick={e => {
                                   handleWeightChange(e, 'minus')
                               }}>
           <Icon name='minus'/>
         </Button>
-        <Button size='mini' onClick={e => handleWeightChange(e, 'plus')}>
+        <Button id="plus-weight" size='mini' onClick={e => handleWeightChange(e, 'plus')}>
           <Icon name='plus'/>
         </Button>
       </Table.Cell> : <Table.Cell /> 

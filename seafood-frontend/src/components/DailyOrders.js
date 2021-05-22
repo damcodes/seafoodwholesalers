@@ -61,7 +61,7 @@ const DailyOrders = () => {
           // console.log(Date(e.target.value).getDay())
             setDate(e.target.value.slice(0,10))
       }}/>
-      <Button floated='right' onClick={() => setFiltered(!filtered)} circular='true' >
+      <Button id="orders-by-date" floated='right' onClick={() => setFiltered(!filtered)} circular='true' >
         <Icon name='search' onClick={() => setFiltered(!filtered)}/>
       </Button>
       {  filtered ? filteredOrders(allOrders) : null }

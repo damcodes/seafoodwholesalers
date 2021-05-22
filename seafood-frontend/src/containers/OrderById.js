@@ -32,7 +32,7 @@ const OrderById = () => {
     })
     .then( res => res.json() )
     .then( order => {
-      // debugger
+      debugger
       setCurrentOrder(order)
       fetchCustomer(order)
       fetch(`http://localhost:3001/order_products`, {
