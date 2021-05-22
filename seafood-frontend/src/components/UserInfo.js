@@ -18,8 +18,9 @@ const UserInfo = () => {
     .then( res => res.json() )
     .then( user => {
       setUser(user) 
+      setEmail(user.email)
     })
-  }, [ ]);
+  }, [  ]);
 
   const editEmail = () => {
     setEditEmailState(false);
@@ -38,6 +39,7 @@ const UserInfo = () => {
     .then( res => res.json() )
     .then( user => {
       setUser(user)
+      setEmail(user.email)
     })
   }
 
@@ -78,7 +80,7 @@ const UserInfo = () => {
                   </Grid.Column>
 
                   <Grid.Column textAlign='center'>
-                    {editEmailState ? <Input type="text" onChange={e => setEmail(e.target.value)} /> : user.email}
+                    {editEmailState ? <Input type="text" onChange={e => setEmail(e.target.value)} value={email}/> : user.email}
                   </Grid.Column>
 
                   <Grid.Column textAlign='left'>
