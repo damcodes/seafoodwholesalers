@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Grid, Container, Segment, Header, Card, Icon } from 'semantic-ui-react'
+import { Grid, Container, Segment, Header, Card, Icon, Input } from 'semantic-ui-react'
 
 const UserInfo = () => {
 
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
+  const [editEmailState, setEditEmailState ] = useState(false);
+  const [email, setEmail] = useState(null);
 
   useEffect(() => {
     fetch(`http://localhost:3001/current-user`, {
@@ -17,7 +19,27 @@ const UserInfo = () => {
     .then( user => {
       setUser(user) 
     })
-  }, [ ])
+  }, [ ]);
+
+  const editEmail = () => {
+    setEditEmailState(false);
+    fetch(`http://localhost:3001/users/${user.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type":"application/json",
+        "Authorization": localStorage.getItem("auth_key")            
+      },
+      body: JSON.stringify({
+        user: {
+          email: email
+        }
+      })
+    })
+    .then( res => res.json() )
+    .then( user => {
+      setUser(user)
+    })
+  }
 
   return(
     user ? 
@@ -42,7 +64,7 @@ const UserInfo = () => {
                   </Grid.Column>
 
                   <Grid.Column textAlign='left'>
-                    <Icon name='edit' />
+                    {/* <Icon name='edit' /> */}
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
@@ -56,11 +78,11 @@ const UserInfo = () => {
                   </Grid.Column>
 
                   <Grid.Column textAlign='center'>
-                    {user.email}
+                    {editEmailState ? <Input type="text" onChange={e => setEmail(e.target.value)} /> : user.email}
                   </Grid.Column>
 
                   <Grid.Column textAlign='left'>
-                    <Icon name='edit' />
+                    {editEmailState ? <Icon id='edit-email-check' onClick={() => editEmail()} name='check'/> : <Icon id="edit-email-icon" name='edit' onClick={() => setEditEmailState(true)} /> }
                   </Grid.Column>
                 </Grid.Row>
               </Grid>

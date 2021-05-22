@@ -183,3 +183,9 @@ input#new-customer-input {
 #delete-product-msg {
   color:rgb(255, 0, 0)
 }
+#edit-email-icon:hover {
+    color: red;
+}
+#edit-email-check:hover {
+    color: green;
+}
