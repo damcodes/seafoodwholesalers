@@ -10,6 +10,7 @@ import CompletedOrders from '../components/CompletedOrders'
 import UserInfo from '../components/UserInfo'
 import ShippedOrders from '../components/ShippedOrders'
 import DeliveredOrders from '../components/DeliveredOrders'
+import Adapter from '../adapters/Adapter'
 
 function Profile() {
 
@@ -18,14 +19,7 @@ function Profile() {
   const [ refreshInterval ] = useState(2000)
 
   useEffect(() => {
-    const auth = localStorage.getItem("auth_key")
-    fetch('http://localhost:3001/current-user', {
-      method: "GET", 
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": auth
-      }
-    })
+    Adapter.fetch("GET", "current-user")
     .then( res => res.json() )
     .then( user => {
       setUser(user)
@@ -41,14 +35,7 @@ function Profile() {
   })
 
   const fetchData = () => {
-    const auth = localStorage.getItem("auth_key")
-    fetch('http://localhost:3001/current-user', {
-      method: "GET", 
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": auth
-      }
-    })
+    Adapter.fetch("GET", "current-user")
     .then( res => res.json() )
     .then( user => {
       setUser(user)

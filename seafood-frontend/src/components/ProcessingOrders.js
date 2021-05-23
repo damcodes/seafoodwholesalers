@@ -2,11 +2,12 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Header, Icon, List } from 'semantic-ui-react'
+import Adapter from '../adapters/Adapter'
 
 const ProcessingOrders = ({ orders, currentUser }) => {
 
   const [ processingOrders, setProcessingOrders ] = useState(null)
-  const [ refresh, setRefresh ] = useState(5000)
+  const [ refresh ] = useState(5000)
 
   useEffect(() => {
     if (refresh && refresh > 0 && currentUser.admin) {
@@ -16,13 +17,7 @@ const ProcessingOrders = ({ orders, currentUser }) => {
   })
 
   useEffect(() => {
-    fetch(`http://localhost:3001/orders`, {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "orders")
     .then( res => res.json() )
     .then( orders => {
       if (currentUser.admin) {
@@ -34,13 +29,7 @@ const ProcessingOrders = ({ orders, currentUser }) => {
   }, [ currentUser ])
 
   const fetchAllOrders = () => {
-    fetch(`http://localhost:3001/orders`, {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "orders")
     .then( res => res.json() )
     .then( ordersData => setProcessingOrders(ordersData.filter( order => order.order_status === 'processing')) )
   }
@@ -52,7 +41,7 @@ const ProcessingOrders = ({ orders, currentUser }) => {
             processingOrders.map(order => {
               return(
                 <List.Item key={order.id} as='a'>
-                  <Link to={`/orders/${order.id}`}>
+                  <Link to={`/orders/${order.order_number}`}>
                     <List.Content >
                       <List.Header >{`#${order.order_number}`}</List.Header>
                     </List.Content>

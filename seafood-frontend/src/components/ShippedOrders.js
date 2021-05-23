@@ -2,20 +2,15 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Header, Icon, List } from 'semantic-ui-react'
+import Adapter from '../adapters/Adapter'
 
 const ShippedOrders = ({ orders, currentUser }) => {
 
   const [ shippedOrders, setShippedOrders ] = useState(null)
-  const [ refresh, setRefresh ] = useState(2000)
+  const [ refresh ] = useState(2000)
 
   useEffect(() => {
-    fetch(`http://localhost:3001/orders`, {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "orders")
     .then( res => res.json() )
     .then( orders => {
       if (currentUser.admin) {
@@ -35,13 +30,7 @@ const ShippedOrders = ({ orders, currentUser }) => {
   })
 
   const fetchAllOrders = () => {
-    fetch(`http://localhost:3001/orders`, {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "orders")
     .then( res => res.json() )
     .then( orders => setShippedOrders(orders.filter(order => order.order_status === 'shipped')) )   
   }
@@ -53,7 +42,7 @@ const ShippedOrders = ({ orders, currentUser }) => {
           shippedOrders.map(order => {
             return(
               <List.Item key={order.id} as='a'>
-                <Link to={`/orders/${order.id}`}>
+                <Link to={`/orders/${order.order_number}`}>
                   <List.Content >
                     <List.Header >{`#${order.order_number}`}</List.Header>
                   </List.Content>
