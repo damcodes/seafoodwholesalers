@@ -15,7 +15,7 @@ function Profile() {
 
   const [ orders, setOrders ] = useState([])
   const [ currentUser, setUser ] = useState({})
-  const [ refreshInterval, setRefreshInterval ] = useState(2000)
+  const [ refreshInterval ] = useState(2000)
 
   useEffect(() => {
     const auth = localStorage.getItem("auth_key")

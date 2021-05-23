@@ -19,6 +19,8 @@ const InventoryList = ({ sort, searched, items, sortedUp, prevSearched, deleteIt
       }
     } else if (sort === 'Name') {
       op = a.description.localeCompare(b.description);
+    } else {
+      op = b.active - a.active;
     }
     return op;
   }
@@ -39,11 +41,13 @@ const InventoryList = ({ sort, searched, items, sortedUp, prevSearched, deleteIt
   }
 
   if (sort && !searched) {
-    items = items.sort(sortAlgo)
+    items = items.sort(sortAlgo);
   } else if (!sort && searched) {
-    items = items.filter(searchAlgo)
+    items = items.filter(searchAlgo);
   } else if (sort && searched) {
-    items = items.sort(sortAlgo).filter(searchAlgo)
+    items = items.sort(sortAlgo).filter(searchAlgo);
+  } else {
+    items = items.sort(sortAlgo);
   }
 
   return(
