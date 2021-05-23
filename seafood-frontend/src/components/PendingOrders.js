@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
 import { List } from 'semantic-ui-react'
 
 const PendingOrders = ({ orders, currentUser }) => {

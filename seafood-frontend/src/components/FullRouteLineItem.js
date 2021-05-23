@@ -1,6 +1,7 @@
-import { Table, Icon, Button, Input, List } from 'semantic-ui-react'
+import { Table, Icon, Button, Input } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Adapter from '../adapters/Adapter'
 
 const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
   
@@ -10,13 +11,7 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
   const [ stop, setStop ] = useState(null)
 
   useEffect(() => {
-    fetch(`http://localhost:3001/users/${order.user_id}`, {
-      method: 'GET',
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", `users/${order.user_id}`)
     .then( res => res.json() )
     .then( user => setCustomer(user) )
   }, [ order ])
@@ -49,18 +44,12 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
 
   const updateStopNumber = () => {
     if (stop !== '0' && stop !== '') {
-      fetch(`http://localhost:3001/orders/${order.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-type":'application/json',
-          "Authorization": localStorage.getItem('auth_key')
-        },
-        body: JSON.stringify({
-          order: {
-            stop: stop
-          }
-        })
-      })
+      const body = {
+        order: {
+          stop: stop
+        }
+      }
+      Adapter.fetch("PATCH", `orders/${order.id}`, body)
       .then( res => handleResponse(res))
       .then( order => {
         setInput(!input)
