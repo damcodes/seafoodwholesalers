@@ -197,3 +197,6 @@ input#new-customer-input {
   color: white;
   background-color: red;
 }
+#company-name-order-pg:hover {
+  color: goldenrod;
+}

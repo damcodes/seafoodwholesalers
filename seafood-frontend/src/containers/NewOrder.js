@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Button, Icon, Table, Container, Input, Label, Header, Grid } from 'semantic-ui-react';
 import TodaysCatch from '../components/TodaysCatch';
 import Order from '../components/Order';
+import Adapter from '../adapters/Adapter';
 
 const NewOrder = () => {
   
@@ -21,25 +22,13 @@ const NewOrder = () => {
   const prevSearched = usePrevious(searched)
 
   useEffect(() => {
-    fetch('http://localhost:3001/current-user', {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "current-user")
     .then( res => res.json() )
     .then( user => setUser(user) )
   }, [])
 
   useEffect(() => {
-    fetch('http://localhost:3001/products', {
-      method: "GET",
-      headers: {
-        "Content-type":"applicaton/json",
-        "Authorization": localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "products")
     .then( res => res.json() )
     .then( products => setItems(products) )
   }, [])
@@ -73,20 +62,14 @@ const NewOrder = () => {
   }
 
   const newOrder = () => {
-    fetch('http://localhost:3001/orders', {
-      method: "POST",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }, 
-      body: JSON.stringify({
-        order: {
-          user_id: user.id,
-          order_total: totalCost,
-          order_status: 'pending'
-        }
-      })
-    })
+    const body = {
+      order: {
+        user_id: user.id,
+        order_total: totalCost,
+        order_status: 'pending'
+      }
+    }
+    Adapter.fetch("POST", "orders", body)
     .then( res => res.json() )
     .then( newOrder => {
       setCurrentOrder(newOrder)
@@ -95,40 +78,29 @@ const NewOrder = () => {
   }
 
   const newOrderProduct = (item, order) => {
-    fetch('http://localhost:3001/order_products', {
-      method: "POST",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }, 
-      body: JSON.stringify({
-        order_product: {
-          order_id: order.id, 
-          product_id: item.id,
-          weight: item.orderWeight
-        }
-      })
-    })
+    const body = {
+      order_product: {
+        order_id: order.id, 
+        product_id: item.id,
+        weight: item.orderWeight
+      }
+    }
+
+    Adapter.fetch("POST", "order_products", body)
     .then( res => res.json() )
     .then( data => {
       updateProduct(item)
-      history.push(`/orders/${order.id}`)
+      history.push(`/orders/${order.order_number}`)
     })
   }
 
   const updateProduct = (item) => {
-    fetch(`http://localhost:3001/products/${item.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }, 
-      body: JSON.stringify({
-        product: {
-          avail_weight: item.avail_weight - item.orderWeight
-        }
-      })
-    })
+    const body = {
+      product: {
+        avail_weight: item.avail_weight - item.orderWeight
+      }
+    }
+    Adapter.fetch("PATCH", `products/${item.id}`, body)
   }
 
   const submitOrder = () => {

@@ -8,7 +8,7 @@ import NavBar from './components/NavBar'
 import Logout from './containers/Logout'
 import NewOrder from './containers/NewOrder'
 import Inventory from './containers/Inventory'
-import OrderById from './containers/OrderById'
+import OrderByName from './containers/OrderByName'
 import Routes from './containers/Routes'
 import Footer from './components/Footer'
 import Customers from './containers/Customers'
@@ -56,7 +56,7 @@ function App() {
           <Route exact path='/home' component={Home} />
           <Route exact path='/profile' component={() => <Profile currentUser={user} />} />
           <Route exact path='/new-order' component={() => <NewOrder user={user} />} />
-          <Route exact path='/orders/:id' component={() => <OrderById />} />
+          <Route exact path='/orders/:order_number' component={() => <OrderByName />} />
           <Route exact path='/routes' component={Routes} />
           <Route exact path='/companies/:name' component={CustomerPageByName} />
           <Route exact path='/companies' component={Customers} />

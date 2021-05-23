@@ -1,9 +1,10 @@
 import { Table, Button, Container, Icon, Label, Header, Segment } from 'semantic-ui-react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory, useParams, Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import Adapter from '../adapters/Adapter'
 
-const OrderById = () => {
-  let { id } = useParams()
+const OrderByName = () => {
+  let { order_number } = useParams()
   let history = useHistory()
   const [ currentOrder, setCurrentOrder ] = useState(null)
   const [ orderProducts, setOrderProducts ] = useState([])
@@ -11,42 +12,25 @@ const OrderById = () => {
   const [ customer, setCustomer ] = useState({})
 
   useEffect(() => {
-    fetch(`http://localhost:3001/current-user`,{
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "current-user")
     .then( res => res.json() )
     .then( user => setUser(user))
   }, [])
 
   useEffect(() => {
-    fetch(`http://localhost:3001/orders/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization":localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "orders")
     .then( res => res.json() )
-    .then( order => {
+    .then( orders => {
       // debugger
+      const order = orders.find( order => order.order_number === parseInt(order_number))
       setCurrentOrder(order)
       fetchCustomer(order)
-      fetch(`http://localhost:3001/order_products`, {
-        method: "GET",
-        headers: {
-          "Content-type":"application/json",
-          "Authorization":localStorage.getItem("auth_key")
-        }
-      })
+      Adapter.fetch("GET", "order_products")
       .then( res => res.json() )
       .then( data => {
         const ops = data.filter( op => op.order_id === order.id )
         return setOrderProducts([...orderProducts, ops])
-      })
+      });
     })
   }, [])
 
@@ -76,34 +60,22 @@ const OrderById = () => {
   }
 
   const process = () => {
-    fetch(`http://localhost:3001/orders/${currentOrder.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem("auth_key")
-      },
-      body: JSON.stringify({
-        order: {
-          order_status: 'processing'
-        }
-      })
-    })
+    const body = {
+      order: {
+        order_status: 'processing'
+      }
+    }
+    Adapter.fetch("PATCH", `orders/${currentOrder.id}`, body)
     .then( () => history.push('/profile') )
   }
   
   const complete = () => {
-    fetch(`http://localhost:3001/orders/${currentOrder.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem("auth_key")
-      },
-      body: JSON.stringify({
-        order: {
-          order_status: 'completed'
-        }
-      })
-    })
+    const body = {
+      order: {
+        order_status: 'completed'
+      }
+    }
+    Adapter.fetch("PATCH", `orders/${currentOrder.id}`, body)
     .then( () => history.push('/profile') )
   }
 
@@ -118,20 +90,33 @@ const OrderById = () => {
   }
 
   const markDelivered = () => {
-    fetch(`http://localhost:3001/orders/${currentOrder.id}`, {
-      method: "PATCH",
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': localStorage.getItem('auth_key')
-      },
-      body: JSON.stringify({
-        order: {
-          order_status: 'delivered'
-        }
-      })
-    })
+    const body = {
+      order: {
+        order_status: 'delivered'
+      }
+    }
+    Adapter.fetch("PATCH", `orders/${currentOrder.id}`, body)
     .then( () => history.push('/profile') )
   }
+
+  const stringToSlug = (str) => {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+  
+    // remove accents, swap ñ for n, etc
+    var from = "àáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    var to   = "aaaaaeeeeiiiioooouuuunc------";
+
+    for (var i=0; i < from.length ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+}
 
   return(
     !currentOrder || !orderProducts ? 
@@ -144,7 +129,7 @@ const OrderById = () => {
           <span className='order-info'>Order #: {currentOrder.order_number}</span>
         </Header>
         <Header as='h3'><span className='order-info'>Customer: {customer ? `${customer.first_name} ${customer.last_name}` : null}</span></Header>
-        <Header as='h3'><span className='order-info'>Company: {`${customer.company ? customer.company.name : null }`}</span></Header>
+        <Header as='h3'><span className='order-info'>Company: {customer.company ? <Link to={() => `/companies/${stringToSlug(customer.company.name)}`}>{customer.company.name}</Link> : null }</span></Header>
         <Header as='h3'><span className='order-info'>Date: {stringifyDate(currentOrder.created_at)}</span></Header>
 
         <Table striped compact celled definition>
@@ -213,4 +198,4 @@ const OrderById = () => {
   )
 }
 
-export default OrderById
+export default OrderByName
