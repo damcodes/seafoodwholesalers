@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Button, Icon, Table, Container, Input, Header, Label, Grid, Segment, Modal } from 'semantic-ui-react'
 import NewProductCard from '../components/NewProductCard'
 import InventoryList from '../components/InventoryList';
+import Adapter from '../adapters/Adapter'
 
 const Inventory = () => {
 
@@ -13,13 +14,7 @@ const Inventory = () => {
   const prevSearched = usePrevious(searched)
 
   useEffect(() => {
-    fetch('http://localhost:3001/products', {
-      method: "GET",
-      headers: {
-        "Content-type":"applicaton/json",
-        "Authorization": localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", "products")
     .then( res => res.json() )
     .then( items => setItems(items) )
   }, [])
@@ -34,34 +29,22 @@ const Inventory = () => {
 
   const addNewItem = (e, description, itemNumber, price, initialWeight, active) => {
     e.preventDefault()
-    fetch(`http://localhost:3001/products`, {
-      method: "POST",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      },
-      body: JSON.stringify({
-        product: {
-          active: active,
-          description: description,
-          item_number: itemNumber,
-          avail_weight: initialWeight, 
-          price: price
-        }
-      })
-    })
+    const body = {
+      product: {
+        active: active,
+        description: description,
+        item_number: itemNumber,
+        avail_weight: initialWeight, 
+        price: price
+      }
+    }
+    Adapter.fetch("POST", "products", body)
     .then( res => res.json() )
     .then( item => setItems([...items, item]))
   }
 
   const deleteItem = (item) => {
-    fetch(`http://localhost:3001/products/${item.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      }
-    })
+    Adapter.fetch("DELETE", `products/${item.id}`)
     .then( res => res.json() )
     .then( item => {
       const newItems = items.filter( current => current.id !== item.id )

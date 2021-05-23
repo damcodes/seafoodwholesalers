@@ -1,18 +1,19 @@
 import { Table, Input, Checkbox, Icon, Button, Label, Modal, Header } from 'semantic-ui-react'
 import { useState } from 'react'
+import Adapter from '../adapters/Adapter'
 
 const InventoryLineItem = ({ item, deleteItem }) => {
 
   const [ currentItem, setCurrentItem ] = useState(item)
   const [ availWeight, setAvailWeight ] = useState(item.avail_weight)
-  const [ weightChange, setWeightChange] = useState(0)
-  const [ price, setPrice ] = useState(0)
   const [ itemNumber, setItemNumber ] = useState(item.item_number)
   const [ checked, setCheck ] = useState(item.active)
+  const [ description, setDescription ] = useState(item.description)
+  const [ weightChange, setWeightChange] = useState(0)
+  const [ price, setPrice ] = useState(0)
   const [ updatePriceState, setUpdatePriceState ] = useState(true)
   const [ updatedItemNumberState, setUpdateItemNumberState ] = useState(false)
   const [ updateDescriptState, setUpdateDescriptionState ] = useState(false)
-  const [ description, setDescription ] = useState(item.description)
   const [ open, setOpen ] = useState(false)
 
   const countDecimals = (val) => {
@@ -45,35 +46,23 @@ const InventoryLineItem = ({ item, deleteItem }) => {
   }
 
   const persistAvailWeight = (weight) => {
-    fetch(`http://localhost:3001/products/${item.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      },
-      body: JSON.stringify({
-        product: {
-          avail_weight: weight 
-        }
-      })
-    })
+    const body = {
+      product: {
+        avail_weight: weight
+      }
+    }
+    Adapter.fetch("PATCH", `products/${currentItem.id}`, body)
     .then( res => res.json() )
     .then(setCurrentItem)
   }
 
-  const handlePriceChange = e => {
-    fetch(`http://localhost:3001/products/${item.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      },
-      body: JSON.stringify({
-        product: {
-          price: price 
-        }
-      })
-    })
+  const handlePriceChange = () => {
+    const body = {
+      product: {
+        price: price
+      }
+    }
+    Adapter.fetch("PATCH", `products/${item.id}`, body)
     .then( res => res.json() )
     .then( updated => {
       setCurrentItem(updated)
@@ -81,54 +70,36 @@ const InventoryLineItem = ({ item, deleteItem }) => {
   }
 
   const toggleActive = (check) => {
-    fetch(`http://localhost:3001/products/${currentItem.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      }, 
-      body: JSON.stringify({
-        product: {
-          active: check
-        }
-      })
-    })
+    const body = {
+      product: {
+        active: check
+      }
+    }
+    Adapter.fetch("PATCH", `products/${item.id}`, body)
     .then( res => res.json() )
     .then( updatedItem => setCurrentItem(updatedItem))
   }
 
   const handleEditItemNumber = () => {
     setUpdateItemNumberState(!updatedItemNumberState)
-    fetch(`http://localhost:3001/products/${currentItem.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      }, 
-      body: JSON.stringify({
-        product: {
-          item_number: itemNumber
-        }
-      })
-    })
+    const body = {
+      product: {
+        item_number: itemNumber
+      }
+    }
+    Adapter.fetch("PATCH", `products/${currentItem.id}`, body)
     .then( res => res.json() )
     .then( data => setCurrentItem(data) )
   }
 
   const handleEditDescription = () => {
-    setUpdateDescriptionState(!updateDescriptState)
-    fetch(`http://localhost:3001/products/${currentItem.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      }, 
-      body: JSON.stringify({
-        product: {
-          description: description
-        }
-      })
-    })
+    setUpdateDescriptionState(!updateDescriptState);
+    const body = {
+      product: {
+        description: description
+      }
+    }
+    Adapter.fetch("PATCH", `products/${currentItem.id}`, body)
     .then( res => res.json() )
     .then( data => setCurrentItem(data) )
   }
@@ -192,16 +163,16 @@ const InventoryLineItem = ({ item, deleteItem }) => {
       </Table.Cell>
 
       <Table.Cell>
-        {updatedItemNumberState ? <Input onChange={e => setItemNumber(e.target.value)} placeholder={itemNumber} size="mini" type="text" /> : itemNumber}
+        {updatedItemNumberState ? <Input onChange={e => setItemNumber(e.target.value)} value={itemNumber} size="mini" type="text" /> : itemNumber}
         <br/>
-        { checked && !updatedItemNumberState ? <Button id="edit-item-number" onClick={handleEditItemNumber} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
+        { checked && !updatedItemNumberState ? <Button id="edit-item-number" onClick={() => setUpdateItemNumberState(!updatedItemNumberState)} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
         { checked && updatedItemNumberState ? <Button onClick={handleEditItemNumber} textAlign='center' size='mini'><Icon name='check'/></Button> : null}
       </Table.Cell>
 
       <Table.Cell>
-        {updateDescriptState ? <Input onChange={e => setDescription(e.target.value)} placeholder={description} size="mini" type="text" /> : description}
+        {updateDescriptState ? <Input onChange={e => setDescription(e.target.value)} value={description} size="mini" type="text" /> : description}
         <br/>
-        { checked && !updateDescriptState ? <Button id="edit-description" onClick={handleEditDescription} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
+        { checked && !updateDescriptState ? <Button id="edit-description" onClick={() => setUpdateDescriptionState(!updateDescriptState)} textAlign='center' size='mini'><Icon name='edit outline' /></Button> : null }
         { checked && updateDescriptState ? <Button onClick={handleEditDescription} textAlign='center' size='mini'><Icon name='check'/></Button> : null}
       </Table.Cell>
 
