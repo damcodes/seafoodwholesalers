@@ -16,6 +16,24 @@ const CustomersList = ({ sort, searched, companies }) => {
     return a[sort].localeCompare(b[sort]) 
   }
 
+  const stringToSlug = (str) => {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+  
+    // remove accents, swap ñ for n, etc
+    var from = "àáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    var to   = "aaaaaeeeeiiiioooouuuunc------";
+
+    for (var i=0; i < from.length ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+}
   
   if (sort && !searched) {
     customers = companies.sort(sortAlgo)
@@ -31,7 +49,7 @@ const CustomersList = ({ sort, searched, companies }) => {
     <List selection>
       { customers.map( company => {
         return(
-          <List.Item onClick={() => history.push(`/companies/${company.id}`)}>
+          <List.Item onClick={() => history.push(`/companies/${stringToSlug(company.name)}`)}>
             <Segment>
               <Grid>
                 <Grid.Row columns='2'>

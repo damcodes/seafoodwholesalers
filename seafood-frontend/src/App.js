@@ -11,8 +11,8 @@ import Inventory from './containers/Inventory'
 import OrderById from './containers/OrderById'
 import Routes from './containers/Routes'
 import Footer from './components/Footer'
-import CustomerPageById from './containers/CustomerPageById'
 import Customers from './containers/Customers'
+import CustomerPageByName from './containers/CustomerPageByName'
 
 function App() {
 
@@ -58,7 +58,7 @@ function App() {
           <Route exact path='/new-order' component={() => <NewOrder user={user} />} />
           <Route exact path='/orders/:id' component={() => <OrderById />} />
           <Route exact path='/routes' component={Routes} />
-          <Route exact path='/companies/:id' component={CustomerPageById} />
+          <Route exact path='/companies/:name' component={CustomerPageByName} />
           <Route exact path='/companies' component={Customers} />
         </Switch>
       </Router>
