@@ -1,5 +1,5 @@
 import { Table, Button, Container, Icon, Label, Header, Segment } from 'semantic-ui-react'
-import { useHistory, useParams, Link } from 'react-router-dom'
+import { useHistory, useParams, Link, NavLink } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import Adapter from '../adapters/Adapter'
 
@@ -116,7 +116,7 @@ const OrderByName = () => {
         .replace(/-+/g, '-'); // collapse dashes
 
     return str;
-}
+  }
 
   return(
     !currentOrder || !orderProducts ? 
