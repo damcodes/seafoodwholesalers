@@ -8,18 +8,6 @@ const DeliveredOrders = ({ orders, currentUser }) => {
 
   const [ deliveredOrders, setDeliveredOrders ] = useState(null)
   const [ refresh ] = useState(2000)
-
-  useEffect(() => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => {
-      if (currentUser.admin) {
-        setDeliveredOrders(orders.filter( order => order.order_status === 'delivered'))  
-      } else {
-        setDeliveredOrders(orders.filter( order => order.order_status === 'delivered' && order.user_id === currentUser.id))
-      }
-    })
-  }, [ currentUser ])
   
 
   useEffect(() => {
@@ -28,6 +16,10 @@ const DeliveredOrders = ({ orders, currentUser }) => {
       return () => clearInterval(interval)
     }
   })
+
+  useEffect(() => {
+    setDeliveredOrders(orders)
+  }, [ orders ])
 
   const fetchAllOrders = () => {
     Adapter.fetch("GET", "orders")

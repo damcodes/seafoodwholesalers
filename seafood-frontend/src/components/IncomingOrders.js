@@ -34,7 +34,7 @@ const IncomingOrders = () => {
         { incomingOrders.length > 0 ? 
           incomingOrders.map(order => {
             return(
-              <List.Item key={order.id} as='a'>
+              <List.Item key={order.order_number} as='a'>
                 <Link to={`/orders/${order.order_number}`}>
                   <List.Content >
                     <List.Header >{`#${order.order_number}`}</List.Header>

@@ -10,24 +10,15 @@ const ShippedOrders = ({ orders, currentUser }) => {
   const [ refresh ] = useState(2000)
 
   useEffect(() => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => {
-      if (currentUser.admin) {
-        setShippedOrders(orders.filter( order => order.order_status === 'shipped'))  
-      } else {
-        setShippedOrders(orders.filter( order => order.order_status === 'shipped' && order.user_id === currentUser.id))
-      }
-    })
-  }, [ currentUser ])
-  
-
-  useEffect(() => {
     if (refresh && refresh > 0 && currentUser.admin) {
       const interval = setInterval(fetchAllOrders, refresh)
       return () => clearInterval(interval)
     }
   })
+
+  useEffect(() => {
+    setShippedOrders(orders)
+  }, [ orders ] )
 
   const fetchAllOrders = () => {
     Adapter.fetch("GET", "orders")

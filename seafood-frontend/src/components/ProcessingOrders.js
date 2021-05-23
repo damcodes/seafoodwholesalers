@@ -15,25 +15,17 @@ const ProcessingOrders = ({ orders, currentUser }) => {
       return () => clearInterval(interval)
     }
   })
-
+  
   useEffect(() => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => {
-      if (currentUser.admin) {
-        setProcessingOrders(orders.filter( order => order.order_status === 'processing'))  
-      } else {
-        setProcessingOrders(orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id))
-      }
-    })
-  }, [ currentUser ])
+    setProcessingOrders(orders)
+  }, [ orders ])
 
   const fetchAllOrders = () => {
     Adapter.fetch("GET", "orders")
     .then( res => res.json() )
     .then( ordersData => setProcessingOrders(ordersData.filter( order => order.order_status === 'processing')) )
   }
-
+  
   return(
     processingOrders ? 
       <List className='order-card-list' textAlign='center' selection verticalAlign="middle">

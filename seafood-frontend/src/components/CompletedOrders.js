@@ -10,24 +10,15 @@ const CompletedOrders = ({ orders, currentUser }) => {
   const [ refresh ] = useState(2000)
 
   useEffect(() => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => {
-      if (currentUser.admin) {
-        setCompletedOrders(orders.filter( order => order.order_status === 'completed'))  
-      } else {
-        setCompletedOrders(orders.filter( order => order.order_status === 'completed' && order.user_id === currentUser.id))
-      }
-    })
-  }, [ currentUser ])
-  
-
-  useEffect(() => {
     if (refresh && refresh > 0 && currentUser.admin) {
       const interval = setInterval(fetchAllOrders, refresh)
       return () => clearInterval(interval)
     }
   })
+
+  useEffect(() => {
+    setCompletedOrders(orders)
+  }, [ orders ])
 
   const fetchAllOrders = () => {
     Adapter.fetch("GET", "orders")

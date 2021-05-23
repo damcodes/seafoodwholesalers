@@ -10,7 +10,7 @@ const PendingOrders = ({ orders, currentUser }) => {
       orders.filter( order => order.order_status === 'pending').map(order => {
           return(
             <List.Item key={order.id} as='a'>
-              <Link to={`/orders/${order.id}`}>
+              <Link to={`/orders/${order.order_number}`}>
                 {/* <Icon name='angle double right' /> */}
                 <List.Content >
                   <List.Header >{`#${order.order_number}`}</List.Header>

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState, useEffect } from 'react'
 import { Container, Grid, Segment, Header } from 'semantic-ui-react'
 import OrdersWindow from '../components/OrdersWindow'
@@ -28,6 +27,12 @@ function Profile() {
   }, [])
 
   useEffect(() => {
+    Adapter.fetch("GET", "orders")
+    .then( res => res.json() )
+    .then(setOrders)
+  }, [])
+
+  useEffect(() => {
     if (refreshInterval && refreshInterval > 0) {
       const interval = setInterval(fetchData, refreshInterval)
       return () => clearInterval(interval)
@@ -39,10 +44,8 @@ function Profile() {
     .then( res => res.json() )
     .then( user => {
       setUser(user)
-      setOrders(user.orders) 
     })
   }
-
 
   return(
     <Container id='profile-page'>
@@ -61,7 +64,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Being Processed</Header>
-              <ProcessingOrders currentUser={currentUser} orders={orders}/>
+              <ProcessingOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'processing')} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -70,14 +73,14 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Completed Orders</Header>
-              <CompletedOrders currentUser={currentUser} orders={orders}/>
+              <CompletedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'completed')} />
             </Segment>
           </Grid.Column>
 
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Shipped Orders</Header>
-              <ShippedOrders currentUser={currentUser} orders={orders} />
+              <ShippedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'shipped')} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -86,7 +89,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Delivered Orders</Header>
-              <DeliveredOrders orders={orders} currentUser={currentUser} />
+              <DeliveredOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'delivered')} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -95,7 +98,7 @@ function Profile() {
         <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Your Orders</Header>
-              <OrdersWindow orders={orders} currentUser={currentUser} />
+              <OrdersWindow currentUser={currentUser} orders={orders.filter( order => order.user_id === currentUser.id)} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -104,7 +107,7 @@ function Profile() {
           <Grid.Column>
             <Segment className='order-route-card' textAlign='center'>
               <Header as='h2' textAlign='center'>Orders By Date</Header>
-              <DailyOrders currentUser={currentUser} orders={orders}/>
+              <DailyOrders currentUser={currentUser} orders={orders} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -115,14 +118,14 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Pending Orders</Header>
-              <PendingOrders currentUser={currentUser} orders={orders} />
+              <PendingOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'pending' && order.user_id === currentUser.id)} />
             </Segment>
           </Grid.Column>
 
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>In Processing</Header>
-              <ProcessingOrders currentUser={currentUser} orders={orders}/>
+              <ProcessingOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id)}/>
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -131,14 +134,14 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Processed/Being Routed</Header>
-              <CompletedOrders currentUser={currentUser} orders={orders}/>
+              <CompletedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'completed' && order.user_id === currentUser.id)}/>
             </Segment>
           </Grid.Column>
 
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Shipped</Header>
-              <ShippedOrders currentUser={currentUser} orders={orders} />
+              <ShippedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'shipped' && order.user_id === currentUser.id)} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
@@ -147,7 +150,7 @@ function Profile() {
           <Grid.Column>
             <Segment textAlign='center'>
               <Header as='h2' textAlign='center'>Delivered Orders</Header>
-              <DeliveredOrders orders={orders} currentUser={currentUser} />
+              <DeliveredOrders currentUser={currentUser} orders={orders.filter( order => order.order_stats === 'delivered' && order.user_id === currentUser.id)} />
             </Segment>
           </Grid.Column>
         </Grid.Row>
