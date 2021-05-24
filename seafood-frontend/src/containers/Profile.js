@@ -46,7 +46,7 @@ function Profile() {
       setUser(user)
     })
   }
-
+  // debugger
   return(
     <Container id='profile-page'>
       <UserInfo />
