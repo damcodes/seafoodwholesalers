@@ -49,7 +49,7 @@ const CustomersList = ({ sort, searched, companies }) => {
     <List selection>
       { customers.map( company => {
         return(
-          <List.Item onClick={() => history.push(`/companies/${stringToSlug(company.name)}`)}>
+          <List.Item key={company.id} onClick={() => history.push(`/companies/${stringToSlug(company.name)}`)}>
             <Segment>
               <Grid>
                 <Grid.Row columns='2'>

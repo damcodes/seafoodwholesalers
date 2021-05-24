@@ -1,6 +1,6 @@
 class Adapter {
   static fetch(method, endpoint, body) {
-    const getAll = (method, endpoint) => {
+    const get = (method, endpoint) => {
       return fetch(`http://localhost:3001/${endpoint}`, {
         method: method,
         headers: {
@@ -46,7 +46,7 @@ class Adapter {
     let res;
     switch(method) {
       case "GET":
-        res = getAll(method, endpoint)
+        res = get(method, endpoint)
         break;
       case "POST":
         res = post(method, endpoint, body)
