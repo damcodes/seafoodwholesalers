@@ -11,9 +11,9 @@ import DeliveredOrders from '../components/DeliveredOrders'
 
 const CustomerPageByName = () => {
 
-  let { name } = useParams()
+  let { customerName } = useParams()
   const [ company, setCompany ] = useState(null)
-  const [ orders, setOrders ] = useState({});
+  const [ orders, setOrders ] = useState([]);
   const [ currentUser, setCurrentUser ] = useState({})
 
   const stringToSlug = (str) => {
@@ -46,7 +46,7 @@ const CustomerPageByName = () => {
     Adapter.fetch("GET", "companies")
     .then( res => handleResponse(res) )
     .then( companies => {
-      let company = companies.find( company => stringToSlug(company.name) === stringToSlug(name));
+      let company = companies.find( company => stringToSlug(company.name) === stringToSlug(customerName));
       setCompany(company);
     })
 
@@ -59,7 +59,7 @@ const CustomerPageByName = () => {
     Adapter.fetch("GET", "current-user")
     .then( res => res.json() )
     .then(setCurrentUser)
-  }, [ name ])
+  }, [ customerName ])
 
   const handleResponse = res => {
     return res.json()
@@ -74,7 +74,7 @@ const CustomerPageByName = () => {
       return json 
     })
   }
-
+  // debugger
   return(company ? 
     <Grid>
       <Grid.Row centered columns='2'>
@@ -131,7 +131,7 @@ const CustomerPageByName = () => {
                   </Table.Cell>
 
                   <Table.Cell>
-                      <PendingOrders orders={orders.filter( order => order.route_id === company.route_id)} />
+                      <PendingOrders orders={orders.filter( order => order.route_id === company.route_id && order.order_status === "pending" && order.user.company.name === company.name)} />
                   </Table.Cell>
                 </Table.Row>
 
@@ -141,7 +141,7 @@ const CustomerPageByName = () => {
                   </Table.Cell>
 
                   <Table.Cell>
-                      <ProcessingOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>
+                    <ProcessingOrders orders={orders.filter( order => order.route_id === company.route_id && order.order_status === "processing" && order.user.company.name === company.name)} currentUser={currentUser}/>
                   </Table.Cell>
                 </Table.Row>
 
@@ -151,7 +151,8 @@ const CustomerPageByName = () => {
                   </Table.Cell>
 
                   <Table.Cell>
-                  <CompletedOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>                  </Table.Cell>
+                    <CompletedOrders orders={orders.filter( order => order.route_id === company.route_id && order.order_status === "completed" && order.user.company.name === company.name)} currentUser={currentUser}/>                  
+                  </Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
@@ -160,7 +161,8 @@ const CustomerPageByName = () => {
                   </Table.Cell>
 
                   <Table.Cell>
-                  <ShippedOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>                  </Table.Cell>
+                    <ShippedOrders orders={orders.filter( order => order.route_id === company.route_id && order.order_status === "shipped" && order.user.company.name === company.name)} currentUser={currentUser}/>                  
+                  </Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
@@ -169,7 +171,8 @@ const CustomerPageByName = () => {
                   </Table.Cell>
 
                   <Table.Cell>
-                  <DeliveredOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>                  </Table.Cell>
+                    <DeliveredOrders orders={orders.filter( order => order.route_id === company.route_id && order.order_status === "delivered" && order.user.company.name === company.name)} currentUser={currentUser}/>                  
+                  </Table.Cell>
                 </Table.Row>
               </Table.Body>
             </Table>

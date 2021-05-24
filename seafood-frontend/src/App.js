@@ -58,7 +58,7 @@ function App() {
           <Route exact path='/new-order' component={() => <NewOrder user={user} />} />
           <Route exact path='/orders/:order_number' component={() => <OrderByName />} />
           <Route exact path='/routes' component={Routes} />
-          <Route exact path='/companies/:name' component={CustomerPageByName} />
+          <Route exact path='/companies/:customerName' component={CustomerPageByName} />
           <Route exact path='/companies' component={Customers} />
         </Switch>
       </Router>

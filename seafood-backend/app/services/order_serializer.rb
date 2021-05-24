@@ -10,7 +10,7 @@ class OrderSerializer
           except: [ :created_at, :updated_at ]
         }, 
         user: {
-          including: [ :company ],
+          include: [ :company ],
           except: [ :created_at, :updated_at, :password_digest ]
         }
       }
