@@ -76,7 +76,7 @@ class OrdersController < ApplicationController
       else
         if user_company.name == 'Seafood Wholesalers'
           if Order.select{ |order| order.user.company.name == "Seafood Wholesalers"}.last
-            last_order = Order.select{|order| order.user.company.name == 'Seafood Wholesalers'}.last 
+            last_order = Order.select{|order| order.user.company.name == 'Seafood Wholesalers'}.sort{|a,b| a.order_number - b.order_number}.last 
             return last_order.order_number + 1
           else
             return 101010
@@ -85,7 +85,7 @@ class OrdersController < ApplicationController
           if Order.select{|order| order.user.company.name != "Seafood Wholesalers"}.length == 0
             return 646000
           else
-            last_order = Order.select{|order| order.user.company.name != 'Seafood Wholesalers'}.last
+            last_order = Order.select{|order| order.user.company.name != 'Seafood Wholesalers'}.sort{|a, b| a.order_number - b.order_number}.last
             return last_order.order_number + 1
           end
         end

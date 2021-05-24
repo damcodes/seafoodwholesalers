@@ -5,7 +5,7 @@ import Adapter from '../adapters/Adapter'
 
 const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
   
-  const [ currentOrder , setCurrentOrder ] = useState(null)
+  const [ currentOrder , setCurrentOrder ] = useState(order)
   const [ customer, setCustomer ] = useState({})
   const [ input, setInput ] = useState(false)
   const [ stop, setStop ] = useState(null)
@@ -15,6 +15,25 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
     .then( res => res.json() )
     .then( user => setCustomer(user) )
   }, [ order ])
+
+  const stringToSlug = (str) => {
+    str = str.replace(/^\s+|\s+$/g, ''); // trim
+    str = str.toLowerCase();
+  
+    // remove accents, swap ñ for n, etc
+    var from = "àáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+    var to   = "aaaaaeeeeiiiioooouuuunc------";
+
+    for (var i=0; i < from.length ; i++) {
+        str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+    }
+
+    str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+        .replace(/\s+/g, '-') // collapse whitespace and replace by -
+        .replace(/-+/g, '-'); // collapse dashes
+
+    return str;
+  }
 
   const handleResponse = res => {
     return res.json()
@@ -76,7 +95,7 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
         }
       </Table.Cell>
       <Table.Cell textAlign='center'><Link to={`/orders/${order.id}`}>{order.order_number}</Link></Table.Cell>
-      <Table.Cell textAlign='center'>{customer.company ? customer.company.name : null}</Table.Cell>
+      <Table.Cell textAlign='center'><Link to={`/companies/${stringToSlug(customer.company.name)}`}>{customer.company ? customer.company.name : null}</Link></Table.Cell>
       <Table.Cell textAlign='center'>{formatTime(order.created_at)}</Table.Cell>
       <Table.Cell textAlign='center'>{`${order.order_status.slice(0,1).toUpperCase() + order.order_status.slice(1)} @ ${formatTime(order.updated_at)}`}</Table.Cell>
     </Table.Row>
