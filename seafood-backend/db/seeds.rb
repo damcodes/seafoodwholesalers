@@ -19,7 +19,7 @@ sfw = Company.create(name: "Seafood Wholesalers", address: "6060b Southwest Free
 f17 = Company.create(name: "Fiesta 17", address: "4200 San Jacinto St, Houston, TX 77004", route_id: dt.id, phone_number: '7135290155', longitude:-95.38029580, latitude: 29.73378388)
 
 # north stores
-f9 = Company.create(name: "Fiesta 9", address: "10401 Jensen Dr, Houston, TX 77093", route_id: north.id, phone_number: '7136970018', longitude: 29.86464048, latitude:  -95.33458395)
+f9 = Company.create(name: "Fiesta 9", address: "10401 Jensen Dr, Houston, TX 77093", route_id: north.id, phone_number: '7136970018', longitude:  -95.33458395, latitude: 29.86464048)
 f11 = Company.create(name: "Fiesta 11", address: "4711 Airline Dr, Houston, TX 77022", route_id: north.id, phone_number: '7136970050', longitude: -95.38556490, latitude:  29.83599731)
 
 # sugarland stores

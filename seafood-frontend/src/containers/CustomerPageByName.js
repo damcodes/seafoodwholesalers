@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react'
-import { Segment, Header, Icon, Grid } from 'semantic-ui-react'
+import { Segment, Header, Icon, Grid, Table, List } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom'
 import Adapter from '../adapters/Adapter'
 import MapContainer from '../components/Map'
+import PendingOrders from '../components/PendingOrders'
+import ProcessingOrders from '../components/ProcessingOrders'
+import CompletedOrders from '../components/CompletedOrders'
+import ShippedOrders from '../components/ShippedOrders'
+import DeliveredOrders from '../components/DeliveredOrders'
 
 const CustomerPageByName = () => {
 
   let { name } = useParams()
   const [ company, setCompany ] = useState(null)
+  const [ orders, setOrders ] = useState({});
+  const [ currentUser, setCurrentUser ] = useState({})
 
   const stringToSlug = (str) => {
     str = str.replace(/^\s+|\s+$/g, ''); // trim
@@ -26,7 +33,14 @@ const CustomerPageByName = () => {
         .replace(/-+/g, '-'); // collapse dashes
 
     return str;
-}
+  }
+
+  const formatDate = (dateTimeStr) => {
+    const date = new Date(dateTimeStr);
+    const dateStr = date.toLocaleDateString();
+    console.log(dateStr)
+    return dateStr;
+  }
 
   useEffect(() => {
     Adapter.fetch("GET", "companies")
@@ -35,6 +49,16 @@ const CustomerPageByName = () => {
       let company = companies.find( company => stringToSlug(company.name) === stringToSlug(name));
       setCompany(company);
     })
+
+    Adapter.fetch("GET", "orders")
+    .then( res => res.json() )
+    .then( orders => {
+       setOrders(orders)
+    })
+
+    Adapter.fetch("GET", "current-user")
+    .then( res => res.json() )
+    .then(setCurrentUser)
   }, [ name ])
 
   const handleResponse = res => {
@@ -56,8 +80,100 @@ const CustomerPageByName = () => {
       <Grid.Row centered columns='2'>
         <Grid.Column textAlign='center'>
           <Segment>
-            <Header as='h2'>{company.name}</Header>
-            <h4>{company.address}</h4>
+            <Header as='h1'>{company.name}</Header>
+
+            <Table celled>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Address:
+                  </Table.Cell>
+
+                  <Table.Cell textAlign="center">
+                    {company.address}
+                  </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Customer Since:
+                  </Table.Cell>
+
+                  <Table.Cell textAlign="center">
+                    {formatDate(company.created_at)}
+                  </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Employees:
+                  </Table.Cell>
+
+                  <Table.Cell textAlign="left">
+                    <List>
+                      {company.users.map( employee => {
+                        return( 
+                        <List.Item key={employee.id}>
+                          <div id="employee-list">
+                            <div id="employee-name">{`${employee.first_name} ${employee.last_name}`}</div>
+                            <div id='employee-email'>{`${employee.email}`}</div>
+                          </div>
+                        </List.Item>
+                        )
+                      })}
+                    </List>
+                  </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Pending Orders: 
+                  </Table.Cell>
+
+                  <Table.Cell>
+                      <PendingOrders orders={orders.filter( order => order.route_id === company.route_id)} />
+                  </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Processing Orders: 
+                  </Table.Cell>
+
+                  <Table.Cell>
+                      <ProcessingOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>
+                  </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Completed Orders: 
+                  </Table.Cell>
+
+                  <Table.Cell>
+                  <CompletedOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>                  </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Shipped Orders: 
+                  </Table.Cell>
+
+                  <Table.Cell>
+                  <ShippedOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>                  </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                  <Table.Cell textAlign="right">
+                    Delivered Orders: 
+                  </Table.Cell>
+
+                  <Table.Cell>
+                  <DeliveredOrders orders={orders.filter( order => order.route_id === company.route_id)} currentUser={currentUser}/>                  </Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+
           </Segment>
         </Grid.Column>
       </Grid.Row>

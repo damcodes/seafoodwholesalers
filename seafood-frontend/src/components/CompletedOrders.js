@@ -34,7 +34,7 @@ const CompletedOrders = ({ orders, currentUser }) => {
             return(
               <List.Item key={order.id} as='a'>
                 <Link to={`/orders/${order.order_number}`}>
-                  <List.Content >
+                  <List.Content className="orders">
                     <List.Header >{`#${order.order_number}`}</List.Header>
                   </List.Content>
                 </Link>
@@ -42,7 +42,7 @@ const CompletedOrders = ({ orders, currentUser }) => {
             )
           })
           : 
-          <List.Item>No Completed Orders</List.Item>
+          <List.Item className="orders">No Completed Orders</List.Item>
         }
       </List>
       :

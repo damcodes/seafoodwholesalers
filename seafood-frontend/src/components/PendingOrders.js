@@ -5,14 +5,13 @@ import { List } from 'semantic-ui-react'
 const PendingOrders = ({ orders, currentUser }) => {
 
   return(
-    <List textAlign='center' selection verticalAlign="middle">
+    <List animated textAlign='center' selection verticalAlign="middle">
       { orders.filter( order => order.order_status === 'pending').length > 0 ?  
       orders.filter( order => order.order_status === 'pending').map(order => {
           return(
             <List.Item key={order.id} as='a'>
               <Link to={`/orders/${order.order_number}`}>
-                {/* <Icon name='angle double right' /> */}
-                <List.Content >
+                <List.Content className="orders">
                   <List.Header >{`#${order.order_number}`}</List.Header>
                 </List.Content>
               </Link>
@@ -20,7 +19,7 @@ const PendingOrders = ({ orders, currentUser }) => {
           )
       })
       :
-      <List.Item>No Pending Orders</List.Item>
+      <List.Item className='orders'>No Pending Orders</List.Item>
       }
     </List>
   )

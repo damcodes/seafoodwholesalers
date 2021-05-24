@@ -9,8 +9,7 @@ class CompanySerializer
         users: {
           except: [:password_digest, :created_at, :updated_at]
         }
-      },
-      except: [:created_at, :updated_at]
+      }
     }
     @company.to_json(options)
   end

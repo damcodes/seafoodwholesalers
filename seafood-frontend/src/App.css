@@ -197,6 +197,10 @@ input#new-customer-input {
   color: white;
   background-color: red;
 }
-#outer-container {
-  /* margin: 0 auto; */
+#employee-list {
+  display: flex;
+  justify-content: space-around;
+}
+.orders {
+  text-align: center;
 }
