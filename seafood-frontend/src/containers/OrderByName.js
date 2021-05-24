@@ -21,7 +21,6 @@ const OrderByName = () => {
     Adapter.fetch("GET", "orders")
     .then( res => res.json() )
     .then( orders => {
-      // debugger
       const order = orders.find( order => order.order_number === parseInt(order_number))
       setCurrentOrder(order)
       fetchCustomer(order)
@@ -35,13 +34,7 @@ const OrderByName = () => {
   }, [])
 
   const fetchCustomer = order => {
-    fetch(`http://localhost:3001/users/${order.user_id}`, {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem("auth_key")
-      }
-    })
+    Adapter.fetch("GET", `users/${order.user_id}`)
     .then( res => res.json() )
     .then( user => setCustomer(user))
   }

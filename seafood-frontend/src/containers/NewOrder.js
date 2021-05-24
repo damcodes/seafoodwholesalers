@@ -72,6 +72,7 @@ const NewOrder = () => {
     Adapter.fetch("POST", "orders", body)
     .then( res => res.json() )
     .then( newOrder => {
+      debugger
       setCurrentOrder(newOrder)
       cart.map( lineItem => newOrderProduct(lineItem, newOrder))
     })

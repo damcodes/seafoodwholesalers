@@ -23,6 +23,21 @@ class OrdersController < ApplicationController
       else 
         @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
       end
+    elsif Order.all.length == 1
+      prev_order = Order.first
+      if user_company.name == 'Seafood Wholesalers' && prev_order.user.company.name == "Seafood Wholesalers" 
+        new_order_num = prev_order.order_number +1
+        @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
+      elsif user_company.name != 'Seafood Wholesalers' && prev_order.user.company.name != "Seafood Wholesalers"
+        new_order_num = prev_order.order_number + 1
+        @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
+      elsif user_company.name == 'Seafood Wholesalers' && prev_order.user.company.name != "Seafood Wholesalers"
+        new_order_num = 101010
+        @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
+      elsif user_company.name != 'Seafood Wholesalers' && prev_order.user.company.name == 'Seafood Wholesalers'
+        new_order_num = 646000
+        @order = Order.new(user_id: order_params[:user_id], order_number: 646000, order_total: order_params[:order_total], route_id: route_id)
+      end
     else
       if user_company.name == 'Seafood Wholesalers'
         last_order = Order.select{|order| order.user.company.name == 'Seafood Wholesalers'}.last 
@@ -38,6 +53,8 @@ class OrdersController < ApplicationController
         @order =  Order.new(user_id: order_params[:user_id], order_number: new_order_num, order_total: order_params[:order_total], route_id: route_id)
       end
     end
+
+    
     if @order.save
       render json: OrderSerializer.new(@order).serialize, status: :created, location: @order
     else
