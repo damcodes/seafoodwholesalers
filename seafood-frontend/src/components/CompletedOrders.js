@@ -4,27 +4,13 @@ import { useEffect, useState } from 'react'
 import { Header, Icon, List } from 'semantic-ui-react'
 import Adapter from '../adapters/Adapter'
 
-const CompletedOrders = ({ orders, currentUser }) => {
+const CompletedOrders = ({ orders }) => {
 
   const [ completedOrders, setCompletedOrders ] = useState(null)
-  const [ refresh ] = useState(2000)
-
-  useEffect(() => {
-    if (refresh && refresh > 0 && currentUser.admin) {
-      const interval = setInterval(fetchAllOrders, refresh)
-      return () => clearInterval(interval)
-    }
-  })
 
   useEffect(() => {
     setCompletedOrders(orders)
   }, [ orders ])
-
-  const fetchAllOrders = () => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => setCompletedOrders(orders.filter( order => order.order_status === 'completed')) )   
-  }
 
   return(
       completedOrders ? 

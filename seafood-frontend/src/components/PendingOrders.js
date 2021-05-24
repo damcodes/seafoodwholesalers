@@ -2,8 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { List } from 'semantic-ui-react'
 
-const PendingOrders = ({ orders, currentUser }) => {
-
+const PendingOrders = ({ orders }) => {
   return(
     <List animated textAlign='center' selection verticalAlign="middle">
       { orders.filter( order => order.order_status === 'pending').length > 0 ?  

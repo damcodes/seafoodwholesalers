@@ -15,7 +15,7 @@ function Profile() {
 
   const [ orders, setOrders ] = useState([])
   const [ currentUser, setUser ] = useState({})
-  const [ refreshInterval ] = useState(2000)
+  const [ refreshInterval ] = useState(1000)
 
   useEffect(() => {
     Adapter.fetch("GET", "current-user")
@@ -45,8 +45,12 @@ function Profile() {
     .then( user => {
       setUser(user)
     })
+
+    Adapter.fetch("GET", "orders")
+    .then( res => res.json() )
+    .then(setOrders)
   }
-  // debugger
+  
   return(
     <Container id='profile-page'>
       <UserInfo />

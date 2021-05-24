@@ -7,24 +7,10 @@ import Adapter from '../adapters/Adapter'
 const ShippedOrders = ({ orders, currentUser }) => {
 
   const [ shippedOrders, setShippedOrders ] = useState(null)
-  const [ refresh ] = useState(2000)
-
-  useEffect(() => {
-    if (refresh && refresh > 0 && currentUser.admin) {
-      const interval = setInterval(fetchAllOrders, refresh)
-      return () => clearInterval(interval)
-    }
-  })
 
   useEffect(() => {
     setShippedOrders(orders)
   }, [ orders ] )
-
-  const fetchAllOrders = () => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => setShippedOrders(orders.filter(order => order.order_status === 'shipped')) )   
-  }
 
   return(
       shippedOrders ? 

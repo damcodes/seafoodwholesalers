@@ -7,25 +7,10 @@ import Adapter from '../adapters/Adapter'
 const DeliveredOrders = ({ orders, currentUser }) => {
 
   const [ deliveredOrders, setDeliveredOrders ] = useState(null)
-  const [ refresh ] = useState(2000)
-  
-
-  useEffect(() => {
-    if (refresh && refresh > 0 && currentUser.admin) {
-      const interval = setInterval(fetchAllOrders, refresh)
-      return () => clearInterval(interval)
-    }
-  })
 
   useEffect(() => {
     setDeliveredOrders(orders)
   }, [ orders ])
-
-  const fetchAllOrders = () => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => setDeliveredOrders(orders.filter(order => order.order_status === 'delivered')) )   
-  }
 
   return(
       deliveredOrders ? 

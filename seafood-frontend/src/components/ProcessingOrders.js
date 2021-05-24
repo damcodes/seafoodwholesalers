@@ -7,24 +7,10 @@ import Adapter from '../adapters/Adapter'
 const ProcessingOrders = ({ orders, currentUser }) => {
 
   const [ processingOrders, setProcessingOrders ] = useState(null)
-  const [ refresh ] = useState(5000)
-
-  useEffect(() => {
-    if (refresh && refresh > 0 && currentUser.admin) {
-      const interval = setInterval(fetchAllOrders, refresh)
-      return () => clearInterval(interval)
-    }
-  })
   
   useEffect(() => {
     setProcessingOrders(orders)
   }, [ orders ])
-
-  const fetchAllOrders = () => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( ordersData => setProcessingOrders(ordersData.filter( order => order.order_status === 'processing')) )
-  }
   
   return(
     processingOrders ? 
