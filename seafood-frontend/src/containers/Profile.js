@@ -61,7 +61,7 @@ function Profile() {
           <Grid.Column>
             <Segment  textAlign='center'>
               <Header as='h2' textAlign='center'>Incoming Orders</Header>
-              <IncomingOrders />
+              <IncomingOrders orders={orders.filter( order => order.order_status === 'pending')} />
             </Segment>
           </Grid.Column>
 

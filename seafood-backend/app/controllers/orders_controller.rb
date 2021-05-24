@@ -18,7 +18,6 @@ class OrdersController < ApplicationController
     user_company = user.company
     route_id = user_company.route_id
     new_order_num = get_new_order_num()
-    byebug
 
     @order =  Order.new(user_id: order_params[:user_id], order_number: new_order_num, order_total: order_params[:order_total], route_id: route_id)
 

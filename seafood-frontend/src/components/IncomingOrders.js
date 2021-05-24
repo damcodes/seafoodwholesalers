@@ -4,29 +4,13 @@ import { useEffect, useState } from 'react'
 import { Header, Icon, List } from 'semantic-ui-react'
 import Adapter from '../adapters/Adapter'
 
-const IncomingOrders = () => {
+const IncomingOrders = ({ orders }) => {
 
   const [ incomingOrders, setIncomingOrders ] = useState([])
-  const [ refresh ] = useState(2000)
 
   useEffect(() => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => setIncomingOrders(orders.filter( order => order.order_status === 'pending')) )
-  }, [])
-
-  useEffect(() => {
-    if (refresh && refresh > 0) {
-      const interval = setInterval(fetchOrders, refresh)
-      return () => clearInterval(interval)
-    }
-  })
-
-  const fetchOrders = () => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( orders => setIncomingOrders(orders.filter(order => order.order_status === 'pending')) )
-  }
+    setIncomingOrders(orders)
+  }, [ orders ])
 
   return(
       incomingOrders ? 
