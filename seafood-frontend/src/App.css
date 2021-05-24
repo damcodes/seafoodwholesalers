@@ -199,7 +199,7 @@ input#new-customer-input {
 }
 #employee-list {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .orders {
   text-align: center;

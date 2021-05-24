@@ -6,7 +6,7 @@ const CustomersList = ({ sort, searched, companies }) => {
   let customers = []
 
   const searchAlgo = (company) => {
-    return company.name.toUpperCase().slice(0, searched.length) ===  searched.toUpperCase(); 
+    return company.name.toUpperCase().slice(0, searched.length) ===  searched.toUpperCase() || company.name.toUpperCase().includes(searched.toUpperCase()); 
   }
 
   const sortAlgo = (a, b) => {
@@ -47,7 +47,8 @@ const CustomersList = ({ sort, searched, companies }) => {
 
   return(
     <List selection>
-      { customers.map( company => {
+      {!(searched && customers.length === 0) ? 
+      customers.map( company => {
         return(
           <List.Item key={company.id} onClick={() => history.push(`/companies/${stringToSlug(company.name)}`)}>
             <Segment>
@@ -65,8 +66,12 @@ const CustomersList = ({ sort, searched, companies }) => {
             </Segment>
           </List.Item>
         )
-      })}
+      })
+      :
+      <List.Item><Header as='h4'>No Customer Found</Header></List.Item>
+    }
     </List>
+
   )
 }
 

@@ -111,12 +111,12 @@ const CustomerPageByName = () => {
 
                   <Table.Cell textAlign="left">
                     <List>
-                      {company.users.map( employee => {
+                      {company.users.map( (employee, i) => {
                         return( 
                         <List.Item key={employee.id}>
                           <div id="employee-list">
-                            <div id="employee-name">{`${employee.first_name} ${employee.last_name}`}</div>
-                            <div id='employee-email'>{`${employee.email}`}</div>
+                            <div id="employee-name">{`(${i+1}) ${employee.first_name} ${employee.last_name}`}</div>
+                            <div id='employee-email'>{`(${i+1}) ${employee.email}`}</div>
                           </div>
                         </List.Item>
                         )
