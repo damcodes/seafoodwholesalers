@@ -13,33 +13,33 @@ galv = Route.create(name: "Galveston")
 north = Route.create(name: 'North')
 sfwRoute = Route.create(name: 'SFW')
 
-sfw = Company.create(name: "Seafood Wholesalers", address: "6060b Southwest Freeway, Houston, TX 77057", route_id: sfwRoute.id, phone_number: '7136191969')
+sfw = Company.create(name: "Seafood Wholesalers", address: "6060b Southwest Freeway, Houston, TX 77057", route_id: sfwRoute.id, phone_number: '7136191969', longitude: -95.48655448, latitude: 29.72702631)
 
 # downtown
-f17 = Company.create(name: "Fiesta 17", address: "4200 San Jacinto St, Houston, TX 77004", route_id: dt.id, phone_number: '7135290155')
+f17 = Company.create(name: "Fiesta 17", address: "4200 San Jacinto St, Houston, TX 77004", route_id: dt.id, phone_number: '7135290155', longitude:-95.38029580, latitude: 29.73378388)
 
 # north stores
-f9 = Company.create(name: "Fiesta 9", address: "10401 Jensen Dr, Houston, TX 77093", route_id: north.id, phone_number: '7136970018')
-f11 = Company.create(name: "Fiesta 11", address: "4711 Airline Dr, Houston, TX 77022", route_id: north.id, phone_number: '7136970050')
+f9 = Company.create(name: "Fiesta 9", address: "10401 Jensen Dr, Houston, TX 77093", route_id: north.id, phone_number: '7136970018', longitude: 29.86464048, latitude:  -95.33458395)
+f11 = Company.create(name: "Fiesta 11", address: "4711 Airline Dr, Houston, TX 77022", route_id: north.id, phone_number: '7136970050', longitude: -95.38556490, latitude:  29.83599731)
 
 # sugarland stores
-f47 = Company.create(name: "Fiesta 47", address: "1530 Independence Blvd, Missouri City, TX 77489", route_id: sugar.id, phone_number: '2812610200')
+f47 = Company.create(name: "Fiesta 47", address: "1530 Independence Blvd, Missouri City, TX 77489", route_id: sugar.id, phone_number: '2812610200', longitude: -95.52576915, latitude: 29.597291000)
 
 # katy stores
-f8 = Company.create(name: "Fiesta 8", address: "2323 Wirt Rd, Houston, TX 77055", route_id: katy.id, phone_number: '7139842368')
-f82 = Company.create(name: "Fiesta 82", address: "20331 Farm to Market Rd 529, Katy, TX 77449", route_id: katy.id, phone_number: '2818555960')
-f66 = Company.create(name: "Fiesta 66", address: "333 Mason Rd, Katy, TX 77450", route_id: katy.id, phone_number: '2815996350')
+f8 = Company.create(name: "Fiesta 8", address: "2323 Wirt Rd, Houston, TX 77055", route_id: katy.id, phone_number: '7139842368', longitude: -95.48687984, latitude: 29.815635537)
+f82 = Company.create(name: "Fiesta 82", address: "20331 Farm to Market Rd 529, Katy, TX 77449", route_id: katy.id, phone_number: '2818555960', longitude:-95.72197470, latitude: 29.87830634)
+f66 = Company.create(name: "Fiesta 66", address: "333 Mason Rd, Katy, TX 77450", route_id: katy.id, phone_number: '2815996350', longitude: -95.74934545, latitude: 29.780954680)
 
 #galveston
-gaidos = Company.create(name: "Gaido's Seafood Kitchen", address: '3828 Seawall Blvd, Galveston, TX 77550', route_id: galv.id, phone_number: '4097615500')
+gaidos = Company.create(name: "Gaido's Seafood Kitchen", address: '3828 Seawall Blvd, Galveston, TX 77550', route_id: galv.id, phone_number: '4097615500', longitude: -94.80465576, latitude: 29.279522331)
 
 # south stores
-f5 = Company.create(name: "Fiesta 5", address: '5600 Mykawa Rd, Houston, TX 77033', route_id: south.id, phone_number: '7136441611')
-f4 = Company.create(name: "Fiesta 4", address: "1603 Spencer Hwy, South Houston, TX 77587", route_id: south.id, phone_number: '7139437651')
-f201 = Company.create(name: "Fiesta 201", address: "2877 S Richey Richey St, Houston, TX 77017", route_id: south.id, phone_number: '7133780929')
-f18 = Company.create(name: 'Fiesta 18', address: '8130 Kirby Dr, Houston, TX 77054', route_id: south.id, phone_number: '7136669260')
-f51 = Company.create(name: 'Fiesta 51', address: '9420 Cullen Blvd, Houston, TX 77051', route_id: south.id, phone_number: '7137312100')
-f3 = Company.create(name: 'Fiesta 3', address: '800 S Wayside Dr, Houston, TX 77023', route_id: south.id, phone_number: '7139282854')
+f5 = Company.create(name: "Fiesta 5", address: '5600 Mykawa Rd, Houston, TX 77033', route_id: south.id, phone_number: '7136441611', longitude: -95.32836369, latitude: 29.693237201)
+f4 = Company.create(name: "Fiesta 4", address: "1603 Spencer Hwy, South Houston, TX 77587", route_id: south.id, phone_number: '7139437651', longitude: -95.21130295, latitude: 29.665449911)
+f201 = Company.create(name: "Fiesta 201", address: "2877 S Richey Richey St, Houston, TX 77017", route_id: south.id, phone_number: '7133780929', longitude: -95.23077069, latitude: 29.676543166)
+f18 = Company.create(name: 'Fiesta 18', address: '8130 Kirby Dr, Houston, TX 77054', route_id: south.id, phone_number: '7136669260', longitude: -95.41629984, latitude: 29.69055255)
+f51 = Company.create(name: 'Fiesta 51', address: '9420 Cullen Blvd, Houston, TX 77051', route_id: south.id, phone_number: '7137312100', longitude: -95.35592798, latitude: 29.65457955)
+f3 = Company.create(name: 'Fiesta 3', address: '800 S Wayside Dr, Houston, TX 77023', route_id: south.id, phone_number: '7139282854', longitude: -95.31084365, latitude: 29.730619366)
 
 david = User.create(first_name: "David", last_name: 'Molina', email: 'david@seafoodwholesalers.com', password: '123456', company: sfw, admin: true, role: 'management')
 ash = User.create(first_name: "Ash", last_name: "Molina", email: "ash@email.com", password: '123456', company: sfw, admin: false, role: 'transportation')

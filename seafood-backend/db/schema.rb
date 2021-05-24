@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_12_063453) do
+ActiveRecord::Schema.define(version: 2021_05_24_030201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(version: 2021_03_12_063453) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "route_id"
     t.text "phone_number"
+    t.decimal "longitude", precision: 10, scale: 8
+    t.decimal "latitude", precision: 10, scale: 8
   end
 
   create_table "order_products", force: :cascade do |t|

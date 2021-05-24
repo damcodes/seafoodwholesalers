@@ -197,3 +197,6 @@ input#new-customer-input {
   color: white;
   background-color: red;
 }
+#outer-container {
+  /* margin: 0 auto; */
+}

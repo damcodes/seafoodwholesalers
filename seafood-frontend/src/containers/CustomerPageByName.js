@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Segment, Header, Icon, Grid } from 'semantic-ui-react'
 import { useParams } from 'react-router-dom'
 import Adapter from '../adapters/Adapter'
+import MapContainer from '../components/Map'
 
 const CustomerPageByName = () => {
 
@@ -60,6 +61,10 @@ const CustomerPageByName = () => {
           </Segment>
         </Grid.Column>
       </Grid.Row>
+
+      <div id="outer-container">
+        <MapContainer company={company} />
+      </div>
     </Grid>
     : 
     <Header as='h4'><Icon name='spinner'/>Loading Customer...</Header>
