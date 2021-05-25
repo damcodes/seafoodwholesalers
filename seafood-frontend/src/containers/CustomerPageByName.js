@@ -116,7 +116,7 @@ const CustomerPageByName = () => {
                         <List.Item key={employee.id}>
                           <div id="employee-list">
                             <div id="employee-name">{`(${i+1}) ${employee.first_name} ${employee.last_name}`}</div>
-                            <div id='employee-email'>{`(${i+1}) ${employee.email}`}</div>
+                            <div id='employee-email'>{`${employee.email} (${i+1})`}</div>
                           </div>
                         </List.Item>
                         )
