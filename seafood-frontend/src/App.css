@@ -204,3 +204,6 @@ input#new-customer-input {
 .orders {
   text-align: center;
 }
+#search-orders {
+  margin-top: 10px;
+}
