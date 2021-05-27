@@ -40,12 +40,6 @@ function Profile() {
   })
 
   const fetchData = () => {
-    Adapter.fetch("GET", "current-user")
-    .then( res => res.json() )
-    .then( user => {
-      setUser(user)
-    })
-
     Adapter.fetch("GET", "orders")
     .then( res => res.json() )
     .then(setOrders)
