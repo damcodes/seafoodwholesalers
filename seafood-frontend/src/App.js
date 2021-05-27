@@ -13,6 +13,7 @@ import Routes from './containers/Routes'
 import Footer from './components/Footer'
 import Customers from './containers/Customers'
 import CustomerPageByName from './containers/CustomerPageByName'
+import Adapter from './adapters/Adapter';
 
 function App() {
 
@@ -21,12 +22,7 @@ function App() {
 
   useEffect(() => {
     if ( localStorage.getItem('auth_key')) {
-      fetch('http://localhost:3001/current-user', {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem("auth_key")
-      }})
+      Adapter.fetch("GET", "current-user")
       .then( res => res.json() )
       .then( currentUser => setUser(currentUser) )
     }

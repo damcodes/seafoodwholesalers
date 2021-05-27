@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Header } from 'semantic-ui-react'
+import React, { useState } from 'react'
+import { Button } from 'semantic-ui-react'
 import Login from '../components/Login'
 import Signup from '../components/Signup'
-import { Redirect, useHistory } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+import Adapter from '../adapters/Adapter'
 
 function LoginSignup({ setUser, logIn, isLoggedIn }) {
 
@@ -37,27 +38,21 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
     }
     logIn(loggedIn)
     // setLoggedIn(true)
-    fetch('http://localhost:3001/login', {
-      method: "POST",
-      headers: { "Content-type":"application/json" },
-      body: JSON.stringify({
-        user: {
-          email: email,
-          password: password
-        }
-      })
-    })
+    const body = {
+      user: {
+        email: email, 
+        password: password
+      }
+    }
+    Adapter.fetch("POST", "login", body)
     .then( res => handleResponse(res) )
     .then( data => {
       setLoggedIn(true)
       const newUser = JSON.parse(data.user)
       localStorage.setItem('auth_key', data['jwt'])
-      // logIn(loggedIn)
-      // setLoggedIn(true)
       setUser(newUser)
     })
     .catch(err => {
-      // debugger
       setLoginError(err)
       console.log(err.message)
     })
@@ -69,21 +64,18 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
       alert('All fields are required')
       return
     }
+    const body = {
+      user: {
+        first_name: firstName,
+        last_name: lastName,
+        email: email,
+        password: password,
+        password_confirmation: passwordConf,
+        company: company
+      }
+    }
     
-    fetch('http://localhost:3001/users', {
-      method: "POST",
-      headers: { "Content-type":"application/json" },
-      body: JSON.stringify({
-        user: {
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          password: password,
-          password_confirmation: passwordConf,
-          company: company
-        }
-      })
-    })
+    Adapter.fetch("POST", "users", body)
     .then( res => handleResponse(res) )
     .then( data => {
       debugger
