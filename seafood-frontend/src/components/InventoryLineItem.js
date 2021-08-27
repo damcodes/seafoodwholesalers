@@ -53,7 +53,7 @@ const InventoryLineItem = ({ item, deleteItem }) => {
     }
     Adapter.fetch("PATCH", `products/${currentItem.id}`, body)
     .then( res => res.json() )
-    .then(setCurrentItem)
+    .then( updated => setCurrentItem(updated))
   }
 
   const handlePriceChange = () => {
@@ -64,9 +64,7 @@ const InventoryLineItem = ({ item, deleteItem }) => {
     }
     Adapter.fetch("PATCH", `products/${item.id}`, body)
     .then( res => res.json() )
-    .then( updated => {
-      setCurrentItem(updated)
-    })
+    .then( updated => setCurrentItem(updated))
   }
 
   const toggleActive = (check) => {
