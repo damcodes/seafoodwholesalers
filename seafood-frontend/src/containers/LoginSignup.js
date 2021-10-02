@@ -46,7 +46,6 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
             let res = await Adapter.fetch("POST", "login", body);
             let data = await handleResponse(res);
             setLoggedIn(true);
-            debugger;
             const newUser = JSON.parse(data.user);
             localStorage.setItem('auth_key', data['jwt']);
             setUser(newUser);
