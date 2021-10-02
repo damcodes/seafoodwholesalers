@@ -12,8 +12,7 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
 
     useEffect(() => {
         const getUser = async () => {
-            let res = await Adapter.fetch("GET", `users/${order.user_id}`);
-            let user = await handleResponse(res);
+            let user = await Adapter.fetch("GET", `users/${order.user_id}`);
             setCustomer(user);
         }
         getUser();
@@ -38,18 +37,6 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
         return str;
     }
 
-    const handleResponse = async res => {
-        let json = await res.json();
-        if (!res.ok) {
-            const err = Object.assign({}, json, {
-                status: res.status,
-                statusText: res.statusText
-            });
-            return Promise.reject(err);
-        };
-        return json;
-    }
-
     const routeStop = (order) => {
         if (order.stop === 0 && !shipped) return <Button onClick={() => setInput(!input)} size='tiny'>Route</Button>
         if (order.order_status === 'delivered') return order.stop
@@ -69,8 +56,7 @@ const FullRouteLineItem = ({ order, setRouteChanged, shipped }) => {
                     stop: stop
                 }
             };
-            let res = await Adapter.fetch("PATCH", `orders/${currentOrder.id}`, body);
-            let order = await handleResponse(res);
+            let order = await Adapter.fetch("PATCH", `orders/${currentOrder.id}`, body);
             setInput(!input);
             setCurrentOrder(order);
         }

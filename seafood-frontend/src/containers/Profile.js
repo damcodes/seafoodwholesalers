@@ -13,150 +13,151 @@ import Adapter from '../adapters/Adapter'
 
 function Profile() {
 
-  const [ orders, setOrders ] = useState([])
-  const [ currentUser, setUser ] = useState({})
-  const [ refreshInterval ] = useState(1000)
+    const [orders, setOrders] = useState([])
+    const [currentUser, setUser] = useState({})
+    const [refreshInterval] = useState(1000)
 
-  useEffect(() => {
-    Adapter.fetch("GET", "current-user")
-    .then( res => res.json() )
-    .then( user => {
-      setUser(user)
-      setOrders(user.orders) 
+    useEffect(() => {
+        const getUser = async () => {
+            let user = await Adapter.fetch("GET", "current-user");
+            setUser(user);
+            setOrders(user.orders);
+        }
+        getUser();
+    }, [])
+
+    useEffect(() => {
+        const getOrders = async () => {
+            let orders = await Adapter.fetch("GET", "orders");
+            setOrders(orders);
+        }
+        getOrders();
+    }, [])
+
+    useEffect(() => {
+        if (refreshInterval && refreshInterval > 0) {
+            const interval = setInterval(fetchOrders, refreshInterval)
+            return () => clearInterval(interval)
+        }
     })
-  }, [])
 
-  useEffect(() => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then(setOrders)
-  }, [])
-
-  useEffect(() => {
-    if (refreshInterval && refreshInterval > 0) {
-      const interval = setInterval(fetchData, refreshInterval)
-      return () => clearInterval(interval)
+    const fetchOrders = async () => {
+        let orders = await Adapter.fetch("GET", "orders");
+        setOrders(orders);
     }
-  })
 
-  const fetchData = () => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then(setOrders)
-  }
-  
-  return(
-    <Container id='profile-page'>
-      <UserInfo />
-      <br/>
-      { currentUser.admin ?
-      <Grid centered={true}>
-        <Grid.Row id='new-order' columns={2} >
-          <Grid.Column>
-            <Segment  textAlign='center'>
-              <Header as='h2' textAlign='center'>Incoming Orders</Header>
-              <IncomingOrders orders={orders.filter( order => order.order_status === 'pending')} />
-            </Segment>
-          </Grid.Column>
+    return (
+        <Container id='profile-page'>
+            <UserInfo />
+            <br />
+            {currentUser.admin ?
+                <Grid centered={true}>
+                    <Grid.Row id='new-order' columns={2} >
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Incoming Orders</Header>
+                                <IncomingOrders orders={orders.filter(order => order.order_status === 'pending')} />
+                            </Segment>
+                        </Grid.Column>
 
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Being Processed</Header>
-              <ProcessingOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'processing')} />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Being Processed</Header>
+                                <ProcessingOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'processing')} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
 
-        <Grid.Row columns={2}>
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Completed Orders</Header>
-              <CompletedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'completed')} />
-            </Segment>
-          </Grid.Column>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Completed Orders</Header>
+                                <CompletedOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'completed')} />
+                            </Segment>
+                        </Grid.Column>
 
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Shipped Orders</Header>
-              <ShippedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'shipped')} />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Shipped Orders</Header>
+                                <ShippedOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'shipped')} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
 
-        <Grid.Row>
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Delivered Orders</Header>
-              <DeliveredOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'delivered')} />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Delivered Orders</Header>
+                                <DeliveredOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'delivered')} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
 
-        <Grid.Row columns={2}>
-        <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Your Orders</Header>
-              <OrdersWindow currentUser={currentUser} orders={orders.filter( order => order.user_id === currentUser.id)} />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Your Orders</Header>
+                                <OrdersWindow currentUser={currentUser} orders={orders.filter(order => order.user_id === currentUser.id)} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
 
-        <Grid.Row columns={3}>
-          <Grid.Column>
-            <Segment className='order-route-card' textAlign='center'>
-              <Header as='h2' textAlign='center'>Orders By Date</Header>
-              <DailyOrders currentUser={currentUser} orders={orders} />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      :
-      <Grid centered={true} >
-        <Grid.Row id='new-order' columns={2}>
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Pending Orders</Header>
-              <PendingOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'pending' && order.user_id === currentUser.id)} />
-            </Segment>
-          </Grid.Column>
+                    <Grid.Row columns={3}>
+                        <Grid.Column>
+                            <Segment className='order-route-card' textAlign='center'>
+                                <Header as='h2' textAlign='center'>Orders By Date</Header>
+                                <DailyOrders currentUser={currentUser} orders={orders} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+                :
+                <Grid centered={true} >
+                    <Grid.Row id='new-order' columns={2}>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Pending Orders</Header>
+                                <PendingOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'pending' && order.user_id === currentUser.id)} />
+                            </Segment>
+                        </Grid.Column>
 
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>In Processing</Header>
-              <ProcessingOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'processing' && order.user_id === currentUser.id)}/>
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>In Processing</Header>
+                                <ProcessingOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'processing' && order.user_id === currentUser.id)} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
 
-        <Grid.Row columns={2}>
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Processed/Being Routed</Header>
-              <CompletedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'completed' && order.user_id === currentUser.id)}/>
-            </Segment>
-          </Grid.Column>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Processed/Being Routed</Header>
+                                <CompletedOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'completed' && order.user_id === currentUser.id)} />
+                            </Segment>
+                        </Grid.Column>
 
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Shipped</Header>
-              <ShippedOrders currentUser={currentUser} orders={orders.filter( order => order.order_status === 'shipped' && order.user_id === currentUser.id)} />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Shipped</Header>
+                                <ShippedOrders currentUser={currentUser} orders={orders.filter(order => order.order_status === 'shipped' && order.user_id === currentUser.id)} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
 
-        <Grid.Row>
-          <Grid.Column>
-            <Segment textAlign='center'>
-              <Header as='h2' textAlign='center'>Delivered Orders</Header>
-              <DeliveredOrders currentUser={currentUser} orders={orders.filter( order => order.order_stats === 'delivered' && order.user_id === currentUser.id)} />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
-      }
+                    <Grid.Row>
+                        <Grid.Column>
+                            <Segment textAlign='center'>
+                                <Header as='h2' textAlign='center'>Delivered Orders</Header>
+                                <DeliveredOrders currentUser={currentUser} orders={orders.filter(order => order.order_stats === 'delivered' && order.user_id === currentUser.id)} />
+                            </Segment>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            }
 
-    </Container>
-  )
+        </Container>
+    )
 }
 
 export default Profile

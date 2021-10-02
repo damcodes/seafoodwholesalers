@@ -45,15 +45,15 @@ const InventoryLineItem = ({ item, deleteItem }) => {
     }
   }
 
-  const persistAvailWeight = (weight) => {
+  const persistAvailWeight = async (weight) => {
     const body = {
       product: {
         avail_weight: weight
       }
     }
-    Adapter.fetch("PATCH", `products/${currentItem.id}`, body)
-    .then( res => res.json() )
-    .then( updated => setCurrentItem(updated))
+    let res = await Adapter.fetch("PATCH", `products/${currentItem.id}`, body)
+    let updatedItem = await Adapter.handleResponse(res);
+    setCurrentItem(updatedItem);
   }
 
   const handlePriceChange = () => {

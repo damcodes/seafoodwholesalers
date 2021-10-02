@@ -16,18 +16,6 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
         return (!str || /^\s*$/.test(str));
     }
 
-    const handleResponse = async (res) => {
-        let json = res.json();
-        if (!res.ok) {
-            const err = Object.assign({}, json, {
-                status: res.status,
-                statusText: res.statusText
-            });
-            return Promise.reject(err);
-        };
-        return json;
-    }
-
     const login = async (e, email, password) => {
         e.preventDefault();
         if (isBlank(email) || isBlank(password)) {
@@ -43,8 +31,7 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
             }
         };
         try {
-            let res = await Adapter.fetch("POST", "login", body);
-            let data = await handleResponse(res);
+            let data = await Adapter.fetch("POST", "login", body);
             setLoggedIn(true);
             const newUser = JSON.parse(data.user);
             localStorage.setItem('auth_key', data['jwt']);
@@ -71,8 +58,7 @@ function LoginSignup({ setUser, logIn, isLoggedIn }) {
             }
         };
         try {
-            let res = await Adapter.fetch("POST", "users", body);
-            let data = await handleResponse(res);
+            let data = await Adapter.fetch("POST", "users", body);
             setLoggedIn(true);
             const newUser = JSON.parse(data.user);
             localStorage.setItem('auth_key', data['jwt']);

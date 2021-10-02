@@ -13,9 +13,8 @@ const DailyOrders = () => {
 
   useEffect( () => {
     const getOrders = async () => {
-        let res = await Adapter.fetch("GET", "orders");
-        let data = await res.json();
-        setAllOrders(data);
+        let orders = await Adapter.fetch("GET", "orders");
+        setAllOrders(orders);
     }
     getOrders();
   }, [])

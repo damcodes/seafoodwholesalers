@@ -17,52 +17,54 @@ import Adapter from './adapters/Adapter';
 
 function App() {
 
-  const [ loggedIn, setLoggedIn ] = useState(localStorage.getItem('auth_key') ? true : false)
-  const [ user, setUser ] = useState(null)
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem('auth_key') ? true : false)
+    const [user, setUser] = useState(null)
 
-  useEffect(() => {
-    if ( localStorage.getItem('auth_key')) {
-      Adapter.fetch("GET", "current-user")
-      .then( res => res.json() )
-      .then( currentUser => setUser(currentUser) )
-    }
-  }, [loggedIn])
+    useEffect(() => {
+        const getCurrentUser = async () => {
+            let currentUser = await Adapter.fetch("GET", "current-user");
+            setUser(currentUser);
+        }
+        if (localStorage.getItem('auth_key')) {
+            getCurrentUser();
+        }
+    }, [loggedIn])
 
-  useEffect(() => {
-    if (user && window.location.pathname === '/login') {
-      window.location.replace('/profile')
-    }
-  }, [ user ])
+    useEffect(() => {
+        if (user && window.location.pathname === '/login') {
+            window.location.replace('/profile')
+        }
+    }, [user])
 
-  useEffect(() => {
-      if (window.location.pathname === "/") {
-          window.location.replace('/home');
-      }
-  })
+    useEffect(() => {
+        if (window.location.pathname === "/") {
+            window.location.replace('/home');
+        }
+    })
 
-  return (
-    <div className="App">
-      <img src="https://www.seafoodwholesalers.com/image/131551250.png" alt="seafood logo" />
-      <Router>
-        <NavBar id="navbar" user={user} />
-        <Switch>
-          <Route exact path='/inventory' component={user ? Inventory : null} />
-          <Route exact path='/login' component={() => <LoginSignup isloggedIn={loggedIn} setUser={user => setUser(user)} logIn={bool => setLoggedIn(bool)}/>} />
-          <Route exact path='/logout' component={() => <Logout setUser={user => setUser(user)} />} />
-          <Route exact path='/home' component={Home} />
-          <Route exact path='/profile' component={() => <Profile currentUser={user} />} />
-          <Route exact path='/new-order' component={() => <NewOrder user={user} />} />
-          <Route exact path='/orders/:order_number' component={() => <OrderByName />} />
-          <Route exact path='/routes' component={Routes} />
-          <Route exact path='/companies/:customerName' component={CustomerPageByName} />
-          <Route exact path='/companies' component={Customers} />
-        </Switch>
-      </Router>
-      <br />
-      <br />
-      <Footer/>
-    </div>
-  );
+    return (
+        <div className="App">
+            <img src="https://www.seafoodwholesalers.com/image/131551250.png" alt="seafood logo" />
+            <Router>
+                <NavBar id="navbar" user={user} />
+                <Switch>
+                    <Route exact path='/inventory' component={user ? Inventory : null} />
+                    <Route exact path='/login' component={() => <LoginSignup isloggedIn={loggedIn} setUser={user => setUser(user)} logIn={bool => setLoggedIn(bool)} />} />
+                    <Route exact path='/logout' component={() => <Logout setUser={user => setUser(user)} />} />
+                    <Route exact path='/home' component={Home} />
+                    <Route exact path='/profile' component={() => <Profile currentUser={user} />} />
+                    <Route exact path='/new-order' component={() => <NewOrder user={user} />} />
+                    <Route exact path='/orders/:order_number' component={() => <OrderByName />} />
+                    <Route exact path='/routes' component={Routes} />
+                    <Route exact path='/companies/:customerName' component={CustomerPageByName} />
+                    <Route exact path='/companies' component={Customers} />
+                </Switch>
+            </Router>
+            <br />
+            <br />
+            <Footer />
+        </div>
+    );
 }
 
 export default App;
