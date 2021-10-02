@@ -1,8 +1,8 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { Icon, List, Input, Button } from 'semantic-ui-react'
-import Adapter from '../adapters/Adapter'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Icon, List, Input, Button } from 'semantic-ui-react';
+import Adapter from '../adapters/Adapter';
 
 const DailyOrders = () => {
 
@@ -11,10 +11,13 @@ const DailyOrders = () => {
   const [ filtered, setFiltered ] = useState(false);
   const [ orderNumber, setOrderNumber ] = useState(null);
 
-  useEffect(() => {
-    Adapter.fetch("GET", "orders")
-    .then( res => res.json() )
-    .then( data => setAllOrders(data) )
+  useEffect( () => {
+    const getOrders = async () => {
+        let res = await Adapter.fetch("GET", "orders");
+        let data = await res.json();
+        setAllOrders(data);
+    }
+    getOrders();
   }, [])
 
   const filteredOrders = orders => {
@@ -62,4 +65,4 @@ const DailyOrders = () => {
   )
 }
 
-export default DailyOrders
+export default DailyOrders;
