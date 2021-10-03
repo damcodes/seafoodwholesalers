@@ -1,4 +1,4 @@
-import { Table, Input, Checkbox, Button, Icon } from 'semantic-ui-react'
+import { Table, Input, Button, Icon } from 'semantic-ui-react'
 import { useState, useEffect } from 'react'
 
 const LineItem = ({ item, prevTarget, setTargetAndTotalCost, setCart, cart, setTotalCost }) => {

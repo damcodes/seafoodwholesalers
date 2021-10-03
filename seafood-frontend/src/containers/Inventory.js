@@ -29,8 +29,8 @@ const Inventory = () => {
         return ref.current
     }
 
-    const addNewItem = (e, description, itemNumber, price, initialWeight, active) => {
-        e.preventDefault()
+    const addNewItem = async (e, description, itemNumber, price, initialWeight, active) => {
+        e.preventDefault();
         const body = {
             product: {
                 active: active,
@@ -39,19 +39,16 @@ const Inventory = () => {
                 avail_weight: initialWeight,
                 price: price
             }
-        }
-        Adapter.fetch("POST", "products", body)
-            .then(res => res.json())
-            .then(item => setItems([...items, item]))
+        };
+        let item = await Adapter.fetch("POST", "products", body);
+        setItems([...items, item]);
     }
 
-    const deleteItem = (item) => {
-        Adapter.fetch("DELETE", `products/${item.id}`)
-            .then(res => res.json())
-            .then(item => {
-                const newItems = items.filter(current => current.id !== item.id)
-                setItems(newItems)
-            })
+    const deleteItem = async (item) => {
+        let deletedItem = await Adapter.fetch("DELETE", `products/${item.id}`);
+        let newItems = items.filter(current => current.id !== deletedItem.id);
+        debugger;
+        setItems(newItems);
     }
 
     return (
