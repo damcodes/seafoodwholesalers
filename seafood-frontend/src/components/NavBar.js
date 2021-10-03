@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { input, Menu } from 'semantic-ui-react'
-import { NavLink, withRouter } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom'
 
 const NavBar = ({ user }) => {
   const [ activeItem, setActiveItem ] = useState(null)

@@ -1,39 +1,34 @@
-import { Grid, Segment } from 'semantic-ui-react'
-import { useState, useEffect } from 'react'
+import { Grid } from 'semantic-ui-react';
+import { useState, useEffect } from 'react';
+import Adapter from '../adapters/Adapter';
 
 function Orders() {
-  const [currentUser, setCurrentUser] = useState({})
-  const [orders, setOrders] = useState([])
+    const [currentUser, setCurrentUser] = useState({})
+    const [orders, setOrders] = useState([])
 
-  useEffect(() => {
-    fetch('http://localhost:3001/current-user', {
-      method: "GET",
-      headers: {
-        "Content-type":"application/json",
-        "Authorization": localStorage.getItem('auth_key')
-      }
-    })
-    .then( res => res.json() )
-    .then( user => {
-      setCurrentUser(user)
-      setOrders(user.orders)
-    })
-  }, [])
+    useEffect(() => {
+        const getUserAndOrders = async () => {
+            let user = await Adapter.fetch('GET', 'current-user');
+            setCurrentUser(user)
+            setOrders(user.orders);
+        };
+        getUserAndOrders();
+    }, [])
 
-  return(
-    <div>
-      <h1>Your Orders</h1>
-      <Grid>
-        { orders.map(order => {
-            return(
-              <Grid.Row centered={true}>
-                {order.created_at}
-              </Grid.Row>
-            )
-        })}
-      </Grid>
-    </div>
-  )
+    return (
+        <div>
+            <h1>Your Orders</h1>
+            <Grid>
+                {orders.map(order => {
+                    return (
+                        <Grid.Row centered={true}>
+                            {order.created_at}
+                        </Grid.Row>
+                    )
+                })}
+            </Grid>
+        </div>
+    )
 }
 
 export default Orders

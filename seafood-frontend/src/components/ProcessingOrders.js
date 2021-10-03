@@ -1,15 +1,14 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { Header, Icon, List } from 'semantic-ui-react'
-import Adapter from '../adapters/Adapter'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Header, Icon, List } from 'semantic-ui-react';
 
-const ProcessingOrders = ({ orders, currentUser }) => {
+const ProcessingOrders = ({ orders }) => {
 
   const [ processingOrders, setProcessingOrders ] = useState(null)
   
   useEffect(() => {
-    setProcessingOrders(orders)
+    setProcessingOrders(orders);
   }, [ orders ])
   
   return(

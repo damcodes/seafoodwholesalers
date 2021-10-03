@@ -1,13 +1,13 @@
-import { Segment, Form, Button, Grid, Input, Header, Label, Checkbox, Icon } from 'semantic-ui-react'
-import { useState } from 'react' 
+import { Segment, Form, Button, Grid, Input, Header, Label, Checkbox, Icon } from 'semantic-ui-react';
+import { useState } from 'react';
 
 const NewProductCard = ({ addNewItem, setOpen }) => {
 
-  const [ description, setDescription ] = useState(null)
-  const [ itemNumber, setItemNumber ] = useState(null)
-  const [ price, setPrice ] = useState(0)
-  const [ initialWeight, setInitialWeight ] = useState(0)
-  const [ active, setActive ] = useState(false)
+  const [ description, setDescription ] = useState(null);
+  const [ itemNumber, setItemNumber ] = useState(null);
+  const [ price, setPrice ] = useState(0);
+  const [ initialWeight, setInitialWeight ] = useState(0);
+  const [ active, setActive ] = useState(false);
 
   return(
     <Segment id='new-product-card'>

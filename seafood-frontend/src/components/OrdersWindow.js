@@ -1,7 +1,6 @@
-import React from 'react'
-import {  Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { Header, Icon, List } from 'semantic-ui-react'
+import React from 'react';
+import {  Link } from 'react-router-dom';
+import { Header, Icon, List } from 'semantic-ui-react';
 
 const OrdersWindow = ({ orders, currentUser }) => {
   return(

@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { List } from 'semantic-ui-react'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { List } from 'semantic-ui-react';
 
 const PendingOrders = ({ orders }) => {
   return(

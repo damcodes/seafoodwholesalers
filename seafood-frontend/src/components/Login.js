@@ -7,7 +7,6 @@ function Login({ login, loginError }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  // debugger
   return(
     <Segment >
         { loginError ? <Errors loginError={loginError} /> : null }

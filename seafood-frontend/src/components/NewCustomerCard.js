@@ -1,19 +1,18 @@
-import { Segment, Form, Button, Grid, Input } from 'semantic-ui-react'
-import { useState, useEffect } from 'react' 
-import usePlacesAutocomplete from '@atomap/use-places-autocomplete'
-import StateSelection from '../components/StateSelection'
-import RouteSelection from '../components/RouteSelection'
-import PhoneInput from 'react-phone-number-input/input'
+import { Segment, Form, Button, Grid, Input } from 'semantic-ui-react';
+import { useState } from 'react';
+import StateSelection from '../components/StateSelection';
+import RouteSelection from '../components/RouteSelection';
+import PhoneInput from 'react-phone-number-input/input';
 
 const NewCustomerCard = ({ addNewCustomer }) => {
 
-  const [ name, setName ] = useState(null)
-  const [ number, setNumber ] = useState(null)
-  const [ address, setAddress ] = useState(null)
-  const [ city, setCity ] = useState(null)
-  const [ state, setState ] = useState(null)
-  const [ zip, setZip ] = useState(null)
-  const [ routeId, setRouteId ] = useState(null)
+  const [ name, setName ] = useState(null);
+  const [ number, setNumber ] = useState(null);
+  const [ address, setAddress ] = useState(null);
+  const [ city, setCity ] = useState(null);
+  const [ state, setState ] = useState(null);
+  const [ zip, setZip ] = useState(null);
+  const [ routeId, setRouteId ] = useState(null);
 
 
   return(

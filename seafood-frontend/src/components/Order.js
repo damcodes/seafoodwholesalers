@@ -1,6 +1,4 @@
-import { Table, Button, Container, Icon, Label } from 'semantic-ui-react'
-import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { Table, Container, Label } from 'semantic-ui-react';
 
 const Order = ({ cart }) => {
 
